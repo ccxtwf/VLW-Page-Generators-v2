@@ -160,10 +160,10 @@ ${x}
 `}if(u){let y="";c&&i?(y=e.slice(0,-1).map(x=>`|'''''${x}'''''
 `).join(""),y+=`|{{OfficialEnglish}}
 `):y=e.map(x=>!h&&x==="English"?"":`|'''''${x}'''''
-`).join(""),C=`{| style="width:100%"
+`).join(""),C+=`{| style="width:100%"
 ${y}${t.map(x=>x.getWikitext(h)).join("")}|}`,c&&(!i||o!=="")&&(C+=`
 {{Translator|${o===""?"Anonymous":o}}}
-`)}else C=`<poem>
+`)}else C+=`<poem>
 ${t.map(y=>y.colour===""?y.original:`<span style="color:${y.colour}">${y.original}</span>`).join(`
 `)}
 </poem>
