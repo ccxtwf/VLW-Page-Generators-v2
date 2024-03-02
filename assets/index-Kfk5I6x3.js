@@ -156,9 +156,9 @@ object-assign
 !style="background-color:${s}; color:${a}"|Singer
 ${C}
 |}
-`}if(u){let w="";c&&i?(w=e.map(C=>`|'''''${C}'''''
-`).join(""),w+=`|{{OfficialEnglish}}
-`):w=e.map(C=>!h&&C==="English"?"":`|'''''${C}'''''
+`}if(u){let w="";c&&i?w=e.map(C=>C==="English"?`|{{OfficialEnglish}}
+`:`|'''''${C}'''''
+`).join(""):w=e.map(C=>!h&&C==="English"?"":`|'''''${C}'''''
 `).join(""),S+=`{| style="width:100%"
 ${w}${t.map(C=>C.getWikitext(h)).join("")}|}`,c&&(!i||o!=="")&&(S+=`
 {{Translator|${o===""?"Anonymous":o}}}
