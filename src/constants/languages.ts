@@ -126,4 +126,14 @@ export const CONST_LANGUAGES = [
     name: "Welsh",
     code: null
   },
+  {
+    name: "Conlang",
+    code: null,
+    specCat: "Songs written in conlangs"
+  },
+  {
+    name: "Non-lexical lyrics",
+    code: null,
+    specCat: "Songs with non-lexical lyrics"
+  }
 ];

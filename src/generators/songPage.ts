@@ -107,7 +107,7 @@ export function parseInput({
   translator = translator.trim();
   uploadDateRaw = uploadDateRaw.trim();
   let uploadDate: Date | null = uploadDateRaw === '' ? null : new Date(uploadDateRaw);
-  const convertRawTextAreaInput = (input: string) => (input.replace(/\s*\n\s*/g, '<br />'));
+  const convertRawTextAreaInput = (input: string) => (input.replace(/[\r \t]*\n[\r \t]*/g, '<br />'));
   singers = convertRawTextAreaInput(singers.trim());
   producers = convertRawTextAreaInput(producers.trim());
   description = convertRawTextAreaInput(description.trim());
@@ -152,7 +152,13 @@ export function autoloadCategories({
   const res = [];
   
   for (let id of languageIds) {
-    res.push(`${CONST_LANGUAGES[id]?.name || ''} songs`);
+    const referLang = CONST_LANGUAGES[id];
+    if (!referLang) continue;
+    if (referLang.specCat) {
+      res.push(referLang.specCat);
+    } else {
+      res.push(`${referLang.name || ''} songs`);
+    }
   }
 
   const splitSingersByLine = singers.split('\n');
@@ -163,7 +169,16 @@ export function autoloadCategories({
     const singersInMarkup = line.matchAll(
       /\[\[(?<base>[^\|\n\]]*)\|?(?<cap>(?<=\|)[^\]]*)?\]\]/g
     );
+    const singersInTemplate = line.matchAll(
+      /\{\{[Ss]inger\|(?<base>[^\|\}]+)\|?(?<cap>(?<=\|)[^\}]*)?\}\}/g
+    );
     for (let singer of singersInMarkup) {      
+      let { base = '' } = singer.groups || {};
+      if (base === '') continue;
+      detectedSingers.push(base.trim());
+      if (areMainSingers) numMainSingers += 1;
+    }
+    for (let singer of singersInTemplate) {
       let { base = '' } = singer.groups || {};
       if (base === '') continue;
       detectedSingers.push(base.trim());
@@ -359,7 +374,7 @@ export function validate(input: ProcessedInput): {
     ]);
     recommendToAutoloadCategories = true;
   }
-  if (singers.match(/\[\[[^\]]*\]\]/gm) === null) {
+  if (singers.match(/\[\[[^\]]*\]\]/gm) === null && singers.match(/\{\{[Ss]inger\|[^\}]*\}\}/gm) === null) {
     res.push([
       true, 
       'You need to list at least one singer in markup, e.g. [[Kagamine Rin]].', 
@@ -491,7 +506,7 @@ export function generateSongPage(input: ProcessedInput): string {
   if (isUnavailable) unavailableTemplate = '{{Unavailable}}';
 
   if (origTitle.match(/^[a-z]/) !== null) displayTitleTemplate = '{{Lowercase}}';
-  if (origTitle.match(/_/g) !== null) displayTitleTemplate = `{{DISPLAYTITLE:${origTitle}}}`
+  if (origTitle.match(/_/g) !== null) displayTitleTemplate = `{{DISPLAYTITLE:${origTitle}}}`;
 
   titlesSegment = `"'''${origTitle}'''"`;
   if (altChTitle !== '') titlesSegment += `<br />${altChIsTraditional ? 'Traditional' : 'Simplified'} Chinese: ${altChTitle}`;

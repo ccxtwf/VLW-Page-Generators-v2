@@ -13,26 +13,26 @@ export class Lyric {
 
   getWikitext(printEmptyEnglishColumn: boolean = false): string {
     let wikitext: string = `|-${this.colour === '' ? ' ' : ` style='color:${this.colour}'`}\n`;
-    let sharesColumns = (this.original === (this.romanized || this.original)) && (
-      !printEmptyEnglishColumn ||
-      (printEmptyEnglishColumn && (this.original === (this.english || this.original)))
+    let isLineBreak = (this.original === '' && (this.romanized || '') === '' && (this.english || '') === '');    
+    let sharesColumns = (
+      (this.romanized === undefined || this.original === this.romanized) &&
+      (this.english === undefined || !printEmptyEnglishColumn || this.original === this.english)
     );
-    if (sharesColumns) {
-      if (this.original === '') {
-        wikitext += '|<br />\n'
-      } else {
-        let numColumns = [!!this.original, !!this.romanized, !!this.english].reduce(
-          (num, curBool) => { 
-            num += curBool ? 1 : 0; 
-            return num; 
-          }, 0
-        );
-        if (printEmptyEnglishColumn && (!this.english || this.english === '')) numColumns += 1;
-        wikitext += `| {{shared|${numColumns}}} ${this.original}\n`;
-      }
+    if (this.romanized === undefined && this.english === '') sharesColumns = false;
+    if (isLineBreak) {
+      wikitext += '|<br />\n';
+    } else if (sharesColumns) {
+      let numColumns = [!!this.original, !!this.romanized, !!this.english].reduce(
+        (num, curBool) => { 
+          num += curBool ? 1 : 0; 
+          return num; 
+        }, 0
+      );
+      if (printEmptyEnglishColumn && (!this.english || this.english === '')) numColumns += 1;
+      wikitext += `| {{shared|${numColumns}}} ${this.original}\n`;
     } else {
       wikitext += `|${this.original}\n`;
-      if (this.romanized) wikitext += `|${this.romanized}\n`;
+      if (this.romanized !== undefined) wikitext += `|${this.romanized}\n`;
       if (printEmptyEnglishColumn) wikitext += `|${this.english || ''}\n`;
     }
     return wikitext;

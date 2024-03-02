@@ -242,4 +242,8 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
     re: /^https?:\/\/www\.pixiv\.net\/fanbox\/.*/,
     isMedia: true
   },
+  {
+    site: "Moegirlpedia",
+    re: /https?:\/\/zh\.moegirl\.org\.cn\/.*/
+  }
 ]);

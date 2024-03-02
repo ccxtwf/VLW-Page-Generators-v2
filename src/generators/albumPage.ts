@@ -254,11 +254,15 @@ export function generateAlbumPage(input: ProcessedInput): string {
     tracklist, extLinks
   } = input;
 
+  let displayTitleTemplate: string = '';
   let trackListSegment: string = '';
   let officialLinksWikitext: string = '';
   let unofficialLinksWikitext: string = '';
   let extLinksSegment: string = '';
   let sortTemplateSegment: string = '';
+
+  if (origTitle.match(/^[a-z]/) !== null) displayTitleTemplate = '{{Lowercase}}';
+  if (origTitle.match(/_/g) !== null) displayTitleTemplate = `{{DISPLAYTITLE:${origTitle}}}`;
 
   trackListSegment = tracklist.map(track => (
     `|${
@@ -294,7 +298,7 @@ export function generateAlbumPage(input: ProcessedInput): string {
 
   return (
     `
-{{Album Infobox
+${displayTitleTemplate}{{Album Infobox
 |title = ${romTitle === '' ? origTitle : romTitle}
 |orgtitle = ${romTitle === '' ? '' : origTitle}
 |label = ${label}

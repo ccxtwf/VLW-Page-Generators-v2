@@ -154,7 +154,7 @@ function generateUnofficialProdLinks(links: ExternalLink[]): string {
     NICOPEDIA: /^https?:\/\/dic\.nicovideo\.jp\/id\/(.*)$/,
     VOCADB: /^https?:\/\/vocadb\.net\/Ar\/(\d*)/,
     NICOTAG: /^https?:\/\/www\.nicovideo\.jp\/tag\/(.*)$/,
-    MGP: /^https?:\/\/mzh\.moegirl\.org\.cn\/(.*)$/
+    MGP: /^https?:\/\/zh\.moegirl\.org\.cn\/(.*)$/
   };
   const detectedDomains: any = {};
   let wikitextForUndetectedDomains: string = '';

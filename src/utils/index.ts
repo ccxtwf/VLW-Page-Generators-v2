@@ -35,6 +35,9 @@ export const parseHeadersFromLanguages = (
       if (lang.name === 'Mandarin') {
         isChinese = true;
         headerOriginalLanguages.push('Chinese');
+      } else if (lang.name === 'Cantonese') {
+        isChinese = true;
+        headerOriginalLanguages.push(lang.name);
       } else {
         headerOriginalLanguages.push(lang.name);
       }

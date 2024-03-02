@@ -33,7 +33,10 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
   const columnDefinitions = [
     { 
       type: 'dropdown',
-      source: CONST_PV_SERVICES.map(el => el.site)
+      source: CONST_PV_SERVICES.map(el => el.site),
+      strict: false,
+      allowInvalid: true,
+      validator: undefined
     },
     { 
       type: 'text', 

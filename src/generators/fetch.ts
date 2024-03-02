@@ -425,9 +425,9 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     }
     strLabel = labels.length === 0 ? '' : commaList(labels);
     if (json.discType === AlbumType.compilation) {
-      strDescription = `a compilation album by ${
-        circles.length === 0 ? 'several producers' :
-        commaList(circles)
+      strDescription = `a compilation album${
+        circles.length === 0 ? '' :
+        ', by the circle ' + commaList(circles)
       }`;
     } else if (mainProducers.length > 3) {
       strDescription = `an album by ${
@@ -469,7 +469,11 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
             }
           }
         } else {
-          songProducers.push(artist?.name || '');
+          const roles = artist.effectiveRoles.split(', ');
+          const isMainProducer = roles.some((role) => (
+            role === ArtistRole.default || role === ArtistRole.composer
+          ));
+          if (isMainProducer) songProducers.push(artist?.name || '');
         }
       }
       trackList.push([
