@@ -146,8 +146,13 @@ export function generateLyricsTable(
     // Generate as multi-column table
     let wikiHeaders: string = '';
     if (hasEnglishTranslation && isOfficialTranslation) {
-      wikiHeaders = headersText.map((el) => `|'''''${el}'''''\n`).join('');
-      wikiHeaders += `|{{OfficialEnglish}}\n`;
+      wikiHeaders = headersText.map((el) => {
+        if (el === 'English') {
+          return '|{{OfficialEnglish}}\n';
+        } else {
+          return `|'''''${el}'''''\n`
+        }
+      }).join('');
     } else {
       wikiHeaders = headersText.map(el => {
         if (!showEnglishColumn && el === 'English') return '';
