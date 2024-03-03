@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef } from "react";
+// @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { urlRenderer, sharedContextMenuOptions } from "./shared";
 import { CONST_RECOGNIZED_LINKS } from "../../constants/linkDomains";
@@ -65,7 +66,7 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
         autoWrapRow={true}
         autoWrapCol={true}
         manualColumnResize={true}
-        imeFastEdit={true}
+        // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
         colWidths={columnWidths}

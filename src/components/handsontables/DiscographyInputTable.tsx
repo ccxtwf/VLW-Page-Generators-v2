@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef } from "react";
+// @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { sharedContextMenuOptions } from "./shared";
 
@@ -69,7 +70,7 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
         autoWrapRow={true}
         autoWrapCol={true}
         manualColumnResize={true}
-        imeFastEdit={true}
+        // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
         colWidths={columnWidths}

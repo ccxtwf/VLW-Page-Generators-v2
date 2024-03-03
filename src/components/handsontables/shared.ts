@@ -1,3 +1,4 @@
+// @ts-ignore
 import { PredefinedMenuItemKey } from "handsontable/plugins/contextMenu";
 
 // @ts-ignore

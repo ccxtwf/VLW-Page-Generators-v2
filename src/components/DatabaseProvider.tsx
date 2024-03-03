@@ -29,7 +29,7 @@ export const DatabaseProvider: FunctionComponent<PropsWithChildren> = ({
       });
       const buf = await fetch(dbUrl).then(res => res.arrayBuffer());
       const db = new SQL.Database(new Uint8Array(buf));
-      console.log("Initialized DB connection");
+      if (import.meta.env.DEV) console.log("Initialized DB connection");
       return db;
     } catch (e) {
       console.error(e);

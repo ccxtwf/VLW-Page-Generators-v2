@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef } from "react";
+// @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { sharedContextMenuOptions } from "./shared";
 import { CONST_WIKI_DOMAIN } from "../../constants/linkDomains";
@@ -68,7 +69,7 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
         autoWrapRow={true}
         autoWrapCol={true}
         manualColumnResize={true}
-        imeFastEdit={true}
+        // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
         colWidths={columnWidths}

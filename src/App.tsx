@@ -5,17 +5,15 @@ import AlbumGeneratorPage from "./layouts/AlbumGeneratorPage";
 import ProducerGeneratorPage from "./layouts/ProducerGeneratorPage";
 import LyricsEditorPage from "./layouts/LyricsEditorPage";
 
-// @ts-ignore
-import Handsontable from 'handsontable/base';
-import { registerAllModules } from 'handsontable/registry';
-
-registerAllModules();
-
 import 'semantic-ui-css/semantic.min.css';
 import 'handsontable/dist/handsontable.full.min.css';
 import "./index.css";
 
 // const baseUrl = import.meta.env.BASE_URL;
+
+import { registerHandsontableCellTypes, registerHandsontablePlugins } from './registerHandsontable';
+registerHandsontableCellTypes();
+registerHandsontablePlugins();
 
 const routes = createHashRouter([
   {

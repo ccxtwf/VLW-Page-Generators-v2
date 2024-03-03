@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef } from "react";
+// @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { CONST_PV_SERVICES } from "../../constants/linkDomains";
 import { urlRenderer, sharedContextMenuOptions } from "./shared";
@@ -61,7 +62,7 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
         autoWrapRow={true}
         autoWrapCol={true}
         manualColumnResize={true}
-        imeFastEdit={true}
+        // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
         colWidths={[20, 35, 10, 10, 10, 15]}
