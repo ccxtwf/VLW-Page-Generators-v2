@@ -52,8 +52,8 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
     //@ts-ignore
     return (instance) => {
       //@ts-ignore
-      const { from: { row: fromRow } = {}, to: { row: toRow } = {} } = (instance.getSelectedRange() || [{}])[0];
-      if (!fromRow || !toRow) return [];
+      const { from: { row: fromRow = null } = {}, to: { row: toRow = null } = {} } = (instance.getSelectedRange() || [{}])[0];
+      if (fromRow === null || toRow === null) return [];
       const selectedRows = [];
       for (let i = fromRow; i <= toRow; i++) {
         //@ts-ignore
@@ -77,9 +77,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           const selectedRows = getSelectedRowData(this);
           const isNotBolded = selectedRows.every(([_, orig, rom, eng]) => {
             return (
-              (orig.trim() === '' || orig.match(rxMatchBolded) === null) &&
-              (!needsRomanization || rom.trim() === '' || rom.match(rxMatchBolded) === null) &&
-              (!needsEnglishTranslation || eng.trim() === '' || eng.match(rxMatchBolded) === null)
+              ((orig || '').trim() === '' || orig.match(rxMatchBolded) === null) &&
+              (!needsRomanization || (rom || '').trim() === '' || rom.match(rxMatchBolded) === null) &&
+              (!needsEnglishTranslation || (eng || '').trim() === '' || eng.match(rxMatchBolded) === null)
             )
           });
           return !isNotBolded;
@@ -87,21 +87,20 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
         //@ts-ignore
         callback(key, selection, clickEvent) {
           const { start: { row: fromRow = null } = {}, end: { row: toRow = null } = {} } = (selection || [{}])[0];
-          if (!fromRow || !toRow) return;
+          if (fromRow === null || toRow === null) return;
+          //@ts-ignore
+          const data = this.getData();
           for (let i = fromRow; i <= toRow; i++) {
-            //@ts-ignore
-            let orig = (this.getDataAtCell(i, 1) || '').trim();
-            //@ts-ignore
-            let rom = (this.getDataAtCell(i, 2) || '').trim();
-            //@ts-ignore
-            let eng = (this.getDataAtCell(i, 3) || '').trim();
-            //@ts-ignore
-            this.setDataAtCell(i, 1, `'''${orig}'''`);
-            //@ts-ignore
-            if (needsRomanization && rom !== '') this.setDataAtCell(i, 2, `'''${rom}'''`);
-            //@ts-ignore
-            if (needsEnglishTranslation && eng !== '') this.setDataAtCell(i, 3, `'''${eng}'''`);
+            const row = data[i];
+            let orig = (row[1] || '').trim();
+            row[1] = `'''${orig}'''`;
+            let rom = (row[2] || '').trim();
+            if (needsRomanization && rom !== '') row[2] = `'''${rom}'''`;
+            let eng = (row[3] || '').trim();
+            if (needsEnglishTranslation && eng !== '') row[3] = `'''${eng}'''`;
           }
+          //@ts-ignore
+          this.loadData(data);
         }
       },
       italic: {
@@ -110,9 +109,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           const selectedRows = getSelectedRowData(this);
           const isNotItalicized = selectedRows.every(([_, orig, rom, eng]) => {
             return (
-              (orig.trim() === '' || orig.match(rxMatchItalicised) === null) &&
-              (!needsRomanization || rom.trim() === '' || rom.match(rxMatchItalicised) === null) &&
-              (!needsEnglishTranslation || eng.trim() === '' || eng.match(rxMatchItalicised) === null)
+              ((orig || '').trim() === '' || orig.match(rxMatchItalicised) === null) &&
+              (!needsRomanization || (rom || '').trim() === '' || rom.match(rxMatchItalicised) === null) &&
+              (!needsEnglishTranslation || (eng || '').trim() === '' || eng.match(rxMatchItalicised) === null)
             )
           });
           return !isNotItalicized;
@@ -120,21 +119,20 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
         //@ts-ignore
         callback(key, selection, clickEvent) {
           const { start: { row: fromRow = null } = {}, end: { row: toRow = null } = {} } = (selection || [{}])[0];
-          if (!fromRow || !toRow) return;
+          if (fromRow === null || toRow === null) return;
+          //@ts-ignore
+          const data = this.getData();
           for (let i = fromRow; i <= toRow; i++) {
-            //@ts-ignore
-            let orig = (this.getDataAtCell(i, 1) || '').trim();
-            //@ts-ignore
-            let rom = (this.getDataAtCell(i, 2) || '').trim();
-            //@ts-ignore
-            let eng = (this.getDataAtCell(i, 3) || '').trim();
-            //@ts-ignore
-            this.setDataAtCell(i, 1, `''${orig}''`);
-            //@ts-ignore
-            if (needsRomanization && rom !== '') this.setDataAtCell(i, 2, `''${rom}''`);
-            //@ts-ignore
-            if (needsEnglishTranslation && eng !== '') this.setDataAtCell(i, 3, `''${eng}''`);
+            const row = data[i];
+            let orig = (row[1] || '').trim();
+            row[1] = `''${orig}''`;
+            let rom = (row[2] || '').trim();
+            if (needsRomanization && rom !== '') row[2] = `''${rom}''`;
+            let eng = (row[3] || '').trim();
+            if (needsEnglishTranslation && eng !== '') row[3] = `''${eng}''`;
           }
+          //@ts-ignore
+          this.loadData(data);
         }
       },
       unbold: {
@@ -143,9 +141,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           const selectedRows = getSelectedRowData(this);
           const isBolded = selectedRows.some(([_, orig, rom, eng]) => {
             return (
-              (orig.match(rxMatchBolded) !== null) ||
-              (!needsRomanization || rom.match(rxMatchBolded) !== null) ||
-              (!needsEnglishTranslation || eng.match(rxMatchBolded) !== null)
+              ((orig || '').match(rxMatchBolded) !== null) ||
+              (!needsRomanization || (rom || '').match(rxMatchBolded) !== null) ||
+              (!needsEnglishTranslation || (eng || '').match(rxMatchBolded) !== null)
             )
           });
           return !isBolded;
@@ -153,21 +151,20 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
         //@ts-ignore
         callback(key, selection, clickEvent) {
           const { start: { row: fromRow = null } = {}, end: { row: toRow = null } = {} } = (selection || [{}])[0];
-          if (!fromRow || !toRow) return;
+          if (fromRow === null || toRow === null) return;
+          //@ts-ignore
+          const data = this.getData();
           for (let i = fromRow; i <= toRow; i++) {
-            //@ts-ignore
-            let orig = (this.getDataAtCell(i, 1) || '').trim();
-            //@ts-ignore
-            let rom = (this.getDataAtCell(i, 2) || '').trim();
-            //@ts-ignore
-            let eng = (this.getDataAtCell(i, 3) || '').trim();
-            //@ts-ignore
-            this.setDataAtCell(i, 1, orig.replace(rxMatchBolded, '$2'));
-            //@ts-ignore
-            if (needsRomanization) this.setDataAtCell(i, 2, rom.replace(rxMatchBolded, '$2'));
-            //@ts-ignore
-            if (needsEnglishTranslation) this.setDataAtCell(i, 3, eng.replace(rxMatchBolded, '$2'));
+            const row = data[i];
+            let orig = (row[1] || '').trim();
+            row[1] = orig.replace(rxMatchBolded, '$2');
+            let rom = (row[2] || '').trim();
+            if (needsRomanization && rom !== '') row[2] = rom.replace(rxMatchBolded, '$2');
+            let eng = (row[3] || '').trim();
+            if (needsEnglishTranslation && eng !== '') row[3] = eng.replace(rxMatchBolded, '$2');
           }
+          //@ts-ignore
+          this.loadData(data);
         }
       },
       unitalic: {
@@ -176,9 +173,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           const selectedRows = getSelectedRowData(this);
           const isItalicized = selectedRows.some(([_, orig, rom, eng]) => {
             return (
-              (orig.match(rxMatchItalicised) !== null) ||
-              (!needsRomanization || rom.match(rxMatchItalicised) !== null) ||
-              (!needsEnglishTranslation || eng.match(rxMatchItalicised) !== null)
+              ((orig || '').match(rxMatchItalicised) !== null) ||
+              (!needsRomanization || (rom || '').match(rxMatchItalicised) !== null) ||
+              (!needsEnglishTranslation || (eng || '').match(rxMatchItalicised) !== null)
             )
           });
           return !isItalicized;
@@ -186,21 +183,20 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
         //@ts-ignore
         callback(key, selection, clickEvent) {
           const { start: { row: fromRow = null } = {}, end: { row: toRow = null } = {} } = (selection || [{}])[0];
-          if (!fromRow || !toRow) return;
+          if (fromRow === null || toRow === null) return;
+          //@ts-ignore
+          const data = this.getData();
           for (let i = fromRow; i <= toRow; i++) {
-            //@ts-ignore
-            let orig = (this.getDataAtCell(i, 1) || '').trim();
-            //@ts-ignore
-            let rom = (this.getDataAtCell(i, 2) || '').trim();
-            //@ts-ignore
-            let eng = (this.getDataAtCell(i, 3) || '').trim();
-            //@ts-ignore
-            this.setDataAtCell(i, 1, orig.replace(rxMatchItalicised, '$2'));
-            //@ts-ignore
-            if (needsRomanization) this.setDataAtCell(i, 2, rom.replace(rxMatchItalicised, '$2'));
-            //@ts-ignore
-            if (needsEnglishTranslation) this.setDataAtCell(i, 3, eng.replace(rxMatchItalicised, '$2'));
+            const row = data[i];
+            let orig = (row[1] || '').trim();
+            row[1] = orig.replace(rxMatchItalicised, '$2');
+            let rom = (row[2] || '').trim();
+            if (needsRomanization && rom !== '') row[2] = rom.replace(rxMatchItalicised, '$2');
+            let eng = (row[3] || '').trim();
+            if (needsEnglishTranslation && eng !== '') row[3] = eng.replace(rxMatchItalicised, '$2');
           }
+          //@ts-ignore
+          this.loadData(data);
         }
       },
       sp3: '---------',
