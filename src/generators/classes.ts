@@ -12,7 +12,7 @@ export class Lyric {
   }
 
   getWikitext(printEmptyEnglishColumn: boolean = false): string {
-    let wikitext: string = `|-${this.colour === '' ? ' ' : ` style='color:${this.colour}'`}\n`;
+    let wikitext: string = `|-${this.colour === '' ? ' ' : ` style="color:${this.colour}"`}\n`;
     let isLineBreak = (this.original === '' && (this.romanized || '') === '' && (this.english || '') === '');    
     let sharesColumns = (
       (this.romanized === undefined || this.original === this.romanized) &&
