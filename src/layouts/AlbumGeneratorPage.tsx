@@ -14,6 +14,7 @@ import ExternalLinksInputTable from '../components/handsontables/ExternalLinksIn
 import CopyButton from '../components/reusables/CopyButton';
 import DisplayError from '../components/reusables/DisplayErrors';
 import PreloadFromVdb from '../components/reusables/PreloadFromVdb';
+import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
@@ -560,6 +561,12 @@ export default function AlbumGeneratorPage() {
           warnings={notify.warnings}
           recommendToAutoloadCategories={notify.recommendToAutoloadCategories}
         />
+      </GridColumn>
+    </GridRow>
+
+    <GridRow>
+      <GridColumn width={16}>
+        <FirstTimeEditorNote addRedirectNote={true} />
       </GridColumn>
     </GridRow>
 
