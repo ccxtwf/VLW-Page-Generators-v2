@@ -265,7 +265,7 @@ ${
 ${
   albumList.length === 0 ? '' : 
   (`==Discography==\n{| class=\"sortable producer-table\"\n|- class=\"vcolor-default\"\n! {{awt head}}\n` +
-  albumList.map(album => `|-\n| ${album.toTemplate()}\n`).join('') + '|}\n\n')
+  albumList.map(album => `|-\n| ${album.toTemplate()}\n`).join('') + '|}\n')
 }
 __NOTOC__
 ${ 

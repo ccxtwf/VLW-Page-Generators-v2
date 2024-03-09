@@ -506,7 +506,9 @@ export function generateSongPage(input: ProcessedInput): string {
   if (isUnavailable) unavailableTemplate = '{{Unavailable}}';
 
   if (origTitle.match(/^[a-z]/) !== null) displayTitleTemplate = '{{Lowercase}}';
-  if (origTitle.match(/_/g) !== null) displayTitleTemplate = `{{DISPLAYTITLE:${origTitle}}}`;
+  if (origTitle.match(/[_#]/g) !== null) displayTitleTemplate = `{{DISPLAYTITLE:${origTitle}${
+    romTitle === '' ? '' : ` (${romTitle})`
+  }}}`;
 
   titlesSegment = `"'''${origTitle}'''"`;
   if (altChTitle !== '') titlesSegment += `<br />${altChIsTraditional ? 'Traditional' : 'Simplified'} Chinese: ${altChTitle}`;
