@@ -21,7 +21,7 @@ const lyricRenderer = (instance, td, row, col, prop, value, cellProperties) => {
   }
   const colour = instance.getDataAtCell(row, 0) || '';
   value = value.replace(/<ref\s*[^>]*\/>/gi, '<i class="asterisk tiny icon"></i>');
-  value = value.replace(/<ref\s*[^>]*>(.*)<\/ref>/gi, '<i class="asterisk tiny icon"></i>');
+  value = value.replace(/<ref\s*[^>]*>(.*)<\/ref>/gsi, '<i class="asterisk tiny icon"></i>');
   value = value.replace(/'{3}(.*?)'{3}/g, '<b>$1</b>');
   value = value.replace(/'{2}(.*?)'{2}/g, '<i>$1</i>');
   if (colour !== '') value = `<span style="color:${colour};">${value}</span>`;

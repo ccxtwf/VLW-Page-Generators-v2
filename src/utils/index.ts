@@ -110,9 +110,14 @@ export function generateLyricsTable(
   let showNotes: boolean = false;
   let isTranslationNote: boolean | null = null;
   const rxRefTag = /<ref(?:[^>]*)>/;
+  const rxSpanInlineColour = /<span\s+style\s*=\s*["'][^>]*color\s*:\s*([a-zA-Z0-9#]+)\s*[^>]*["']>.*?<\/span>/gm;
   let usedColours: Set<string> = new Set();
   for (let lyric of lyrics) {
     usedColours.add(lyric.colour);
+    const detectedInlineColours = lyric.original.matchAll(rxSpanInlineColour);
+    for (let [_, colour] of detectedInlineColours) {
+      usedColours.add(colour);
+    }
     if (lyric.original.match(rxRefTag) || (lyric?.romanized || '').match(rxRefTag)) {
       showNotes = true;
       isTranslationNote = isTranslationNote || false;
