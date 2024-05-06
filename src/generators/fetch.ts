@@ -115,6 +115,16 @@ function queryVocalist(vdbId: number, fallbackName: string): {
   return { wikitext, base, engine, isSuccess }
 }
 
+const dictConvertPvServiceName = {
+  [PvService.yt]: 'YouTube',
+  [PvService.nnd]: 'Niconico',
+  [PvService.bb]: 'bilibili',
+  [PvService.pp]: 'piapro',
+  [PvService.sc]: 'SoundCloud',
+  [PvService.bc]: 'Bandcamp',
+  [PvService.vm]: 'Vimeo'
+}
+
 // async function _checkIfYtThumbnailIsValid(watchId: string): Promise<string> {
 //   const tryYtImgs = [
 //     'maxresdefault.jpg',
@@ -251,16 +261,6 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
     
     singersString += commaList(mainSingers);
     if (minorSingers.length > 0) singersString += `\n<small>${commaList(minorSingers)}</small>`;
-
-    const dictConvertPvServiceName = {
-      [PvService.yt]: 'YouTube',
-      [PvService.nnd]: 'Niconico',
-      [PvService.bb]: 'bilibili',
-      [PvService.pp]: 'piapro',
-      [PvService.sc]: 'SoundCloud',
-      [PvService.bc]: 'Bandcamp',
-      [PvService.vm]: 'Vimeo'
-    }
     
     for (let pv of (json.pvs || [])) {
       const pvService = dictConvertPvServiceName[pv.service] || null;
@@ -484,6 +484,14 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       ]);
     }
 
+    for (let link of (json.pvs || [])) {
+      let url = '';
+      if (link.service === PvService.yt) url = `https://www.youtube.com/watch?v=${link.pvId || ''}`
+      else url = link.url || '';
+      let description = dictConvertPvServiceName[link.service] || null;
+      description = 'Album crossfade' + (description === null ? '' : ` - ${description}`);
+      extLinks.push([ url, description, true ]);
+    }
     for (let link of (json.webLinks || [])) {
       const url = link.url || '';
       let description = link.description || '';
