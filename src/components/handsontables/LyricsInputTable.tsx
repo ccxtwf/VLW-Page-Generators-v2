@@ -67,6 +67,80 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
     items: {
       copy: { disabled: false },
       cut: { disabled: false },
+      paste: {
+        name: 'Paste',
+        //@ts-ignore
+        callback(key, selection, clickEvent) {
+          let { 
+            start: { row: fromRow = null, col: fromCol = null } = {}, 
+            end: { row: toRow = null, col: toCol = null } = {} 
+          } = (selection || [{}])[0];
+          if (fromRow === null || fromCol === null || toRow === null || toCol === null) return;
+          if (fromRow > toRow) [fromRow, toRow] = [toRow, fromRow];
+          if (fromCol > toCol) [fromCol, toCol] = [toCol, fromCol];
+          navigator.clipboard.readText()
+            .then((str) => {
+              const pasted = str.split(/\n/).map((line) => line.split(/\t/));
+
+              //@ts-ignore
+              // let data = this.getData();
+              let numExistingRows = this.getData().length;
+              let numOverlappedExistingRows = Math.min(
+                numExistingRows - fromRow,
+                pasted.length
+              );
+              let numOverflowedRows = pasted.length - numOverlappedExistingRows;
+              const changes: (number | string)[][] = [];
+
+              if (fromRow === toRow && fromCol === toCol) {
+                // Starting cell is a single cell
+                // In this case, limit the paste range to rows after fromRow and columns after fromCol
+                let numOverlappedExistingColumns = Math.min(
+                  4 - hiddenColumns.columns.length, 
+                  Math.max(...pasted.map(line => line.length))
+                );
+                for (let i = 0; i < numOverlappedExistingRows; i++) {
+                  let z = 0;
+                  for (let j = 0; j < numOverlappedExistingColumns; j++) {
+                    while (hiddenColumns.columns.includes((fromCol+z))) z++;
+                    changes.push([fromRow+i, fromCol+z++, pasted[i][j] || '']);
+                  }
+                }
+                for (let i = 0; i < numOverflowedRows; i++) {
+                  let z = 0;                  
+                  for (let j = 0; j < numOverlappedExistingColumns; j++) {
+                    while (hiddenColumns.columns.includes((fromCol+z))) z++;
+                    changes.push([numExistingRows+i, fromCol+z++, pasted[numOverlappedExistingRows+i][j] || '']);
+                  }
+                }
+              } else {
+                // Starting cell is a multi-cell range
+                // In this case, limit the paste range to the columns within fromCol & toCol, 
+                // and to rows below (equal to or more than) fromRow
+                for (let i = 0; i < numOverlappedExistingRows; i++) {
+                  let z = 0;
+                  for (let j = fromCol; j <= toCol; j++) {
+                    while (hiddenColumns.columns.includes((fromCol+z))) z++;
+                    changes.push([fromRow+i, fromCol+z++, pasted[i][j-fromCol] || '']);
+                  }
+                }
+                for (let i = 0; i < numOverflowedRows; i++) {
+                  let z = 0;
+                  for (let j = fromCol; j <= toCol; j++) {
+                    while (hiddenColumns.columns.includes((fromCol+z))) z++;
+                    changes.push([numExistingRows+i, fromCol+z++, pasted[numOverlappedExistingRows+i][j-fromCol] || '']);
+                  }
+                }
+              }
+
+              //@ts-ignore
+              this.setDataAtCell(changes);
+            })
+            .catch(() => {
+              window.alert("Unable to paste! Please use keyboard command (Ctrl/Cmd + V)!");
+            })
+        }
+      },
       sp1: '---------',
       undo: { disabled: false },
       redo: { disabled: false },
@@ -205,7 +279,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
       remove_row: { disabled: false },
       clear_column: { disabled: false }
     }
-  }), []);
+  }), [needsRomanization, needsEnglishTranslation]);
 
   return (
     <div className="table-container">
