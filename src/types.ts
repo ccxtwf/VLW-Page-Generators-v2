@@ -30,6 +30,7 @@ export interface songPageFormInterface {
 export interface albumPageFormInterface {
   origTitle: string
   romTitle: string
+  engTitle: string
   bgColour: string
   fgColour: string
   label: string

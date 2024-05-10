@@ -11,6 +11,7 @@ interface ProcessedInput {
   formData: {
     origTitle: string
     romTitle: string
+    engTitle: string
     bgColour: string
     fgColour: string
     label: string
@@ -26,7 +27,7 @@ interface ProcessedInput {
 
 export function parseInput({ formData, tracklistData, extLinksData }: RawInput): ProcessedInput {
   let {
-    origTitle, romTitle,
+    origTitle, romTitle, engTitle,
     bgColour, fgColour,
     label, description,
     vdbAlbumId, vocaWikiPage,
@@ -34,6 +35,7 @@ export function parseInput({ formData, tracklistData, extLinksData }: RawInput):
   } = formData;
   origTitle = origTitle.trim();
   romTitle = romTitle.trim();
+  engTitle = engTitle.trim();
   bgColour = bgColour.trim();
   fgColour = fgColour.trim();
   label = label.trim();
@@ -54,7 +56,7 @@ export function parseInput({ formData, tracklistData, extLinksData }: RawInput):
   return {
     formData: {
       ...formData,
-      origTitle, romTitle,
+      origTitle, romTitle, engTitle,
       bgColour, fgColour,
       label, description,
       vdbAlbumId, vocaWikiPage, categories
@@ -245,7 +247,7 @@ export function validate(input: ProcessedInput): {
 export function generateAlbumPage(input: ProcessedInput): string {
   let {
     formData: {
-      origTitle, romTitle,
+      origTitle, romTitle, engTitle,
       bgColour, fgColour,
       label, description, 
       vdbAlbumId, vocaWikiPage,
@@ -300,7 +302,7 @@ export function generateAlbumPage(input: ProcessedInput): string {
     `
 ${displayTitleTemplate}{{Album Infobox
 |title = ${romTitle === '' ? origTitle : romTitle}
-|orgtitle = ${romTitle === '' ? '' : origTitle}
+|orgtitle = ${romTitle === '' ? '' : origTitle}${engTitle === '' ? '' : `\n|english = ${engTitle}`}
 |label = ${label}
 |desc = ${description}
 |vdb = ${vdbAlbumId}

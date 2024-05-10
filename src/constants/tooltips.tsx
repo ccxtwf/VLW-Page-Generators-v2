@@ -151,7 +151,12 @@ export const CONST_TOOLTIPS_ALBUM_PAGES = {
   ),
   romTitle: (
     <>
-    Transliterated song title (if non-English original)
+    Transliterated album title (if non-English)
+    </>
+  ),
+  engTitle: (
+    <>
+    English album title (if available)
     </>
   ),
   infobox: (

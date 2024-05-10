@@ -30,6 +30,7 @@ import { fetchDataFromVocaDbForAlbumPage } from "../generators/fetch";
 const defaultInputData: albumPageFormInterface = {
   origTitle: "",
   romTitle: "",
+  engTitle: "",
   bgColour: "black",
   fgColour: "white",
   label: "",
@@ -96,14 +97,14 @@ export default function AlbumGeneratorPage() {
       fetchDataFromVocaDbForAlbumPage(preload.url)
         .then( data => {
           const { formData: { 
-            origTitle, romTitle, label, description, engines, vdbAlbumId, vocaWikiPage, imageSrc 
+            origTitle, romTitle, engTitle, label, description, engines, vdbAlbumId, vocaWikiPage, imageSrc 
           }, tracklistData, extLinksData
           } = data;
 
           // SET INTERNAL STATES
           setFormData(() => ({
             ...defaultInputData,
-            origTitle, romTitle, label, description, engines, vdbAlbumId, vocaWikiPage 
+            origTitle, romTitle, engTitle, label, description, engines, vdbAlbumId, vocaWikiPage 
           }));
           setImageSrc(() => imageSrc);
           
@@ -112,6 +113,8 @@ export default function AlbumGeneratorPage() {
           document.getElementById("album-generator-input-origTitle").value = origTitle;
           // @ts-ignore
           document.getElementById("album-generator-input-romTitle").value = romTitle;
+          // @ts-ignore
+          document.getElementById("album-generator-input-engTitle").value = engTitle;
           // @ts-ignore
           document.getElementById("album-generator-input-label").value = label;
           // @ts-ignore
@@ -290,6 +293,22 @@ export default function AlbumGeneratorPage() {
           fluid placeholder="Romanized title" 
           {...bindInput("romTitle")} 
           className={bindElementWithErrorNotification('romTitle')}
+        />
+      </GridColumn>
+    </GridRow>
+    <GridRow>
+      <GridColumn width={3}>
+        <div className='label-column'>
+          <div>English title:</div>
+          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.engTitle} />
+        </div>
+      </GridColumn>
+      <GridColumn width={13}>
+        <Input 
+          id="album-generator-input-engTitle"
+          fluid placeholder="English title" 
+          {...bindInput("engTitle")} 
+          className={bindElementWithErrorNotification('engTitle')}
         />
       </GridColumn>
     </GridRow>

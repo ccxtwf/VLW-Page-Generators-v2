@@ -42,6 +42,7 @@ interface parsedAlbumPageInfo {
   formData: {
     origTitle: string
     romTitle: string
+    engTitle: string
     label: string
     description: string
     engines: string[]
@@ -396,6 +397,9 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     const romTitle = (json.names || []).find(el => {
       return el.language === 'Romaji'
     })?.value || '';
+    const engTitle = (json.names || []).find(el => {
+      return el.language === 'English'
+    })?.value || '';
 
     let imageSrc: string | null = json.mainPicture.urlOriginal;
 
@@ -503,7 +507,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     }
 
     const formData = {
-      origTitle, romTitle,
+      origTitle, romTitle, engTitle,
       label: strLabel, 
       description: strDescription,
       engines: [...engines],
