@@ -215,8 +215,9 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
     ];
     const searchArtistType = [
       ArtistType.vocaloid, ArtistType.utau, ArtistType.cevio,
-      ArtistType.synthv, ArtistType.neutrino, ArtistType.voiceroid, 
-      ArtistType.voisona, ArtistType.newtype, ArtistType.othervoicesynth
+      ArtistType.synthv, ArtistType.ace, ArtistType.neutrino, 
+      ArtistType.voiceroid, ArtistType.voisona, ArtistType.newtype, 
+      ArtistType.othervoicesynth
     ];
     for (let artist of (json.artists || [])) {
       let addName: string = artist.name || '';

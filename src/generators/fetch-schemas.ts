@@ -55,6 +55,7 @@ export enum ArtistType {
   utau = 'UTAU',
   cevio = 'CeVIO',
   synthv = 'SynthesizerV',
+  ace = 'ACEVirtualSinger',
   neutrino = 'NEUTRINO',
   voisona = 'VoiSona',
   newtype = 'NewType',
