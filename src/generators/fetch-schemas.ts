@@ -49,13 +49,17 @@ export enum ArtistType {
   designer = 'Designer',
   coverartist = 'CoverArtist',
 
-  character = 'Character',
+  character = 'Character'
+}
 
+export enum VocalSynthEngines {
   vocaloid = 'Vocaloid',
   utau = 'UTAU',
   cevio = 'CeVIO',
   synthv = 'SynthesizerV',
   ace = 'ACEVirtualSinger',
+  aivoice = 'AIVOICE',
+  voicevox = 'VOICEVOX',
   neutrino = 'NEUTRINO',
   voisona = 'VoiSona',
   newtype = 'NewType',
@@ -118,7 +122,7 @@ export enum AlbumType {
 interface VdbArtistEntity {
   artist?: {
     additionalNames: string | null
-    artistType: ArtistType
+    artistType: ArtistType | VocalSynthEngines
     deleted: boolean
     id: number
     name: string | null
@@ -244,7 +248,7 @@ export interface schemaFetchedArtistPageJson {
   artistLinks: {
     artist: {
       additionalNames: string | null
-      artistType: ArtistType
+      artistType: ArtistType | VocalSynthEngines
       deleted: boolean
       id: number
       name: string | null

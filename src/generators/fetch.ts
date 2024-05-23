@@ -4,7 +4,7 @@ import { CONST_WIKI_DOMAIN, CONST_RECOGNIZED_LINKS } from "../constants/linkDoma
 import { CONST_LANGUAGES } from "../constants/languages";
 
 import {
-  ArtistCategory, ArtistRole, ArtistType,
+  ArtistCategory, ArtistRole, ArtistType, VocalSynthEngines,
   PvService, PvType, 
   WebLinkCategory, 
   AlbumType,
@@ -213,17 +213,12 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
       'instruments', 'illustration', 'PV', 'encoding', 
       'vocalist', 'chorus', 'publisher', 'other' 
     ];
-    const searchArtistType = [
-      ArtistType.vocaloid, ArtistType.utau, ArtistType.cevio,
-      ArtistType.synthv, ArtistType.ace, ArtistType.neutrino, 
-      ArtistType.voiceroid, ArtistType.voisona, ArtistType.newtype, 
-      ArtistType.othervoicesynth
-    ];
+    
     for (let artist of (json.artists || [])) {
       let addName: string = artist.name || '';
       // Is singer
       if (artist.categories === ArtistCategory.vocalist) {
-        if (artist.artist && searchArtistType.includes(artist.artist?.artistType)) {
+        if (artist.artist && (Object.values(VocalSynthEngines) as string[]).includes((artist.artist?.artistType as string))) {
           // Try searching for the vocalist in the SQLite db
           const { wikitext, engine, isSuccess } = queryVocalist(artist.artist.id, addName);
           if (isSuccess) {
