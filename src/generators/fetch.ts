@@ -607,8 +607,13 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
       }
 
       for (let page of json.query.categorymembers) {
-        const title: string = decodeURI(page.title);
-        const sortkey: string = (page.sortkeyprefix || '') === '' ? title : page.sortkeyprefix || ''; 
+        let title: string;
+        try {
+          title = decodeURI(page.title);
+        } catch (e) {
+          title = page.title;
+        }
+        let sortkey: string = (page.sortkeyprefix || '') === '' ? title : page.sortkeyprefix || ''; 
         if (page.ns === 0) {
           songs.set(sortkey, title);
         } else {
@@ -646,8 +651,13 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
         }
 
         arr.push(...json.query.categorymembers.map(el => {
-          const title = decodeURI(el.title);
-          const sortkey = (el.sortkeyprefix || '') === '' ? title : el.sortkeyprefix || ''; 
+          let title: string;
+          try {
+            title = decodeURI(el.title);
+          } catch (e) {
+            title = el.title;
+          }
+          let sortkey = (el.sortkeyprefix || '') === '' ? title : el.sortkeyprefix || ''; 
           return { title, sortkey };
         }));
 
