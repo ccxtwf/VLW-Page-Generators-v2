@@ -1,3 +1,17 @@
+:root, body {
+  background-color: rgb(244, 248, 251);
+  color: rgb(58, 58, 58);
+}
+.ht-theme-main {
+  --ht-foreground-color: rgb(58, 58, 58);
+  --ht-background-color: rgb(244, 248, 251);
+  --ht-row-header-odd-background-color: rgb(169, 226, 210);
+  --ht-row-header-even-background-color: rgb(169, 226, 210);
+  --ht-header-background-color: rgb(169, 226, 210);
+  --ht-header-highlighted-background-color: rgb(113, 216, 187);
+  --ht-header-row-highlighted-background-color: rgb(113, 216, 187);
+}
+
 header {
   padding: 25px 10px 5px 10px;
 }
@@ -36,6 +50,10 @@ input[type="color"] {
 }
 textarea {
   border-color: #bcbcbc !important;
+}
+.ui.form .ui.input>input:not([type="color"]), .ui.form .ui.dropdown>input:not([type="color"]), .ui.form textarea {
+  background-color: rgb(251, 253, 255);
+  color: rgb(58, 58, 58);
 }
 
 .infobox-preview {

@@ -156,7 +156,7 @@ export default function LyricsEditorPage() {
     </h3>
     
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
-    <Label basic color='violet' size='large'>
+    <Label basic={!isDarkMode} color={isDarkMode ? 'black' : 'violet'} size='large'>
       {
         lyricsTables.length === 0 ?
         'No lyrics tables found'
