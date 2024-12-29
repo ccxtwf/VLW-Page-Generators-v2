@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useThemeMode } from '../ThemeModeProvider';
 
 import { Button, Popup } from 'semantic-ui-react';
 
@@ -8,6 +9,7 @@ interface Params {
 
 export default function CopyButton({ copyState }: Params) {
   const [open, setOpen] = useState<boolean>(false);
+  const { isDarkMode } = useThemeMode();
   return (
     <Popup 
       content='Copied to clipboard'
@@ -21,6 +23,7 @@ export default function CopyButton({ copyState }: Params) {
             navigator.clipboard.writeText(copyState);
             setOpen(true);
           }}
+          inverted={isDarkMode}
         >
           Copy Output
         </Button>

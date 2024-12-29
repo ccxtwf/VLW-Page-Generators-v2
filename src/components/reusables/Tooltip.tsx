@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useThemeMode } from '../ThemeModeProvider';
 import { Popup, Icon, IconGroup } from 'semantic-ui-react';
 
 interface TooltipPropsInterface {
@@ -8,8 +9,11 @@ interface TooltipPropsInterface {
 }
 
 export default function Tooltip({ content, required = false, wide = false }: TooltipPropsInterface) {
+  const { isDarkMode } = useThemeMode();
 
-  let trigger: ReactNode = (<Icon name='help circle' />);
+  let trigger: ReactNode = (
+    <Icon name='help circle' inverted={isDarkMode} className='user-tooltip' />
+  );
   if (required) {
     trigger = (
       <IconGroup>
@@ -34,6 +38,7 @@ export default function Tooltip({ content, required = false, wide = false }: Too
       wide={wide}
       trigger={trigger}
       style={{ zIndex: '1000' }}
+      className='user-tooltip-message'
     />
   )
 }

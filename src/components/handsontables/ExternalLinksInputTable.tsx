@@ -22,14 +22,14 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
     { type: 'text' },
     { type: 'checkbox', className: 'htCenter htMiddle' }
   ];
-  let columnWidths = [60, 30, 10];
+  let columnWidths = [450, 240, 80];
   if (forProducerPages) {
     headerText.push(...['Media', 'Inactive?']);
     columnDefinitions.push(...[
       { type: 'checkbox', className: 'htCenter htMiddle' },
       { type: 'checkbox', className: 'htCenter htMiddle' }
     ])
-    columnWidths = [60, 25, 5, 5, 5];
+    columnWidths = [500, 200, 100, 100, 100];
   }
 
   const handleChanges = (changes: any[][] | null) => {
@@ -73,6 +73,7 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
         stretchH="all"
         minSpareRows={0}
         afterChange={handleChanges}
+        className='ht-theme-main'
         licenseKey="non-commercial-and-evaluation"
       />
     </div>

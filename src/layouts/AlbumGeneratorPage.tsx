@@ -16,6 +16,7 @@ import DisplayError from '../components/reusables/DisplayErrors';
 import PreloadFromVdb from '../components/reusables/PreloadFromVdb';
 import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 
+import { useThemeMode } from '../components/ThemeModeProvider';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 import { convertColourStringToHexCode } from '../utils';
@@ -67,6 +68,8 @@ export default function AlbumGeneratorPage() {
   const refExtLinks = useRef(null);
 
   const { bindInput, bindDropdown } = useTwoWayBinding<albumPageFormInterface>(formData, setFormData);
+
+  const { isDarkMode } = useThemeMode();
 
   const engines = useFetchListOfEngines();
 
@@ -227,7 +230,7 @@ export default function AlbumGeneratorPage() {
 
   return (
   <>
-  <Form id='album-generator-form'>
+  <Form id='album-generator-form' inverted={isDarkMode}>
   <Grid stackable verticalAlign='middle'>
 
     {/* VocaDB Pre-loader */}
@@ -250,7 +253,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <GridRow>
       <GridColumn width={16}>
@@ -261,7 +264,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Song Titles */}
     <GridRow>
@@ -313,7 +316,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Infobox Colours */}
     <GridRow>
@@ -453,7 +456,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Tracklist */}
     <GridRow className={bindElementWithErrorNotification('tracklist')}>
@@ -468,7 +471,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* VocaDB Album Page ID */}
     <GridRow className={bindElementWithErrorNotification('vdbAlbumId')}>
@@ -519,7 +522,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Categories */}
     <GridRow>
@@ -530,6 +533,7 @@ export default function AlbumGeneratorPage() {
         </div>
         <Button basic color='violet'
           onClick={handleAutoloadCategories}
+          inverted={isDarkMode}
         >
           Autoload
         </Button>
@@ -545,7 +549,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Buttons */}
     <GridRow>
@@ -571,7 +575,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <GridRow>
       <GridColumn width={16}>
@@ -591,7 +595,7 @@ export default function AlbumGeneratorPage() {
 
     <br />
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Generated Results */}
     <GridRow>

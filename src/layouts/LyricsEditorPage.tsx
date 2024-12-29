@@ -8,6 +8,7 @@ import {
 
 import LyricsInputTable from '../components/handsontables/LyricsInputTable';
 
+import { useThemeMode } from '../components/ThemeModeProvider';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 
 import { CONST_TOOLTIPS_LYRICS_EDITOR } from '../constants/tooltips';
@@ -140,9 +141,11 @@ export default function LyricsEditorPage() {
 
   const { bindInput, bindCheckbox } = useTwoWayBinding<lyricsEditorFormInterface>(formData, setFormData);
 
+  const { isDarkMode } = useThemeMode();
+
   return (
   <>
-  <Form>
+  <Form inverted={isDarkMode}>
 
     {/* Source Code Input */}
     <h3>
@@ -202,7 +205,7 @@ export default function LyricsEditorPage() {
       Extract Lyrics Table
     </Button>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Lyrics Output */}
     <h3>Parsed Lyrics:</h3>
@@ -242,13 +245,13 @@ export default function LyricsEditorPage() {
 
     <br />
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Glossary */}
     <ButtonGroup widths='3'>
       <Popup
         trigger={
-          <Button basic color='green'>
+          <Button basic={!isDarkMode} color='green'>
             Open mini-library of special characters
           </Button>
         }
@@ -289,7 +292,7 @@ export default function LyricsEditorPage() {
       />
       <Popup
         trigger={
-          <Button basic color='green'>
+          <Button basic={!isDarkMode} color='green'>
             Show glossary of wikitext formatting
           </Button>
         }
@@ -324,9 +327,9 @@ export default function LyricsEditorPage() {
       />
     </ButtonGroup>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Additional Buttons */}
     <ButtonGroup widths='3'>
@@ -368,7 +371,7 @@ export default function LyricsEditorPage() {
       </Button>
     </ButtonGroup>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Main Button */}
     <Button 
@@ -399,11 +402,11 @@ export default function LyricsEditorPage() {
       Generate
     </Button>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <br />
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Generated Results */}
     <h3 className='centered-header'>

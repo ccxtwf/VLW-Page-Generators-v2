@@ -1,7 +1,7 @@
 import { useAsync } from "react-use";
 
 import initSqlJs from "sql.js";
-import { createContext, FunctionComponent, PropsWithChildren, useContext } from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 
 import wasm from "sql.js/dist/sql-wasm.wasm?url";
 
@@ -18,9 +18,7 @@ const DatabaseContext = createContext<DatabaseContextProps>({
 });
 
 let AppDataSource: initSqlJs.Database;
-export const DatabaseProvider: FunctionComponent<PropsWithChildren> = ({
-  children,
-}) => {
+export function DatabaseProvider({children}: PropsWithChildren) {
   const { value, loading } = useAsync(async () => {    
     try {
       // Initialize SQL.js database connection

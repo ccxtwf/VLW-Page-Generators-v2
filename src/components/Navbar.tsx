@@ -1,5 +1,7 @@
-import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useThemeMode } from '../components/ThemeModeProvider';
+import ThemeModeToggle from "./ThemeModeToggle";
 import { MenuItem, Menu } from 'semantic-ui-react';
 
 const cbDetermineActiveNativeLink = ({ isActive }: { isActive: boolean }) => (
@@ -29,6 +31,7 @@ export default function Navbar() {
 
   const [activeRouteIndex, setActiveRouteIndex] = useState<number>(0);
   const location = useLocation();
+  const { isDarkMode } = useThemeMode();
   useEffect(() => {
     const curIndex = Math.max(routes.findIndex(({ url }) => url === location.pathname), 0);
     setActiveRouteIndex(curIndex);
@@ -36,7 +39,7 @@ export default function Navbar() {
 
   return (
     <div>
-      <Menu pointing secondary>
+      <Menu pointing secondary inverted={isDarkMode}>
       {
         routes.map(({ url, name }, index) => (
           <NavLink to={url} className={cbDetermineActiveNativeLink} key={name}>
@@ -49,6 +52,9 @@ export default function Navbar() {
           </NavLink>
         ))
       }
+        <MenuItem position="right">
+          <ThemeModeToggle />
+        </MenuItem>
       </Menu>
     </div>
   );

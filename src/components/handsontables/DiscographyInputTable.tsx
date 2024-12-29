@@ -38,7 +38,7 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
     },
     { type: 'text' }
   ];
-  let columnWidths = [60, 40];
+  let columnWidths = [600, 200];
 
   const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
     for (let change of changes) {
@@ -77,6 +77,7 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
         stretchH="all"
         minSpareRows={0}
         beforeChange={handleVlwPageUrlInputEvent}
+        className='ht-theme-main'
         licenseKey="non-commercial-and-evaluation"
       />
     </div>

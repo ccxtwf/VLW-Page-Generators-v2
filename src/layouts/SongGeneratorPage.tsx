@@ -18,6 +18,7 @@ import DisplayError from '../components/reusables/DisplayErrors';
 import PreloadFromVdb from '../components/reusables/PreloadFromVdb';
 import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 
+import { useThemeMode } from '../components/ThemeModeProvider';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 import { convertColourStringToHexCode, parseHeadersFromLanguages } from '../utils';
@@ -107,6 +108,8 @@ export default function SongGeneratorPage() {
       else return '';
     }
   ), [elementsWithErrors]);
+
+  const { isDarkMode } = useThemeMode();
 
   // Load default data
   useEffect(() => {
@@ -292,8 +295,8 @@ export default function SongGeneratorPage() {
 
   return (
   <>
-  <Form id="song-generator-form">
-  <Grid stackable verticalAlign='middle'>
+  <Form id="song-generator-form" inverted={isDarkMode}>
+  <Grid stackable verticalAlign='middle' inverted={isDarkMode}>
 
     {/* VocaDB Pre-loader */}
     <GridRow>
@@ -315,7 +318,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <GridRow>
       <GridColumn width={16}>
@@ -329,7 +332,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Content Warnings */}
     <GridRow style={{paddingBottom: "20px"}}>
@@ -487,7 +490,7 @@ export default function SongGeneratorPage() {
     </GridRow>
     }
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Infobox Colours */}
     <GridRow>
@@ -633,7 +636,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
     
     {/* Playlinks */}
     <GridRow className={bindElementWithErrorNotification('playLinks')}>
@@ -666,7 +669,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Lyrics */}
     <GridRow className={bindElementWithErrorNotification('lyrics')}>
@@ -685,8 +688,6 @@ export default function SongGeneratorPage() {
           headersText={headersText}
           needsRomanization={needsRomanization}
           needsEnglishTranslation={needsEnglishTranslation}
-          // mode={showDarkMode ? 'dark' : 'light'}
-          mode='light'
           ref={refLyrics}
         />
       </GridColumn>
@@ -716,7 +717,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* External Links */}
     <GridRow className={bindElementWithErrorNotification('extLinks')}>
@@ -740,7 +741,7 @@ export default function SongGeneratorPage() {
           <div>Categories</div>
           <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.categories} required />
         </div>
-        <Button basic color='violet'
+        <Button basic color='violet' inverted={isDarkMode}
           onClick={handleAutoloadCategories}
         >
           Autoload
@@ -758,7 +759,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Buttons */}
     <GridRow>
@@ -784,7 +785,7 @@ export default function SongGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <GridRow>
       <GridColumn width={16}>
@@ -804,7 +805,7 @@ export default function SongGeneratorPage() {
 
     <br />
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Generated Results */}
     <GridRow>

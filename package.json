@@ -2,7 +2,7 @@
   "name": "vlw-new-page-generators",
   "homepage": "https://ccxtwf.github.io/VLW-Page-Generators-v2",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,9 +13,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@handsontable/react": "^13.1.0",
+    "@handsontable/react": "^15.0.0",
     "@types/sql.js": "^1.4.9",
-    "handsontable": "^13.1.0",
+    "handsontable": "^15.0.0",
     "react": "^18.2.0",
     "react-beforeunload": "^2.6.0",
     "react-dom": "^18.2.0",
@@ -25,7 +25,8 @@
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
     "sql.js": "^1.9.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",

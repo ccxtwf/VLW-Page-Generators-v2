@@ -16,6 +16,7 @@ import DisplayError from '../components/reusables/DisplayErrors';
 import PreloadFromVdb from '../components/reusables/PreloadFromVdb';
 import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 
+import { useThemeMode } from '../components/ThemeModeProvider';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 
@@ -83,6 +84,8 @@ export default function AlbumGeneratorPage() {
   const { bindInput, bindTextArea, bindDropdown } = useTwoWayBinding<producerPageFormInterface>(formData, setFormData);
   const { bindCheckbox } = useTwoWayBinding<producerRoles>(producerRoles, setProducerRoles);
 
+  const { isDarkMode } = useThemeMode();
+  
   const engines = useFetchListOfEngines();
 
   const bindElementWithErrorNotification = useMemo(() => (
@@ -259,7 +262,7 @@ export default function AlbumGeneratorPage() {
 
   return (
   <>
-  <Form id='producer-generator-form'>
+  <Form id='producer-generator-form' inverted={isDarkMode}>
   <Grid stackable verticalAlign='middle'>
 
     {/* VocaDB Pre-loader */}
@@ -282,7 +285,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <GridRow>
       <GridColumn width={3}>
@@ -293,7 +296,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Producer Category */}
     <GridRow>
@@ -337,7 +340,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Affiliations */}
     <GridRow>
@@ -478,7 +481,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* External Links */}
     <GridRow className={bindElementWithErrorNotification('extLinks')}>
@@ -494,7 +497,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Discography - Songs */}
     <GridRow className={bindElementWithErrorNotification('pwtDiscog')}>
@@ -542,7 +545,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Buttons */}
     <GridRow>
@@ -568,7 +571,7 @@ export default function AlbumGeneratorPage() {
       </GridColumn>
     </GridRow>
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     <GridRow>
       <GridColumn width={16}>
@@ -588,7 +591,7 @@ export default function AlbumGeneratorPage() {
 
     <br />
 
-    <Divider />
+    <Divider inverted={isDarkMode} />
 
     {/* Generated Results */}
     <GridRow>

@@ -37,7 +37,7 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
     { type: 'text' },
     { type: 'text' }
   ];
-  let columnWidths = [5, 5, 50, 20, 20];
+  let columnWidths = [90, 90, 500, 160, 160];
 
   const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
     for (let change of changes) {
@@ -76,6 +76,7 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
         beforeChange={handleVlwPageUrlInputEvent}
         stretchH="all"
         minSpareRows={0}
+        className='ht-theme-main'
         licenseKey="non-commercial-and-evaluation"
       />
     </div>

@@ -1,4 +1,5 @@
 import { RouterProvider, createHashRouter, redirect } from "react-router-dom";
+import { ThemeModeProvider } from "./components/ThemeModeProvider";
 import BaseLayout from "./layouts/BaseLayout";
 import SongGeneratorPage from "./layouts/SongGeneratorPage";
 import AlbumGeneratorPage from "./layouts/AlbumGeneratorPage";
@@ -6,7 +7,9 @@ import ProducerGeneratorPage from "./layouts/ProducerGeneratorPage";
 import LyricsEditorPage from "./layouts/LyricsEditorPage";
 
 import 'semantic-ui-css/semantic.min.css';
-import 'handsontable/dist/handsontable.full.min.css';
+import 'handsontable/styles/handsontable.min.css';
+import 'handsontable/styles/ht-theme-main.min.css';
+import './ht-theme-dark.css';
 import "./index.css";
 
 // const baseUrl = import.meta.env.BASE_URL;
@@ -53,7 +56,9 @@ const routes = createHashRouter([
 
 function App() {
   return (
-    <RouterProvider router={routes} />
+    <ThemeModeProvider>
+      <RouterProvider router={routes} />
+    </ThemeModeProvider>
   )
 }
 

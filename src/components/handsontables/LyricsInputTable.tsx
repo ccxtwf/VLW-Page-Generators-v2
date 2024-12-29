@@ -1,13 +1,12 @@
 import { ForwardedRef, forwardRef, useMemo } from "react";
-// @ts-ignore
 import { HotTable } from '@handsontable/react';
+import { ContextMenu } from 'handsontable/plugins/contextMenu';
 // import { sharedContextMenuOptions } from "./shared";
 
 interface LyricsInputTableInterface {
   headersText: string[]
   needsRomanization: boolean
   needsEnglishTranslation: boolean
-  mode?: 'dark' | 'light'
 }
 
 const rxMatchBolded = /^\s*('{3})(.*)\1\s*$/;
@@ -33,7 +32,7 @@ const lyricRenderer = (instance, td, row, col, prop, value, cellProperties) => {
 }
 
 const LyricsInputTable = forwardRef(function LyricsInputTable(
-  { headersText, needsRomanization, needsEnglishTranslation, mode = 'light' }: LyricsInputTableInterface, 
+  { headersText, needsRomanization, needsEnglishTranslation }: LyricsInputTableInterface, 
   ref: ForwardedRef<any>
 ) {
 
@@ -141,10 +140,10 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
             })
         }
       },
-      sp1: '---------',
+      sp1: ContextMenu.SEPARATOR,
       undo: { disabled: false },
       redo: { disabled: false },
-      sp2: '---------',
+      sp2: ContextMenu.SEPARATOR,
       bold: {
         name: () => ('Bold row'),
         hidden() {
@@ -273,7 +272,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           this.loadData(data);
         }
       },
-      sp3: '---------',
+      sp3: ContextMenu.SEPARATOR,
       row_above: { disabled: false }, 
       row_below: { disabled: false }, 
       remove_row: { disabled: false },
@@ -296,10 +295,10 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
         selectionMode="multiple"
         manualColumnResize={true}
         // imeFastEdit={true}
-        colWidths={[20]}
+        colWidths={[100, 280, 280, 280]}
         stretchH="all"
         minSpareRows={0}
-        className={`lyrics-table ${mode}-mode`}
+        className='lyrics-table ht-theme-main'
         licenseKey="non-commercial-and-evaluation"
       />
     </div>

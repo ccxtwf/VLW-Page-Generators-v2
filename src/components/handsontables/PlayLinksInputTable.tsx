@@ -65,10 +65,11 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
         // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
-        colWidths={[20, 35, 10, 10, 10, 15]}
+        colWidths={[140, 280, 90, 90, 90, 90]}
         stretchH="all"
         // minSpareRows={0}
         afterChange={handleChanges}
+        className='ht-theme-main'
         licenseKey="non-commercial-and-evaluation"
       />
     </div>

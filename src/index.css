@@ -1,5 +1,5 @@
 header {
-  margin: 25px 10px 5px 10px;
+  padding: 25px 10px 5px 10px;
 }
 header h1 {
   font-size: 30pt;
@@ -174,4 +174,109 @@ div.error, .ui.dropdown.error, textarea.error, .ui.input.error > input {
     padding-left: 0px;
     text-align: left;
   }
+}
+
+.user-tooltip {
+  cursor: pointer;
+}
+
+#theme-toggle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#theme-toggle > i.icon {
+  padding-left: 5px;
+}
+
+.dark-mode {
+  background-color: rgb(14, 25, 26);
+  color: rgb(230, 230, 230);
+}
+.dark-mode .ui.secondary.pointing.menu {
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+.dark-mode a {
+  color: #4ca6ff;
+}
+.dark-mode a:hover, .dark-mode a:focus {
+  color: #a5d2ff;
+}
+/* DARK MODE: Input text fields + textareas */
+.dark-mode .ui.inverted.form .ui.input>input:not([type="color"]), .dark-mode .ui.inverted.form .ui.dropdown>input:not([type="color"]), .dark-mode .ui.inverted.form textarea {
+  background-color: rgb(3, 41, 44);
+  color: rgb(230, 230, 230);
+}
+.dark-mode .ui.inverted.form .ui.input>input::selection, .dark-mode .ui.inverted.form .ui.dropdown>input::selection, .dark-mode .ui.inverted.form textarea::selection {
+  background-color: rgb(9, 109, 81);
+  color: rgb(255, 255, 255);
+}
+.dark-mode .ui.inverted.form .ui.labeled.input > .ui.checkbox label, .dark-mode .ui.inverted.form .ui.labeled.input > label {
+  color: black;
+}
+/* DARK MODE: CONTENT WARNING Dropdown */
+.dark-mode .ui.selection.dropdown.cw-dropdown > .text {
+  color: #35364b;
+}
+.dark-mode .ui.selection.dropdown.cw-dropdown.questionable > .text {
+  color: #35364b;
+}
+.dark-mode .ui.selection.dropdown.cw-dropdown.explicit > .text {
+  color: #ffd584;
+}
+/* DARK MODE: DROPDOWNS */
+.dark-mode .ui.selection.dropdown {
+  background-color: rgb(3, 41, 44);
+}
+.dark-mode .ui.selection.dropdown.active, .dark-mode .ui.selection.dropdown.active>.text:not(.default) {
+  background-color: rgb(3, 41, 44);
+  color: rgb(230, 230, 230);
+}
+.dark-mode .ui.dropdown .menu {
+  background-color: rgb(3, 41, 44);
+}
+.dark-mode .ui.selection.dropdown .menu>.item {
+  border-top: 1px solid rgba(159, 169, 161, 0.6);
+}
+.dark-mode .ui.dropdown .text {
+  color: rgb(230, 230, 230);
+}
+.dark-mode .ui.multiple.selection.dropdown > .ui.label {
+  background-color: rgb(41, 171, 135);
+}
+
+/* ON ERROR */
+.dark-mode div.error, .ui.dropdown.error, .dark-mode textarea.error, .dark-mode .ui.input.error > input {
+  background-color:#470303 !important;
+  color:rgb(249, 205, 147);
+  /* outline: 1px inset darkred; */
+  box-shadow:none;
+}
+.dark-mode div.error:not(.ui):not(.text) {
+  border: solid 2px rgb(249, 205, 147);
+}
+.dark-mode .ui.message {
+  background-color: #35364b;
+  color: #fff;
+}
+.dark-mode .ui.positive.message {
+  background-color: #009741;
+  color: #fff;
+}
+.dark-mode .ui.negative.message {
+  background-color: #7f0000;
+  color: rgb(240 229 214);
+}
+.dark-mode .ui.negative.message .header {
+  color: #f5ebeb;
+}
+
+.ui.inverted.popup.user-tooltip-message {
+  border: solid 1px #bcbcbc !important;
+}
+.ui.inverted.popup.user-tooltip-message::before {
+  border-left: solid 1px #bcbcbc !important;
+  border-top: solid 1px #bcbcbc !important;
 }
