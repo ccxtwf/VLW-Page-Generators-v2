@@ -293,6 +293,19 @@ export default function SongGeneratorPage() {
 
   }
 
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
+  const [tooltipPosition, setTooltipPosition] = useState<'bottom right' | 'bottom center'>(isMobileViewport ? 'bottom right' : 'bottom center');
+  useEffect(() => {
+    window
+      .matchMedia("(max-width: 768px)")
+      .addEventListener('change', e => setIsMobileViewport( e.matches ));
+  }, []);
+  useEffect(() => {
+    setTooltipPosition(isMobileViewport ? 'bottom right' : 'bottom center')
+  }, [isMobileViewport]);
+
   return (
   <>
   <Form id="song-generator-form" inverted={isDarkMode}>
@@ -303,7 +316,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Pre-load from VocaDB:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.vdb} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.vdb} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -339,7 +355,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Content Warnings:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.cw} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.cw} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -382,7 +401,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Song Language:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.language} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.language} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -403,7 +426,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Original title:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.origTitle} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.origTitle}
+            position={tooltipPosition}  
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -421,7 +448,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Traditional/Simplified Chinese title:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.altChTitle} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.altChTitle}
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -449,7 +479,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Transliterated title:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.romTitle} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.romTitle} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -468,7 +501,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Translated title:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.engTitle} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.engTitle} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -497,7 +533,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Infobox BG/FG colours:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.infobox} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.infobox} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -563,7 +603,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Upload Date:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.dateOfPublication} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.dateOfPublication} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -581,7 +625,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Singer(s):</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.singers} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.singers} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -607,7 +655,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Producer(s):</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.producers} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.producers}
+            position={tooltipPosition}  
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -624,7 +676,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Description:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.description} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.description} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -643,7 +698,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Broadcast Links</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.playLinks} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.playLinks} 
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -676,7 +735,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={16}>
         <div className='centered-header'>
           <span style={{ paddingRight: '5px' }}>Lyrics</span>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.lyrics} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.lyrics} 
+          />
         </div>
         {/* <div>
           <Checkbox toggle 
@@ -696,7 +758,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Translator:</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.translator} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.translator}
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -713,7 +778,10 @@ export default function SongGeneratorPage() {
           {...bindCheckbox('isOfficialTranslation')}
           style={{ marginLeft: '20px' }}
         />
-        <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.officialTranslation} />
+        <Tooltip 
+          content={CONST_TOOLTIPS_SONG_PAGES.officialTranslation} 
+          position={tooltipPosition} 
+        />
       </GridColumn>
     </GridRow>
 
@@ -724,7 +792,10 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>External Links</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.extLinks} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.extLinks}
+            position={tooltipPosition} 
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -739,7 +810,11 @@ export default function SongGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column' style={{ marginBottom: '10px' }}>
           <div>Categories</div>
-          <Tooltip content={CONST_TOOLTIPS_SONG_PAGES.categories} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.categories}
+            position={tooltipPosition}  
+          />
         </div>
         <Button basic color='violet' inverted={isDarkMode}
           onClick={handleAutoloadCategories}

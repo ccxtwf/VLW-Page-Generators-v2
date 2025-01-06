@@ -228,6 +228,19 @@ export default function AlbumGeneratorPage() {
     }
   }
 
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
+  const [tooltipPosition, setTooltipPosition] = useState<'bottom right' | 'bottom center'>(isMobileViewport ? 'bottom right' : 'bottom center');
+  useEffect(() => {
+    window
+      .matchMedia("(max-width: 768px)")
+      .addEventListener('change', e => setIsMobileViewport( e.matches ));
+  }, []);
+  useEffect(() => {
+    setTooltipPosition(isMobileViewport ? 'bottom right' : 'bottom center')
+  }, [isMobileViewport]);
+
   return (
   <>
   <Form id='album-generator-form' inverted={isDarkMode}>
@@ -238,7 +251,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Pre-load from VocaDB:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.vdb} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.vdb}
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -271,7 +287,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Original title:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.origTitle} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.origTitle} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -287,7 +307,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Transliterated title:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.romTitle} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.romTitle} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -303,7 +326,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>English title:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.engTitle} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.engTitle} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -323,7 +349,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Infobox BG/FG colours:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.infobox} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.infobox} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -405,7 +435,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Label:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.label} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.label} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -423,7 +456,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Description:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.description} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.description} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -441,7 +478,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Singer(s):</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.engines} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.engines} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -463,7 +504,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={16}>
         <div className='centered-header'>
           <span style={{ paddingRight: '5px' }}>Tracklist</span>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.tracklist} required wide />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.tracklist} 
+            required wide 
+          />
         </div>
         <TracklistInputTable 
           ref={refTracklist}
@@ -478,7 +522,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>VocaDB Album Page ID:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.vdbAlbumId} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.vdbAlbumId} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -495,7 +543,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>VOCALOID Wiki Page:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.vocaWikiPage} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.vocaWikiPage} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -512,7 +563,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>External Links:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.extLinks} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.extLinks} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -529,7 +583,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column' style={{ marginBottom: '10px' }}>
           <div>Categories:</div>
-          <Tooltip content={CONST_TOOLTIPS_ALBUM_PAGES.categories} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.categories} 
+            position={tooltipPosition}
+          />
         </div>
         <Button basic color='violet'
           onClick={handleAutoloadCategories}
