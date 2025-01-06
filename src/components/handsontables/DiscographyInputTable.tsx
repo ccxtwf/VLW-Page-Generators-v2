@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useState, useRef, useEffect } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { sharedContextMenuOptions } from "./shared";
@@ -29,7 +29,7 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
 
   const headerText = [
     forAlbums ? 'Album pages' : 'Song pages', 
-    'Additional template parameters'
+    `${forAlbums ? 'AWT' : 'PWT'} Parameters`
   ];
   const columnDefinitions = [
     { 
@@ -38,7 +38,6 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
     },
     { type: 'text' }
   ];
-  let columnWidths = [600, 200];
 
   const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
     for (let change of changes) {
@@ -58,8 +57,28 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
     }
   }
 
+  const [colWidths, setColWidths] = useState<number[]>([600, 200]);
+  const calculateColWidths = () => {
+    const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    let calcColWidths =[600, 200];
+    const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
+    if (maxWidth >= minWidth) {
+      calcColWidths[0] += (maxWidth - minWidth);
+    } else {
+      calcColWidths = [
+        0.75 * (maxWidth - 50),
+        0.25 * (maxWidth - 50),
+      ];
+    }
+    setColWidths(calcColWidths);
+  };
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(calculateColWidths, []);
+
   return (
-    <div className="table-container">
+    <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
         rowHeaders={true}
@@ -73,8 +92,9 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
         // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
-        colWidths={columnWidths}
+        colWidths={colWidths}
         stretchH="all"
+        afterRefreshDimensions={calculateColWidths}
         minSpareRows={0}
         beforeChange={handleVlwPageUrlInputEvent}
         className='ht-theme-main'

@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, useMemo } from "react";
+import { ForwardedRef, forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { HotTable } from '@handsontable/react';
 import { ContextMenu } from 'handsontable/plugins/contextMenu';
 // import { sharedContextMenuOptions } from "./shared";
@@ -280,8 +280,27 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
     }
   }), [needsRomanization, needsEnglishTranslation]);
 
+  const [colWidths, setColWidths] = useState<number[]>([100, 50, 50, 50]);
+  const calculateColWidths = () => {
+    const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    const numVisibleColumns = 4 - hiddenColumns.columns.length;
+    const calcColWidths = [100, 50, 50, 50];
+    if (maxWidth >= 100 * numVisibleColumns + 50) {
+      calcColWidths[1] = calcColWidths[2] = calcColWidths[3] = 
+        Math.floor((maxWidth - 150) / (numVisibleColumns - 1));
+    } else {
+      calcColWidths[0] = calcColWidths[1] = calcColWidths[2] = calcColWidths[3] = 
+        Math.floor((maxWidth - 50) / numVisibleColumns);
+    }
+    setColWidths(calcColWidths);
+  };
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(calculateColWidths, [needsRomanization, needsEnglishTranslation]);
+
   return (
-    <div className="table-container">
+    <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
         rowHeaders={true}
@@ -295,8 +314,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
         selectionMode="multiple"
         manualColumnResize={true}
         // imeFastEdit={true}
-        colWidths={[100, 280, 280, 280]}
+        colWidths={colWidths}
         stretchH="all"
+        afterRefreshDimensions={calculateColWidths}
         minSpareRows={0}
         className='lyrics-table ht-theme-main'
         licenseKey="non-commercial-and-evaluation"

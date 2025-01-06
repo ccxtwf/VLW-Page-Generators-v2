@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useState, useRef, useEffect } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { urlRenderer, sharedContextMenuOptions } from "./shared";
@@ -22,14 +22,12 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
     { type: 'text' },
     { type: 'checkbox', className: 'htCenter htMiddle' }
   ];
-  let columnWidths = [450, 240, 80];
   if (forProducerPages) {
     headerText.push(...['Media', 'Inactive?']);
     columnDefinitions.push(...[
       { type: 'checkbox', className: 'htCenter htMiddle' },
       { type: 'checkbox', className: 'htCenter htMiddle' }
-    ])
-    columnWidths = [500, 200, 100, 100, 100];
+    ]);
   }
 
   const handleChanges = (changes: any[][] | null) => {
@@ -54,8 +52,50 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
     }
   }
 
+  const [colWidths, setColWidths] = useState<number[]>(
+    forProducerPages ? [400, 200, 100, 100, 100] : [450, 240, 80]
+  );
+  const calculateColWidths = () => {
+    const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    let calcColWidths = [450, 240, 80];
+    const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
+    if (maxWidth >= minWidth) {
+      calcColWidths[0] += (maxWidth - minWidth);
+    } else {
+      calcColWidths = [
+        0.6 * (maxWidth - 50 - 60),
+        0.4 * (maxWidth - 50 - 60),
+        60,
+      ];
+    }
+    setColWidths(calcColWidths);
+  };
+  const calculateColWidthsForProducerPages = () => {
+    const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    let calcColWidths = [400, 200, 100, 100, 100];
+    const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
+    if (maxWidth >= minWidth) {
+      calcColWidths[0] += (maxWidth - minWidth);
+    } else {
+      calcColWidths = [
+        0.6 * (maxWidth - 50 - 80 * 3),
+        0.4 * (maxWidth - 50 - 80 * 3),
+        80,
+        80,
+        80,
+      ];
+    }
+    setColWidths(calcColWidths);
+  };
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(
+    forProducerPages ? calculateColWidthsForProducerPages : calculateColWidths  
+  , [forProducerPages]);
+
   return (
-    <div className="table-container">
+    <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
         rowHeaders={true}
@@ -69,8 +109,11 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
         // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
-        colWidths={columnWidths}
+        colWidths={colWidths}
         stretchH="all"
+        afterRefreshDimensions={
+          forProducerPages ? calculateColWidthsForProducerPages : calculateColWidths
+        }
         minSpareRows={0}
         afterChange={handleChanges}
         className='ht-theme-main'

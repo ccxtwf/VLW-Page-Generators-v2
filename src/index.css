@@ -11,6 +11,9 @@
   --ht-header-highlighted-background-color: rgb(113, 216, 187);
   --ht-header-row-highlighted-background-color: rgb(113, 216, 187);
 }
+.handsontable th {
+  vertical-align: middle;
+}
 
 header {
   padding: 25px 10px 5px 10px;

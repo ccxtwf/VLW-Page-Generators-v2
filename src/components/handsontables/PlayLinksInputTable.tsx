@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useState, useRef, useEffect } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { CONST_PV_SERVICES } from "../../constants/linkDomains";
@@ -49,8 +49,27 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
     { type: 'text' }
   ];
 
+  const [colWidths, setColWidths] = useState<number[]>([130, 250, 90, 90, 90, 90]);
+  const calculateColWidths = () => {
+    const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    const calcColWidths = [130, 250, 90, 90, 90, 90];
+    const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
+    if (maxWidth >= minWidth) {
+      calcColWidths[1] += (maxWidth - minWidth);
+    } else {
+      calcColWidths[1] = 200;
+      calcColWidths[2] = calcColWidths[3] = calcColWidths[4] = calcColWidths[5] = 
+        Math.floor((maxWidth - 50 - calcColWidths[0] - calcColWidths[1]) / 4);
+    }
+    setColWidths(calcColWidths);
+  };
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(calculateColWidths, []);
+
   return (
-    <div className="table-container">
+    <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
         tableClassName='playlinks-table'
@@ -64,9 +83,10 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
         manualColumnResize={true}
         // imeFastEdit={true}
         selectionMode="multiple"
-        rowHeights={30}
-        colWidths={[140, 280, 90, 90, 90, 90]}
+        // rowHeights={30}
+        colWidths={colWidths}
         stretchH="all"
+        afterRefreshDimensions={calculateColWidths}
         // minSpareRows={0}
         afterChange={handleChanges}
         className='ht-theme-main'

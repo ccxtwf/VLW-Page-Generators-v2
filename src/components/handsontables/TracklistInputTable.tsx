@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useState, useRef, useEffect } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { sharedContextMenuOptions } from "./shared";
@@ -37,7 +37,6 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
     { type: 'text' },
     { type: 'text' }
   ];
-  let columnWidths = [90, 90, 500, 160, 160];
 
   const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
     for (let change of changes) {
@@ -57,8 +56,31 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
     }
   }
 
+  const [colWidths, setColWidths] = useState<number[]>(
+    [90, 90, 500, 160, 160]
+  );
+  const calculateColWidths = () => {
+    const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    let calcColWidths = [90, 90, 500, 160, 160];
+    const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
+    if (maxWidth >= minWidth) {
+      calcColWidths[2] += (maxWidth - minWidth);
+    } else {
+      calcColWidths = [
+        80, 80,
+        maxWidth - 50 - 80 - 80 - 140 - 140,
+        140, 140,
+      ];
+    }
+    setColWidths(calcColWidths);
+  };
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(calculateColWidths, []);
+
   return (
-    <div className="table-container">
+    <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
         rowHeaders={true}
@@ -72,9 +94,10 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
         // imeFastEdit={true}
         selectionMode="multiple"
         rowHeights={30}
-        colWidths={columnWidths}
-        beforeChange={handleVlwPageUrlInputEvent}
+        colWidths={colWidths}
         stretchH="all"
+        afterRefreshDimensions={calculateColWidths}
+        beforeChange={handleVlwPageUrlInputEvent}
         minSpareRows={0}
         className='ht-theme-main'
         licenseKey="non-commercial-and-evaluation"
