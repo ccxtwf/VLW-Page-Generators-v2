@@ -55,8 +55,18 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
   const [colWidths, setColWidths] = useState<number[]>(
     forProducerPages ? [400, 200, 100, 100, 100] : [450, 240, 80]
   );
+  const [showRowHeaders, setShowRowHeaders] = useState<boolean>(true);
   const calculateColWidths = () => {
     const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    if (maxWidth < 450) {
+      setColWidths([
+        200, 
+        maxWidth - 200 - 50, 
+        50
+      ]);
+      setShowRowHeaders(false);
+      return;
+    }
     let calcColWidths = [450, 240, 80];
     const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
     if (maxWidth >= minWidth) {
@@ -68,10 +78,20 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
         60,
       ];
     }
+    setShowRowHeaders(true);
     setColWidths(calcColWidths);
   };
   const calculateColWidthsForProducerPages = () => {
     const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    if (maxWidth < 450) {
+      setColWidths([
+        100, 
+        maxWidth - 100 - 40*3, 
+        40, 40, 40
+      ]);
+      setShowRowHeaders(false);
+      return;
+    }
     let calcColWidths = [400, 200, 100, 100, 100];
     const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
     if (maxWidth >= minWidth) {
@@ -85,6 +105,7 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
         80,
       ];
     }
+    setShowRowHeaders(true);
     setColWidths(calcColWidths);
   };
   
@@ -98,7 +119,7 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
     <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
-        rowHeaders={true}
+        rowHeaders={showRowHeaders}
         colHeaders={headerText}
         columns={columnDefinitions}
         width="100%"

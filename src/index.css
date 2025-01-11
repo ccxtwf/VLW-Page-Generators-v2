@@ -14,6 +14,11 @@
 .handsontable th {
   vertical-align: middle;
 }
+@media only screen and (max-width: 500px) {
+  .ht-theme-main {
+    --ht-font-size: 11px;
+  }
+}
 
 header {
   padding: 25px 10px 5px 10px;
@@ -29,6 +34,10 @@ footer * {
 }
 main {
   margin: 20px 12vw 40px 12vw;
+}
+.navbar {
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 /* .lyrics-table.light-mode td {

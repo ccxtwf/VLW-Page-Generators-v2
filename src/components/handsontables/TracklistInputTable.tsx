@@ -59,8 +59,18 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
   const [colWidths, setColWidths] = useState<number[]>(
     [90, 90, 500, 160, 160]
   );
+  const [showRowHeaders, setShowRowHeaders] = useState<boolean>(true);
   const calculateColWidths = () => {
     const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
+    if (maxWidth < 450) {
+      setColWidths([
+        40, 40,
+        maxWidth - 40*2 - 60*2, 
+        60, 60
+      ]);
+      setShowRowHeaders(false);
+      return;
+    }
     let calcColWidths = [90, 90, 500, 160, 160];
     const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
     if (maxWidth >= minWidth) {
@@ -72,6 +82,7 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
         140, 140,
       ];
     }
+    setShowRowHeaders(true);
     setColWidths(calcColWidths);
   };
   
@@ -83,7 +94,7 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
     <div className="table-container" ref={containerRef}>
       <HotTable
         ref={ref}
-        rowHeaders={true}
+        rowHeaders={showRowHeaders}
         colHeaders={headerText}
         columns={columnDefinitions}
         width="100%"

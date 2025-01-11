@@ -50,17 +50,27 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
   ];
 
   const [colWidths, setColWidths] = useState<number[]>([130, 250, 90, 90, 90, 90]);
+  const [showRowHeaders, setShowRowHeaders] = useState<boolean>(true);
   const calculateColWidths = () => {
     const maxWidth = (containerRef.current as HTMLDivElement).clientWidth;
-    const calcColWidths = [130, 250, 90, 90, 90, 90];
+    if (maxWidth < 450) {
+      setColWidths([
+        60, 
+        maxWidth - 60 - 50*4, 
+        50, 50, 50, 50
+      ]);
+      setShowRowHeaders(false);
+      return;
+    }
+    let calcColWidths = [130, 250, 90, 90, 90, 90];
     const minWidth = calcColWidths.reduce((s, cur) => s + cur, 50);
     if (maxWidth >= minWidth) {
       calcColWidths[1] += (maxWidth - minWidth);
     } else {
-      calcColWidths[1] = 200;
-      calcColWidths[2] = calcColWidths[3] = calcColWidths[4] = calcColWidths[5] = 
-        Math.floor((maxWidth - 50 - calcColWidths[0] - calcColWidths[1]) / 4);
+      let checkboxWidth = Math.floor((maxWidth - 50 - calcColWidths[0] - calcColWidths[1]) / 4);
+      calcColWidths = [130, 200, checkboxWidth, checkboxWidth, checkboxWidth, checkboxWidth];
     }
+    setShowRowHeaders(true);
     setColWidths(calcColWidths);
   };
   
@@ -73,7 +83,7 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
       <HotTable
         ref={ref}
         tableClassName='playlinks-table'
-        rowHeaders={true}
+        rowHeaders={showRowHeaders}
         colHeaders={headerText}
         columns={columnDefinitions}
         width="100%"

@@ -38,24 +38,22 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div>
-      <Menu pointing secondary inverted={isDarkMode}>
-      {
-        routes.map(({ url, name }, index) => (
-          <NavLink to={url} className={cbDetermineActiveNativeLink} key={name}>
-            <MenuItem
-              as="div"
-              active={activeRouteIndex === index}
-              name={name}
-              onClick={() => setActiveRouteIndex(index)}
-            />
-          </NavLink>
-        ))
-      }
-        <MenuItem position="right">
-          <ThemeModeToggle />
-        </MenuItem>
-      </Menu>
-    </div>
+    <Menu pointing secondary inverted={isDarkMode} className="navbar">
+    {
+      routes.map(({ url, name }, index) => (
+        <NavLink to={url} className={cbDetermineActiveNativeLink} key={name}>
+          <MenuItem
+            as="div"
+            active={activeRouteIndex === index}
+            name={name}
+            onClick={() => setActiveRouteIndex(index)}
+          />
+        </NavLink>
+      ))
+    }
+      <MenuItem position="right">
+        <ThemeModeToggle />
+      </MenuItem>
+    </Menu>
   );
 }
