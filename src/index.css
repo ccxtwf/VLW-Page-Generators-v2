@@ -1,3 +1,6 @@
+#application {
+  min-height: 100vh;
+}
 :root, body {
   background-color: rgb(244, 248, 251);
   color: rgb(58, 58, 58);

@@ -13,7 +13,7 @@ export default function BaseLayout() {
   useBeforeunload(() => 'Are you sure you want to close this tab?');
 
   return (
-    <div className={isDarkMode ? 'dark-mode' : ''}>
+    <div className={isDarkMode ? 'dark-mode' : ''} id="application">
     <GlobalHeader />
     <Navbar />
     <main>
