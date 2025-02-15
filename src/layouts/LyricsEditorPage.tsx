@@ -77,13 +77,40 @@ function _parseLyricsFromTable(sourceCode: string): {
 
   return { headers, lyrics };
 }
+function _consolidateCellInlineColourFormatting(lyrics: string[][]): string[][] {
+  const rxCellInlineColourFormatting = /^\s*<[Ss][Pp][Aa][Nn]\s+style\s*=\s*["']\s*color\s*:\s*([a-zA-Z0-9#]+);?["']\s*>(.*)<\/\s*[Ss][Pp][Aa][Nn]\s*>\s*$/;
+  const rxSpanTagHead = /<span(?:\s+[^>]+|)\s*>/i;
+  return lyrics.map((lyric) => {
+    const l1 = (lyric[1] || '').trim();
+    const l2 = (lyric[2] || '').trim();
+    const l3 = (lyric[3] || '').trim();
+    const m1 = l1.match(rxCellInlineColourFormatting);
+    const m2 = l2.match(rxCellInlineColourFormatting);
+    const m3 = l3.match(rxCellInlineColourFormatting);
+    console.log(m1);
+    console.log(m2);
+    console.log(m3);
+
+    // Check if original lyrics, romanized lyrics, and translated lyrics are all enclosed within "<span style=color:<COLOR>;></span>" tags.
+    if (!!m1 && (l2 === '' || !!m2) && (l3 === '' || !!m3)) {
+      // Skip if the contents enclosed within the span tags in the original lyrics contain another span tag.
+      if (!m1[2].match(rxSpanTagHead)) {
+        lyric[0] = m1[1];
+        lyric[1] = m1[2];
+        if (l2 !== '' && !!m2) lyric[2] = m2[2];
+        if (l3 !== '' && !!m3) lyric[3] = m3[2];
+      }
+    }
+    return lyric;
+  })
+}
 function _decapitalizeRomanization(lyrics: string[][]): string[][] {
   return lyrics.map((lyric) => {
-    lyric[2] = (lyric[2] || '').trim().replace(/^\w/, (match: string) => {
+    lyric[2] = (lyric[2] || '').trim().replace(/^(?:["'`]*)\w/, (match: string) => {
       return match.toLowerCase();
     });
-    lyric[2] = lyric[2].replace(/\.\s*(\w)/g, (_, match: string) => {
-      return `. ${match.toLowerCase()}`;
+    lyric[2] = lyric[2].replace(/([\.\?!])\s*(["'`]*\s*)(\w)/g, (_, p: string, a: string, match: string) => {
+      return `${p} ${a}${match.toLowerCase()}`;
     });
     return lyric;
   });
@@ -329,7 +356,7 @@ export default function LyricsEditorPage() {
     <Divider />
 
     {/* Additional Buttons */}
-    <ButtonGroup widths='3'>
+    <ButtonGroup widths='4'>
       <Button 
         color='teal'
         onClick={() => {
@@ -348,11 +375,11 @@ export default function LyricsEditorPage() {
           // @ts-ignore
           const lyricsTable = refLyrics.current?.hotInstance;
           let lyrics = lyricsTable.getData();
-          lyrics = _detonePinyinLyrics(lyrics);
+          lyrics = _consolidateCellInlineColourFormatting(lyrics);
           lyricsTable?.loadData(lyrics);
         }}
       >
-        Pinyin: Remove tones
+        Consolidate per-cell span colour formatting to per-row
       </Button>
       <Button 
         color='teal'
@@ -365,6 +392,18 @@ export default function LyricsEditorPage() {
         }}
       >
         Romaji: Change 'wo'→'o', 'he'→'e', 'dzu'→'zu'
+      </Button>
+      <Button 
+        color='teal'
+        onClick={() => {
+          // @ts-ignore
+          const lyricsTable = refLyrics.current?.hotInstance;
+          let lyrics = lyricsTable.getData();
+          lyrics = _detonePinyinLyrics(lyrics);
+          lyricsTable?.loadData(lyrics);
+        }}
+      >
+        Pinyin: Remove tones
       </Button>
     </ButtonGroup>
 
