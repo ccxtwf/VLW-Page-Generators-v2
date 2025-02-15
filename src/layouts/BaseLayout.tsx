@@ -10,14 +10,14 @@ export default function BaseLayout() {
   useBeforeunload(() => 'Are you sure you want to close this tab?');
 
   return (
-    <>
-    <GlobalHeader />
-    <Navbar />
-    <main>
-      <Outlet />
-    </main>
-    <hr />
-    <GlobalFooter />
-    </>
+    <div id="application">
+      <GlobalHeader />
+      <Navbar />
+      <main>
+        <Outlet />
+      </main>
+      <hr />
+      <GlobalFooter />
+    </div>
   )
 }

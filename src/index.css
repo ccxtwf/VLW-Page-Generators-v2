@@ -1,3 +1,6 @@
+#application {
+  min-height: 100vh;
+}
 header {
   margin: 25px 10px 5px 10px;
 }
@@ -12,6 +15,14 @@ footer * {
 }
 main {
   margin: 20px 12vw 40px 12vw;
+}
+.navbar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 99999;
+  background-color: white !important;
 }
 
 /* .lyrics-table.light-mode td {
@@ -59,7 +70,6 @@ textarea {
   background-color: #d3edf1 !important;
   color: #35364b !important;
 }
-
 .cw-dropdown.questionable {
   background-color: #FFD700 !important;
 }

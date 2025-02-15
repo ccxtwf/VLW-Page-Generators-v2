@@ -35,21 +35,31 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div>
-      <Menu pointing secondary>
-      {
-        routes.map(({ url, name }, index) => (
-          <NavLink to={url} className={cbDetermineActiveNativeLink} key={name}>
-            <MenuItem
-              as="div"
-              active={activeRouteIndex === index}
-              name={name}
-              onClick={() => setActiveRouteIndex(index)}
-            />
-          </NavLink>
-        ))
-      }
-      </Menu>
-    </div>
+    <Menu pointing secondary className="navbar">
+    {
+      routes.map(({ url, name }, index) => (
+        <NavLink 
+          to={url} 
+          is='div'
+          className={cbDetermineActiveNativeLink} 
+          key={name}
+          onClick={(e) => {
+            if (window.confirm("Are you sure you want to leave this page?")) {
+              setActiveRouteIndex(index);
+              return true;
+            }
+            e.preventDefault();
+            return false;
+          }}
+        >
+          <MenuItem
+            as="div"
+            active={activeRouteIndex === index}
+            name={name}
+          />
+        </NavLink>
+      ))
+    }
+    </Menu>
   );
 }
