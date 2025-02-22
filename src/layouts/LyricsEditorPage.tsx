@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { 
   Grid, GridColumn, GridRow, Divider,
   Form, 
-  Input, Dropdown, TextArea,
+  Input, Dropdown, TextArea, Icon, IconGroup,
   Popup, Button, Checkbox, ButtonGroup, Label
 } from 'semantic-ui-react';
 
@@ -11,7 +11,6 @@ import LyricsInputTable from '../components/handsontables/LyricsInputTable';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 
 import { CONST_TOOLTIPS_LYRICS_EDITOR } from '../constants/tooltips';
-import Tooltip from '../components/reusables/Tooltip';
 
 import CopyButton from '../components/reusables/CopyButton';
 
@@ -87,9 +86,6 @@ function _consolidateCellInlineColourFormatting(lyrics: string[][]): string[][] 
     const m1 = l1.match(rxCellInlineColourFormatting);
     const m2 = l2.match(rxCellInlineColourFormatting);
     const m3 = l3.match(rxCellInlineColourFormatting);
-    console.log(m1);
-    console.log(m2);
-    console.log(m3);
 
     // Check if original lyrics, romanized lyrics, and translated lyrics are all enclosed within "<span style=color:<COLOR>;></span>" tags.
     if (!!m1 && (l2 === '' || !!m2) && (l3 === '' || !!m3)) {
@@ -167,16 +163,39 @@ export default function LyricsEditorPage() {
 
   const { bindInput, bindCheckbox } = useTwoWayBinding<lyricsEditorFormInterface>(formData, setFormData);
 
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
+  useEffect(() => {
+    window
+      .matchMedia("(max-width: 768px)")
+      .addEventListener('change', e => setIsMobileViewport( e.matches ));
+  }, []);
+
   return (
   <>
   <Form>
 
     {/* Source Code Input */}
     <h3>
-      <span>
-        Input Wiki Page Source Code:
-      </span>
-      <Tooltip content={CONST_TOOLTIPS_LYRICS_EDITOR.sourceInput} />
+      <Popup
+        content={CONST_TOOLTIPS_LYRICS_EDITOR.sourceInput}
+        mouseLeaveDelay={1500}
+        on='hover'
+        inverted
+        position="bottom center"
+        size='tiny'
+        trigger={
+          <div className='centered-header'>
+            Input Wiki Page Source Code:&nbsp;
+            <IconGroup>
+              <Icon name='help circle' />
+              <Icon corner='top right' name='asterisk' color='red' />
+            </IconGroup>
+          </div>
+        }
+        style={{ zIndex: '1000' }}
+      />
     </h3>
     
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
@@ -272,7 +291,12 @@ export default function LyricsEditorPage() {
     <Divider />
 
     {/* Glossary */}
-    <ButtonGroup widths='3'>
+    <ButtonGroup 
+      widths={isMobileViewport ? 1 : 2} 
+      vertical={isMobileViewport} 
+      compact={isMobileViewport}
+      fluid
+    >
       <Popup
         trigger={
           <Button basic color='green'>
@@ -356,7 +380,12 @@ export default function LyricsEditorPage() {
     <Divider />
 
     {/* Additional Buttons */}
-    <ButtonGroup widths='4'>
+    <ButtonGroup 
+      widths={isMobileViewport ? 2 : 4} 
+      vertical={isMobileViewport} 
+      compact={isMobileViewport}
+      fluid
+    >
       <Button 
         color='teal'
         onClick={() => {

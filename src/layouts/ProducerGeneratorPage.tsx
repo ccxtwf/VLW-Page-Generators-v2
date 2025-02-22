@@ -108,6 +108,19 @@ export default function AlbumGeneratorPage() {
     );
   }, []);
 
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
+  const [tooltipPosition, setTooltipPosition] = useState<'bottom right' | 'bottom center'>(isMobileViewport ? 'bottom right' : 'bottom center');
+  useEffect(() => {
+    window
+      .matchMedia("(max-width: 768px)")
+      .addEventListener('change', e => setIsMobileViewport( e.matches ));
+  }, []);
+  useEffect(() => {
+    setTooltipPosition(isMobileViewport ? 'bottom right' : 'bottom center')
+  }, [isMobileViewport]);
+
   function handleFetchFromVocadb() {
     if (window.confirm('Are you sure you want to continue? This will reset all data in the page.')) {
       clearForm(true);
@@ -267,7 +280,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Pre-load from VocaDB:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.vdb} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.vdb} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -300,7 +316,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Main producer category:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.prodcat} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.prodcat} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -324,7 +344,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Producer's other aliases:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.prodaliases} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.prodaliases} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -344,7 +367,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Affiliations:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.affiliations} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.affiliations} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -361,7 +387,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Labels:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.labels} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.labels} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -378,7 +407,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Languages:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.languages} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.languages} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -399,7 +432,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Uses the synthesizers:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.synthesizers} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.synthesizers} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -418,7 +455,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Typical roles:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.prodroles} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.prodroles} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -467,7 +508,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>Description:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.description} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.description} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -485,7 +530,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={16}>
         <div className='centered-header'>
           <span style={{ paddingRight: '5px' }}>External Links</span>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.extLinks} required wide />
+          <Tooltip 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.extLinks} 
+            required wide 
+          />
         </div>
         <ExternalLinksInputTable 
           forProducerPages
@@ -501,7 +549,11 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>List of songs:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.songList} required />
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.songList} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>
@@ -516,7 +568,10 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={3}>
         <div className='label-column'>
           <div>List of albums:</div>
-          <Tooltip content={CONST_TOOLTIPS_PRODUCER_PAGES.albumList} />
+          <Tooltip 
+            content={CONST_TOOLTIPS_PRODUCER_PAGES.albumList} 
+            position={tooltipPosition}
+          />
         </div>
       </GridColumn>
       <GridColumn width={13}>

@@ -5,9 +5,12 @@ interface TooltipPropsInterface {
   content: ReactNode
   required?: boolean
   wide?: boolean
+  position?: "bottom center" | "bottom right" | "bottom left" | 
+    "top left" | "top right" | "right center" | 
+    "left center" | "top center"
 }
 
-export default function Tooltip({ content, required = false, wide = false }: TooltipPropsInterface) {
+export default function Tooltip({ content, required = false, wide, position = "bottom center" }: TooltipPropsInterface) {
 
   let trigger: ReactNode = (<Icon name='help circle' />);
   if (required) {
@@ -30,7 +33,7 @@ export default function Tooltip({ content, required = false, wide = false }: Too
       mouseLeaveDelay={1500}
       on='hover'
       inverted
-      position='bottom center'
+      position={position}
       wide={wide}
       trigger={trigger}
       style={{ zIndex: '1000' }}
