@@ -4,6 +4,7 @@ import SongGeneratorPage from "./layouts/SongGeneratorPage";
 import AlbumGeneratorPage from "./layouts/AlbumGeneratorPage";
 import ProducerGeneratorPage from "./layouts/ProducerGeneratorPage";
 import LyricsEditorPage from "./layouts/LyricsEditorPage";
+import VocaDbSynthsComparerPage from "./layouts/VocaDbSynthsComparerPage";
 
 import 'semantic-ui-css/semantic.min.css';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -42,6 +43,10 @@ const routes = createHashRouter([
       {
         path: `/lyrics-editor`,
         element: <LyricsEditorPage />
+      },
+      {
+        path: `/vdb-synths`,
+        element: <VocaDbSynthsComparerPage />
       },
       {
         path: `*`,

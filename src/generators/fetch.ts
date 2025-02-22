@@ -4,13 +4,13 @@ import { CONST_WIKI_DOMAIN, CONST_RECOGNIZED_LINKS } from "../constants/linkDoma
 import { CONST_LANGUAGES } from "../constants/languages";
 
 import {
-  ArtistCategory, ArtistRole, ArtistType, VocalSynthEngines,
+  ArtistCategory, ArtistRole, ArtistType, VocalSynthEngine,
   PvService, PvType, 
   WebLinkCategory, 
   AlbumType,
-  VdbSystemLanguages,
-  schemaFetchedSongPageJson, schemaFetchedAlbumPageJson, schemaFetchedArtistPageJson,
-  schemaFetchedDiscography
+  VdbSystemLanguage,
+  SchemaFetchedSongPageJson, SchemaFetchedAlbumPageJson, SchemaFetchedArtistPageJson,
+  SchemaFetchedDiscography
 } from "./fetch-schemas";
 
 const origin = 'ccxtwf.github.io';
@@ -156,7 +156,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
       `https://vocadb.net/api/songs/${vdbPageId}` + 
       `?fields=Artists,Names,PVs,WebLinks,CultureCodes&lang=English&origin=${origin}`
     );
-    const json: schemaFetchedSongPageJson = await res.json();
+    const json: SchemaFetchedSongPageJson = await res.json();
     const languageIds = (json.cultureCodes || [])
       .map((code) => (
         CONST_LANGUAGES.findIndex(el => el.code === code)
@@ -164,10 +164,10 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
       .filter(el => el > -1);
     const origTitle = json.defaultName || '';
     const romTitle = (json.names || []).find(el => {
-      return el.language === VdbSystemLanguages.rom
+      return el.language === VdbSystemLanguage.rom
     })?.value || '';
     const engTitle = (json.names || []).find(el => {
-      return el.language === VdbSystemLanguages.eng
+      return el.language === VdbSystemLanguage.eng
     })?.value || '';
     const uploadDate = (json.publishDate || '').replace(/^(\d{4}-\d{2}-\d{2}).*$/, '$1');
 
@@ -218,7 +218,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
       let addName: string = artist.name || '';
       // Is singer
       if (artist.categories === ArtistCategory.vocalist) {
-        if (artist.artist && (Object.values(VocalSynthEngines) as string[]).includes((artist.artist?.artistType as string))) {
+        if (artist.artist && (Object.values(VocalSynthEngine) as string[]).includes((artist.artist?.artistType as string))) {
           // Try searching for the vocalist in the SQLite db
           const { wikitext, engine, isSuccess } = queryVocalist(artist.artist.id, addName);
           if (isSuccess) {
@@ -387,7 +387,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       `?fields=MainPicture,Names,PVs,Artists,Tracks,WebLinks&` + 
       `songfields=Artists&lang=English&origin=${origin}`
     );
-    let json: schemaFetchedAlbumPageJson = await res.json();
+    let json: SchemaFetchedAlbumPageJson = await res.json();
 
     const origTitle = json.defaultName || '';
     const romTitle = (json.names || []).find(el => {
@@ -529,7 +529,7 @@ export async function fetchDataFromVocaDbForProducerPage(url: string): Promise<p
       `https://vocadb.net/api/artists/${vdbPageId}` + 
       `?fields=AdditionalNames,MainPicture,Description,ArtistLinks,WebLinks&lang=English&origin=${origin}`
     );
-    let json: schemaFetchedArtistPageJson = await res.json();
+    let json: SchemaFetchedArtistPageJson = await res.json();
 
     const prodCategory = json.name || '';
     const description = `'''${prodCategory}''' is a vocal synth producer.`;
@@ -600,7 +600,7 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
         `&cmsort=sortkey` + 
         `&cmdir=ascending${cmcontinue}&origin=*`
       );
-      let json: schemaFetchedDiscography = await res.json();
+      let json: SchemaFetchedDiscography = await res.json();
       
       if (json.error) {
         throw new Error(`Failed fetch: ${json.error.info}`);
@@ -644,7 +644,7 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
           `&cmsort=sortkey` + 
           `&cmdir=ascending${cmcontinue}&origin=*`
         );
-        let json: schemaFetchedDiscography = await res.json();
+        let json: SchemaFetchedDiscography = await res.json();
 
         if (json.error) {
           throw new Error(`Failed fetch: ${json.error.info}`);

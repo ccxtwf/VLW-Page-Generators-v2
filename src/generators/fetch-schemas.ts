@@ -52,7 +52,7 @@ export enum ArtistType {
   character = 'Character'
 }
 
-export enum VocalSynthEngines {
+export enum VocalSynthEngine {
   vocaloid = 'Vocaloid',
   utau = 'UTAU',
   cevio = 'CeVIO',
@@ -97,7 +97,7 @@ export enum WebLinkCategory {
   other = 'Other'
 }
 
-export enum VdbSystemLanguages {
+export enum VdbSystemLanguage {
   orig='Japanese',
   rom='Romaji',
   eng='English',
@@ -122,7 +122,7 @@ export enum AlbumType {
 interface VdbArtistEntity {
   artist?: {
     additionalNames: string | null
-    artistType: ArtistType | VocalSynthEngines
+    artistType: ArtistType | VocalSynthEngine
     deleted: boolean
     id: number
     name: string | null
@@ -158,18 +158,18 @@ interface VdbWebLinkEntity {
   id: number
   url: string | null
 }
-export interface schemaFetchedSongPageJson {
+export interface SchemaFetchedSongPageJson {
   artists: VdbArtistEntity[] | null
   artistString: string | null
   createDate: string
   defaultName: string | null
-  defaultNameLanguage: VdbSystemLanguages
+  defaultNameLanguage: VdbSystemLanguage
   favoritedTimes: number
   id: number
   lengthSeconds: number
   name: string | null
   names: {
-    language: VdbSystemLanguages
+    language: VdbSystemLanguage
     value: string | null
   }[] | null
   publishDate: string | null
@@ -182,13 +182,13 @@ export interface schemaFetchedSongPageJson {
   webLinks: VdbWebLinkEntity[] | null
   cultureCodes: string[] | null
 }
-export interface schemaFetchedAlbumPageJson {
+export interface SchemaFetchedAlbumPageJson {
   artists: VdbArtistEntity[] | null
   artistString: string | null
   catalogNumber: string | null
   createDate: string
   defaultName: string | null
-  defaultNameLanguage: VdbSystemLanguages
+  defaultNameLanguage: VdbSystemLanguage
   discType: AlbumType
   id: number
   mainPicture: {
@@ -200,7 +200,7 @@ export interface schemaFetchedAlbumPageJson {
   }
   name: string | null
   names: {
-    language: VdbSystemLanguages
+    language: VdbSystemLanguage
     value: string
   }[] | null
   pvs: VdbPvEntity[] | null
@@ -222,7 +222,7 @@ export interface schemaFetchedAlbumPageJson {
       artistString: string | null
       createDate: string
       defaultName: string | null
-      defaultNameLanguage: VdbSystemLanguages
+      defaultNameLanguage: VdbSystemLanguage
       favoritedTimes: number
       id: number
       lengthSeconds: number
@@ -242,13 +242,45 @@ export interface schemaFetchedAlbumPageJson {
   version: number
   webLinks: VdbWebLinkEntity[] | null
 }
+export interface SchemaFetchedVocaDBArtistsListJson {
+  items: {
+    additionalNames: string
+    artistType: VocalSynthEngine
+    baseVoicebank?: {
+      additionalNames: string
+      artistType: VocalSynthEngine
+      deleted: boolean
+      id: number
+      name: string
+      pictureMime: string
+      releaseDate: string
+      status: EntryStatus
+      version: number
+    }
+    createDate: string
+    defaultName: string
+    defaultNameLanguage: VdbSystemLanguage
+    id: number
+    name: string
+    names: {
+      language: VdbSystemLanguage
+      value: string
+    }[]
+    pictureMime: string
+    releaseDate: string
+    status: EntryStatus
+    version: number
+  }[]
+  term: string
+  totalCount: number
+}
 
-export interface schemaFetchedArtistPageJson {
+export interface SchemaFetchedArtistPageJson {
   additionalNames: string | null
   artistLinks: {
     artist: {
       additionalNames: string | null
-      artistType: ArtistType | VocalSynthEngines
+      artistType: ArtistType | VocalSynthEngine
       deleted: boolean
       id: number
       name: string | null
@@ -261,7 +293,7 @@ export interface schemaFetchedArtistPageJson {
   artistType: string
   createDate: string
   defaultName: string | null
-  defaultNameLanguage: VdbSystemLanguages
+  defaultNameLanguage: VdbSystemLanguage
   description: string | null
   id: number
   mainPicture: {
@@ -278,7 +310,7 @@ export interface schemaFetchedArtistPageJson {
   webLinks: VdbWebLinkEntity[] | null
 }
 
-export interface schemaFetchedDiscography {
+export interface SchemaFetchedDiscography {
   error?: {
     code: string
     info: string
