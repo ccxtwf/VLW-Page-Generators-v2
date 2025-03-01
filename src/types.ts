@@ -35,6 +35,10 @@ export interface albumPageFormInterface {
   fgColour: string
   label: string
   description: string
+  isCompilationAlbum: boolean
+  publishedYear: string
+  publishedMonth: string
+  publishedDay: string
   engines: string[]
   vdbAlbumId: string
   vocaWikiPage: string

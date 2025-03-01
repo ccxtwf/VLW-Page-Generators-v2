@@ -175,7 +175,12 @@ export const CONST_TOOLTIPS_ALBUM_PAGES = {
   ),
   description: (
     <>
-    Add a short description about the album, e.g. "a compilation album by PRODUCERS featuring SYNTHS" or "an album by PRODUCER".
+    Add a short description about the album, e.g. "a compilation album by PRODUCERS featuring SYNTHS" or "an album by PRODUCER".<br /><br />Check the "Is the album a Compilation Album?" checkbox to sort the album page into the category "Compilation albums" on the wiki.
+    </>
+  ),
+  publishedDate: (
+    <>
+    Album publication date
     </>
   ),
   engines: (

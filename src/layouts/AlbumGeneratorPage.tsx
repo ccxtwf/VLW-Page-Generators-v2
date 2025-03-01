@@ -26,6 +26,7 @@ import { albumPageFormInterface, displayErrorsInterface } from "../types";
 
 import { parseInput, validate, autoloadCategories, generateAlbumPage } from "../generators/albumPage";
 import { fetchDataFromVocaDbForAlbumPage } from "../generators/fetch";
+import { CONST_MONTHS } from '../constants/months';
 
 const defaultInputData: albumPageFormInterface = {
   origTitle: "",
@@ -35,6 +36,10 @@ const defaultInputData: albumPageFormInterface = {
   fgColour: "white",
   label: "",
   description: "",
+  isCompilationAlbum: false,
+  publishedYear: "",
+  publishedMonth: "",
+  publishedDay: "",
   engines: [],
   vdbAlbumId: "",
   vocaWikiPage: "",
@@ -66,7 +71,7 @@ export default function AlbumGeneratorPage() {
   const refTracklist = useRef(null);
   const refExtLinks = useRef(null);
 
-  const { bindInput, bindDropdown } = useTwoWayBinding<albumPageFormInterface>(formData, setFormData);
+  const { bindInput, bindDropdown, bindCheckbox } = useTwoWayBinding<albumPageFormInterface>(formData, setFormData);
 
   const engines = useFetchListOfEngines();
 
@@ -110,14 +115,22 @@ export default function AlbumGeneratorPage() {
       fetchDataFromVocaDbForAlbumPage(preload.url)
         .then( data => {
           const { formData: { 
-            origTitle, romTitle, engTitle, label, description, engines, vdbAlbumId, vocaWikiPage, imageSrc 
+            origTitle, romTitle, engTitle, label, description, 
+            isCompilationAlbum,
+            publishedYear, publishedMonth, publishedDay,
+            engines, vdbAlbumId, vocaWikiPage, imageSrc 
           }, tracklistData, extLinksData
           } = data;
+
+          console.log(">> HANDLING FETCH: ", data);
 
           // SET INTERNAL STATES
           setFormData(() => ({
             ...defaultInputData,
-            origTitle, romTitle, engTitle, label, description, engines, vdbAlbumId, vocaWikiPage 
+            origTitle, romTitle, engTitle, label, description, 
+            isCompilationAlbum,
+            publishedYear, publishedMonth, publishedDay, 
+            engines, vdbAlbumId, vocaWikiPage 
           }));
           setImageSrc(() => imageSrc);
           
@@ -132,6 +145,14 @@ export default function AlbumGeneratorPage() {
           document.getElementById("album-generator-input-label").value = label;
           // @ts-ignore
           document.getElementById("album-generator-input-description").value = description;
+          // @ts-ignore
+          document.getElementById("album-generator-input-isCompilationAlbum").value = isCompilationAlbum;
+          // @ts-ignore
+          document.getElementById("album-generator-input-publishedYear").value = publishedYear;
+          // @ts-ignore
+          document.getElementById("album-generator-input-publishedMonth").value = publishedMonth;
+          // @ts-ignore
+          document.getElementById("album-generator-input-publishedDay").value = publishedDay;
           // @ts-ignore
           document.getElementById("album-generator-input-vdbAlbumId").value = vdbAlbumId;
           // @ts-ignore
@@ -466,6 +487,57 @@ export default function AlbumGeneratorPage() {
           fluid placeholder="an album by PRODUCER" 
           {...bindInput("description")} 
           className={bindElementWithErrorNotification('description')}
+        />
+        <br />
+        <Checkbox 
+          id="album-generator-input-isCompilationAlbum"
+          label='Is the album a Compilation Album?' 
+          {...bindCheckbox('isCompilationAlbum')}
+        />
+      </GridColumn>
+    </GridRow>
+
+    {/* Date */}
+    <GridRow>
+      <GridColumn width={3}>
+        <div className='label-column'>
+          <div>Album Publication Date:</div>
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.publishedDate} 
+            position={tooltipPosition}
+          />
+        </div>
+      </GridColumn>
+      <GridColumn width={4}>
+        <Input 
+          id="album-generator-input-publishedYear"
+          type="number"
+          fluid placeholder="year"
+          {...bindInput('publishedYear')}
+          className={bindElementWithErrorNotification('publishedDate')} 
+        />
+      </GridColumn>
+      <GridColumn width={6}>
+        <Dropdown
+          id="album-generator-input-publishedMonth"
+          placeholder='month'
+          fluid selection clearable
+          options={CONST_MONTHS.map((el, idx) => {
+            return { key: idx, text: el, value: el }
+          })}
+          {...bindDropdown('publishedMonth')}
+          className={bindElementWithErrorNotification('publishedDate')} 
+          {...{style: {zIndex: '1000'}}}
+        />
+      </GridColumn>
+      <GridColumn width={3}>
+        <Input 
+          id="album-generator-input-publishedDay"
+          type="number"
+          fluid placeholder="day"
+          {...bindInput('publishedDay')}
+          className={bindElementWithErrorNotification('publishedDate')} 
         />
       </GridColumn>
     </GridRow>

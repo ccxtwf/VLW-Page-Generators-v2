@@ -12,6 +12,7 @@ import {
   SchemaFetchedSongPageJson, SchemaFetchedAlbumPageJson, SchemaFetchedArtistPageJson,
   SchemaFetchedDiscography
 } from "./fetch-schemas";
+import { CONST_MONTHS } from "../constants/months";
 
 const origin = 'ccxtwf.github.io';
 
@@ -45,6 +46,10 @@ interface parsedAlbumPageInfo {
     engTitle: string
     label: string
     description: string
+    publishedYear: string
+    publishedMonth: string
+    publishedDay: string
+    isCompilationAlbum: boolean
     engines: string[]
     vdbAlbumId: string
     vocaWikiPage: string
@@ -405,6 +410,10 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     const engines: Set<string> = new Set();
     let strLabel: string = '';
     let strDescription: string = '';
+    let isCompilationAlbum: boolean = false;
+    let publishedYear: string = '';
+    let publishedMonth: string = '';
+    let publishedDay: string = '';
     let vocaWikiPage: string = '';
 
     for (let artist of (json.artists || [])) {
@@ -429,6 +438,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
         circles.length === 0 ? '' :
         ', by the circle ' + commaList(circles)
       }`;
+      isCompilationAlbum = true;
     } else if (mainProducers.length > 3) {
       strDescription = `an album by ${
         circles.length === 0 ? 'several producers' :
@@ -439,6 +449,13 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       if (circles.length > 0) {
         strDescription += `, under the circle ${commaList(circles)}`;
       }
+    }
+
+    if (json.releaseDate.isEmpty === false) {
+      const { year, month, day } = json.releaseDate;
+      publishedYear = `${year || ''}`;
+      publishedMonth = month === null ? '' : CONST_MONTHS[month-1];
+      publishedDay = `${day || ''}`;
     }
 
     const trackList: (string | number)[][] = [];
@@ -506,11 +523,16 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       origTitle, romTitle, engTitle,
       label: strLabel, 
       description: strDescription,
+      isCompilationAlbum,
+      publishedYear,
+      publishedMonth,
+      publishedDay,
       engines: [...engines],
       vdbAlbumId: vdbPageId, 
       vocaWikiPage,
       imageSrc
     }
+    console.log(">> IN fetch.js", formData);
     return {
       formData,
       tracklistData: trackList,

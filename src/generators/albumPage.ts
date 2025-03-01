@@ -16,6 +16,10 @@ interface ProcessedInput {
     fgColour: string
     label: string
     description: string
+    isCompilationAlbum: boolean
+    publishedYear: string
+    publishedMonth: string
+    publishedDay: string
     engines: string[]
     vdbAlbumId: string
     vocaWikiPage: string
@@ -29,7 +33,11 @@ export function parseInput({ formData, tracklistData, extLinksData }: RawInput):
   let {
     origTitle, romTitle, engTitle,
     bgColour, fgColour,
-    label, description,
+    label, 
+    description,
+    publishedYear,
+    publishedMonth,
+    publishedDay,
     vdbAlbumId, vocaWikiPage,
     categoriesRaw
   } = formData;
@@ -40,6 +48,9 @@ export function parseInput({ formData, tracklistData, extLinksData }: RawInput):
   fgColour = fgColour.trim();
   label = label.trim();
   description = description.trim();
+  publishedYear = publishedYear.trim();
+  publishedMonth = publishedMonth.trim();
+  publishedDay = publishedDay.trim();
   vdbAlbumId = vdbAlbumId.trim().replace(/^(\d+)\D*$/, "$1");
   vocaWikiPage = vocaWikiPage.trim();
   let categories: string[] = [];
@@ -58,7 +69,12 @@ export function parseInput({ formData, tracklistData, extLinksData }: RawInput):
       ...formData,
       origTitle, romTitle, engTitle,
       bgColour, fgColour,
-      label, description,
+      label, 
+      description,
+      isCompilationAlbum: formData.isCompilationAlbum,
+      publishedYear,
+      publishedMonth,
+      publishedDay,
       vdbAlbumId, vocaWikiPage, categories
     },
     tracklist, extLinks
@@ -128,7 +144,11 @@ export function validate(input: ProcessedInput): {
     formData: {
       origTitle, 
       bgColour, fgColour,
-      description, engines,
+      description, 
+      publishedYear,
+      publishedMonth,
+      publishedDay,
+      engines,
       vdbAlbumId, 
       categories
     },
@@ -172,6 +192,33 @@ export function validate(input: ProcessedInput): {
     'You must add a short description about the album.', 
     'description'
   ]);
+
+  if (publishedYear === '' && publishedMonth === '' && publishedDay === '') {
+    res.push([
+      true,
+      'You must add an album publication date.',
+      'publishedDate'
+    ]);
+  } else if (publishedYear === '') {
+    res.push([
+      true,
+      'You must specify the album publication year.',
+      'publishedDate'
+    ]);
+  } else if (publishedMonth === '' && publishedDay !== '') {
+    res.push([
+      true,
+      'You must specify the album publication month.',
+      'publishedDate'
+    ]);
+  }
+  if (publishedYear !== '' && publishedYear.length !== 4) {
+    res.push([
+      true,
+      'Publication year is invalid.',
+      'publishedDate'
+    ]);
+  }
 
   if (vdbAlbumId === '') res.push([
     true, 
@@ -249,7 +296,12 @@ export function generateAlbumPage(input: ProcessedInput): string {
     formData: {
       origTitle, romTitle, engTitle,
       bgColour, fgColour,
-      label, description, 
+      label, 
+      description, 
+      isCompilationAlbum,
+      publishedYear,
+      publishedMonth,
+      publishedDay,
       vdbAlbumId, vocaWikiPage,
       categories
     },
@@ -257,6 +309,7 @@ export function generateAlbumPage(input: ProcessedInput): string {
   } = input;
 
   let displayTitleTemplate: string = '';
+  let dateSegment: string = '';
   let trackListSegment: string = '';
   let officialLinksWikitext: string = '';
   let unofficialLinksWikitext: string = '';
@@ -265,6 +318,10 @@ export function generateAlbumPage(input: ProcessedInput): string {
 
   if (origTitle.match(/^[a-z]/) !== null) displayTitleTemplate = '{{Lowercase}}';
   if (origTitle.match(/_/g) !== null) displayTitleTemplate = `{{DISPLAYTITLE:${origTitle}}}`;
+
+  if (publishedYear !== '' || publishedMonth !== '' || publishedDay !== '') {
+    dateSegment = `{{DateAlbum|${publishedYear}|${publishedMonth}|${publishedDay}}}`;
+  }
 
   trackListSegment = tracklist.map(track => (
     `|${
@@ -305,8 +362,9 @@ ${displayTitleTemplate}{{Album Infobox
 |orgtitle = ${romTitle === '' ? '' : origTitle}${engTitle === '' ? '' : `\n|english = ${engTitle}`}
 |label = ${label}
 |desc = ${description}
+|date = ${dateSegment}
 |vdb = ${vdbAlbumId}
-|vw = ${vocaWikiPage}
+|vw = ${vocaWikiPage}${isCompilationAlbum ? '\n|compilation = 1' : ''}
 
 |image = 
 |color = ${bgColour}; color:${fgColour}
