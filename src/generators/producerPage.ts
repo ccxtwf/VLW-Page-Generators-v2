@@ -12,6 +12,7 @@ interface RawInput {
 interface ProcessedInput {
   formData: {
     prodCategory: string
+    splitAlbum: boolean
     prodAliases: string
     prodRoles: producerRoles
     affiliations: string
@@ -47,7 +48,7 @@ export function parseInput(
     .map(arr => new DiscogItem(arr[0], arr[1]))
     .filter(el => el.page !== '');
   const albumList: DiscogItem[] = albumListData
-    .map(arr => new DiscogItem(arr[0], arr[1], true))
+    .map(arr => new DiscogItem(arr[0], arr[1], true, arr[2]))
     .filter(el => el.page !== '');
   const extLinks: ExternalLink[] = extLinksData
     .map(arr => new ExternalLink(arr[0], arr[1], arr[2], arr[3], arr[4]))
@@ -190,7 +191,7 @@ function generateUnofficialProdLinks(links: ExternalLink[]): string {
 export function generateProducerPage(input: ProcessedInput): string {
   const {
     formData: {
-      prodCategory, prodAliases, prodRoles,
+      prodCategory, splitAlbum, prodAliases, prodRoles,
       affiliations, label, 
       languageIds, engines,
       description
@@ -236,6 +237,58 @@ export function generateProducerPage(input: ProcessedInput): string {
     categories.push(`Producers using ${engine}`);
   }
 
+  let albumListSegment = '';
+  if (albumList.length > 0) {
+    if (splitAlbum) {
+      const originalAlbums = [];
+      const compilationAlbums = [];
+      for (const album of albumList) {
+        if (album.isCompilation) {
+          compilationAlbums.push(album);
+        } else {
+          originalAlbums.push(album);
+        }
+      }
+      albumListSegment = "==Discography==\n";
+      if (originalAlbums.length > 0) {
+        albumListSegment += (
+          `{| class=\"sortable producer-table\"\n${
+            ''
+          }|- class=\"vcolor-default\"\n${
+            ''
+          }! {{awt head}}\n` +
+          originalAlbums
+            .map(album => `|-\n| ${album.toTemplate()}\n`).join('') + '|}\n'
+        );
+      }
+      if (originalAlbums.length > 0 && compilationAlbums.length > 0) {
+        albumListSegment += "\n";
+      }
+      if (compilationAlbums.length > 0) {
+        albumListSegment += (
+          `===Compilations===\n{| class=\"sortable producer-table\"\n${
+            ''
+          }|- class=\"vcolor-default\"\n${
+            ''
+          }! {{awt head}}\n` +
+          compilationAlbums
+            .map(album => `|-\n| ${album.toTemplate()}\n`).join('') + '|}\n'
+        );
+      }
+    } else {
+      albumListSegment = (
+        `==Discography==\n${
+          ''
+        }{| class=\"sortable producer-table\"\n${
+          ''
+        }|- class=\"vcolor-default\"\n${
+          ''
+        }! {{awt head}}\n` +
+        albumList.map(album => `|-\n| ${album.toTemplate()}\n`).join('') + '|}\n'
+      );
+    }
+  }
+
   return (`
 <div class="producer-links">
 [[File:<PRODUCER PROFILE PICTURE IMAGE FILE>|250px|center]]
@@ -262,11 +315,7 @@ ${
   songList.map(song => `|-\n| ${song.toTemplate()}\n`).join('')
 }|}
 
-${
-  albumList.length === 0 ? '' : 
-  (`==Discography==\n{| class=\"sortable producer-table\"\n|- class=\"vcolor-default\"\n! {{awt head}}\n` +
-  albumList.map(album => `|-\n| ${album.toTemplate()}\n`).join('') + '|}\n')
-}
+${ albumListSegment }
 __NOTOC__
 ${ 
   categories.map(cat => `[[Category:${cat}]]`).join('\n')

@@ -27,18 +27,39 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
     return td;
   }
 
-  const headerText = [
-    forAlbums ? 'Album pages' : 'Song pages', 
-    'Additional template parameters'
-  ];
-  const columnDefinitions = [
-    { 
-      type: 'text', 
-      renderer: vlwPageRenderer
-    },
-    { type: 'text' }
-  ];
-  let columnWidths = [60, 40];
+  let headerText = null;
+  let columnDefinitions = null;
+  let columnWidths = null;
+
+  if (forAlbums) {
+    headerText = [
+      'Album pages', 
+      'Additional template parameters',
+      'Is Compilation?'
+    ];
+    columnDefinitions = [
+      { 
+        type: 'text', 
+        renderer: vlwPageRenderer
+      },
+      { type: 'text' },
+      { type: 'checkbox', className: 'htCenter htMiddle' },
+    ];
+    columnWidths = [60, 25, 15];
+  } else {
+    headerText = [
+      'Song pages', 
+      'Additional template parameters'
+    ];
+    columnDefinitions = [
+      { 
+        type: 'text', 
+        renderer: vlwPageRenderer
+      },
+      { type: 'text' }
+    ];
+    columnWidths = [60, 40];
+  }
 
   const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
     for (let change of changes) {

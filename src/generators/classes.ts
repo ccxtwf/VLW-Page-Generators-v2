@@ -70,12 +70,16 @@ export class TrackItem {
 export class DiscogItem {
   page: string;
   additionalParameters: string;
+  isCompilation?: boolean;
   forAlbum: boolean;
   
-  constructor(page: string, additionalParameters: string, forAlbum: boolean = false) {
+  constructor(page: string, additionalParameters: string, forAlbum: boolean = false, isCompilation: boolean | null = null) {
     this.page = (page || '').trim();
     this.additionalParameters = (additionalParameters || '').trim();
     this.forAlbum = forAlbum;
+    if (forAlbum) {
+      this.isCompilation = isCompilation ?? false;
+    }
   }
 
   toTemplate(): string {

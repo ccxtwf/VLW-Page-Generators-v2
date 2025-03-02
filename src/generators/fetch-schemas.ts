@@ -328,3 +328,30 @@ export interface SchemaFetchedDiscography {
     }[]
   }
 }
+
+interface Dictionary<T> {
+  [Key: string]: T;
+}
+export interface SchemaFetchedDiscographyAlbum {
+  error?: {
+    code: string
+    info: string
+  }
+  batchComplete: string
+  continue?: {
+    cmcontinue: string
+    continue: string
+  }
+  query: {
+    pageids: string[]
+    pages: Dictionary<{
+      pageid: number
+      ns: number
+      title: string
+      categories: {
+        ns: number
+        title: string
+      }[]
+    }>
+  }
+}

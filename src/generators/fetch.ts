@@ -10,7 +10,8 @@ import {
   AlbumType,
   VdbSystemLanguage,
   SchemaFetchedSongPageJson, SchemaFetchedAlbumPageJson, SchemaFetchedArtistPageJson,
-  SchemaFetchedDiscography
+  SchemaFetchedDiscography,
+  SchemaFetchedDiscographyAlbum
 } from "./fetch-schemas";
 import { CONST_MONTHS } from "../constants/months";
 
@@ -70,7 +71,8 @@ interface parsedProducerPageInfo {
 }
 interface discography {
   songs: string[][]
-  albums: string[][]
+  albums: (string | boolean)[][]
+  recommendToSplitAlbum: boolean
 }
 
 function commaList(list: string[]): string {
@@ -606,7 +608,7 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
     }
     let subcats: Set<string> = new Set();
     let songs: Map<string, string> = new Map();
-    let albums: string[] = [];
+    let albums: { title: string, isCompilation: boolean }[] = [];
 
     let cmcontinue: string = '';
 
@@ -692,11 +694,52 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
       return arr;
     }
 
+    const getAlbumPagesInSubcategory = async (subcat: string): Promise<{ title: string, isCompilation: boolean }[]> => {
+      const arr: { title: string, isCompilation: boolean }[] = [];
+      while (true) {
+        let res = await fetch(
+          `https://${CONST_WIKI_DOMAIN}.fandom.com/api.php?` + 
+          `action=query&format=json&generator=categorymembers` + 
+          `&indexpageids=true` +
+          `&gcmtitle=${encodeURI(subcat)}` +
+          `&prop=categories&gcmlimit=500&cllimit=500` + 
+          `&clcategories=Category:Compilation_albums` +
+          `&gcmnamespace=0` + 
+          `&gcmsort=sortkey` + 
+          `&gcmdir=ascending${cmcontinue}&origin=*`
+        );
+        let json: SchemaFetchedDiscographyAlbum = await res.json();
+
+        if (json.error) {
+          throw new Error(`Failed fetch: ${json.error.info}`);
+        }
+
+        for (let id of json.query.pageids) {
+          const page = json.query.pages[id];
+          let title: string;
+          let isCompilation: boolean;
+          try {
+            title = decodeURI(page.title);
+          } catch (e) {
+            title = page.title;
+          }
+          isCompilation = !!page.categories;
+          arr.push({ title, isCompilation })
+        }
+
+        if (json.continue) {
+          cmcontinue = '&cmcontinue=' + json.continue.cmcontinue;
+        } else {
+          break;
+        }
+      }
+      return arr;
+    }
+
     let albumSubcat: string | null = [...subcats].find(el => el.endsWith('/Albums')) || null;
     if (albumSubcat !== null) {
       subcats.delete(albumSubcat);
-      const arrAlbums = await getPagesInSubcategory(albumSubcat);
-      albums.push(...arrAlbums.map(el => el.title));
+      albums = await getAlbumPagesInSubcategory(albumSubcat);
     }
 
     const arrFetched = await Promise.all([...subcats].map(subcat => getPagesInSubcategory(subcat))); 
@@ -712,10 +755,15 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
       const w = b[0].toLowerCase();
       return (v > w) ? 1 : (v < w) ? -1 : 0;
     });
+
+    const numCompilations = albums.reduce((numCompilations, album) => {
+      return album.isCompilation ? numCompilations+1 : numCompilations;
+    }, 0);
     
     return {
       songs: sortedSongs.map(el => [el[1], '']),
-      albums: albums.map(el => [el, ''])
+      albums: albums.map(el => [el.title, '', el.isCompilation]),
+      recommendToSplitAlbum: (numCompilations > 10)
     }
 
   } catch(err) {

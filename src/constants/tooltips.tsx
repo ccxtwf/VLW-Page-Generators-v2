@@ -247,6 +247,8 @@ export const CONST_TOOLTIPS_PRODUCER_PAGES = {
     This will be used as the parameter of the &#123;&#123;ProdLinks&#125;&#125; template on the producer page, which will link to the producer's songs list category on the wiki
     <br/><br/>
     Click on the "Fetch discography from wiki" button to get this site to query the list of song & album pages from the producer category on Vocaloid Lyrics Wiki.
+    <br/><br/>
+    Use the toggle option on the right to split the album discography into "Original Albums" and "Compilation Albums".
     </>
   ),
   prodaliases: (

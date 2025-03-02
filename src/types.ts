@@ -47,6 +47,7 @@ export interface albumPageFormInterface {
 
 export interface producerPageFormInterface {
   prodCategory: string
+  splitAlbum: boolean
   prodAliases: string
   affiliations: string
   label: string

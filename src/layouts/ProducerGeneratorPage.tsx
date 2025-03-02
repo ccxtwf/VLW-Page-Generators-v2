@@ -30,6 +30,7 @@ import { fetchDataFromVocaDbForProducerPage, fetchDiscographyFromVlw } from "../
 
 const defaultInputData: producerPageFormInterface = {
   prodCategory: "",
+  splitAlbum: false,
   prodAliases: "",
   affiliations: "",
   label: "",
@@ -174,7 +175,8 @@ export default function AlbumGeneratorPage() {
     setPreload({ ...preload, loadingDiscog: true });
     fetchDiscographyFromVlw(formData.prodCategory)
       .then(data => {
-        const { songs, albums } = data;
+        const { songs, albums, recommendToSplitAlbum } = data;
+        setFormData({...formData, splitAlbum: recommendToSplitAlbum});
         // @ts-ignore
         refDiscogSongs.current?.hotInstance?.loadData(songs);
         // @ts-ignore
@@ -335,6 +337,23 @@ export default function AlbumGeneratorPage() {
           labelPosition='right'
           {...bindInput("prodCategory")}
           className={bindElementWithErrorNotification('prodCategory')}
+        />
+      </GridColumn>
+    </GridRow>
+    <GridRow>
+      <GridColumn width={3} />
+      <GridColumn width={13}>
+        <Checkbox 
+          toggle 
+          label='Split Album Table into Two' 
+          checked={formData.splitAlbum}
+          onChange={(_, data) => {
+            // console.log("Checkbox changed");
+            setFormData({
+              ...formData,
+              splitAlbum: data.checked || false
+            })
+          }}
         />
       </GridColumn>
     </GridRow>
