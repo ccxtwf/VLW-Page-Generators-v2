@@ -157,6 +157,10 @@ div.error, .ui.dropdown.error, textarea.error, .ui.input.error > input {
   margin-right: 7px;
 }
 
+.ui.dimmer {
+  z-index: 100000;
+}
+
 @media only screen and (max-width: 900px) {
   main {
     margin-left: 20px;

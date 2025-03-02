@@ -16,6 +16,8 @@ interface ComparedSynth {
   vdbId: number
   originalName: string
   additionalNames: string
+  internalWikiName: string
+  categoryHasBeenAddedOnWiki: boolean
   type: VocalSynthEngine
   baseVoicebank: {
     vdbId: number
@@ -46,6 +48,8 @@ async function fetchListOfSynthsFromVocaDb(artistTypes: VocalSynthEngine[], offs
         vdbId: item.id,
         originalName: item.defaultName,
         additionalNames: item.additionalNames,
+        internalWikiName: '',
+        categoryHasBeenAddedOnWiki: false,
         baseVoicebank: null,
         type: item.artistType,
         addedOnVocaDbDate: (item.createDate ? new Date(Date.parse(item.createDate)) : null),
@@ -68,16 +72,19 @@ async function fetchListOfSynthsFromVocaDb(artistTypes: VocalSynthEngine[], offs
     }
 
     let rawQueryResults = AppDataSource.exec(
-      `SELECT s.vdb_id FROM synths s WHERE s.vdb_id IN (${arr.map(synth => synth.vdbId).join(',')});`
+      `SELECT s.vdb_id, s.wikicat_name, s.category_is_not_on_vlw FROM synths s WHERE s.vdb_id IN (${arr.map(synth => synth.vdbId).join(',')});`
     );
     if (rawQueryResults.length > 0) {
-      const synthsListedInDatabase = new Set();
-      for (let [vdbId] of rawQueryResults[0].values) {
-        synthsListedInDatabase.add(vdbId);
+      const synthsListedInDatabase = new Map<number, { catname: string, hasBeenAdded: boolean }>();
+      for (let [vdbId, wikicatName, categoryHasBeenAddedOnVLW] of rawQueryResults[0].values) {
+        synthsListedInDatabase.set(vdbId as number, { catname: wikicatName as string, hasBeenAdded: !!categoryHasBeenAddedOnVLW });
       }
       for (let synth of arr) {
         if (synthsListedInDatabase.has(synth.vdbId)) {
           synth.isListedOnInternalDb = true;
+          const { catname, hasBeenAdded } = synthsListedInDatabase.get(synth.vdbId) || { catname: '', hasBeenAdded: false};
+          synth.internalWikiName = catname;
+          synth.categoryHasBeenAddedOnWiki = hasBeenAdded;
         }
       }
     }
@@ -274,7 +281,28 @@ export default function VocaDbSynthsComparerPage() {
                   <TableCell>
                     {
                       synth.isListedOnInternalDb ? 
-                      <Icon name="check circle" color="green" /> :
+                      <Popup
+                        content={
+                          <>
+                            {synth.internalWikiName}
+                            {
+                              synth.categoryHasBeenAddedOnWiki ? 
+                              <><br />(Category page is not yet added on VLW)</> :
+                              null
+                            }
+                          </>
+                        }
+                        mouseLeaveDelay={1500}
+                        on='hover'
+                        inverted
+                        position='bottom center'
+                        wide={true}
+                        trigger={
+                          <Icon name="check circle" color="green" />
+                        }
+                        style={{ zIndex: '1000' }}
+                      />
+                      :
                       <Icon name="times circle" color="red" />
                     }
                   </TableCell>
@@ -290,7 +318,7 @@ export default function VocaDbSynthsComparerPage() {
           Next Page
         </Button>
       </GridRow>
-      <Dimmer active={isLoading} style={{'z-index': 100000}}>
+      <Dimmer active={isLoading}>
         <Loader>Loading</Loader>
       </Dimmer>
     </Grid>
