@@ -105,7 +105,7 @@ export default function SongGeneratorPage() {
     parseHeadersFromLanguages(languages)
   ), [languages]);
   const hideLyricsTableColumns = useMemo(() => {
-    const res = [4, 5];
+    const res = Array(import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS-3).fill(0).map((_, i) => i+4);
     if (!needsRomanization) res.push(2);
     if (!needsEnglishTranslation) res.push(3);
     return res;

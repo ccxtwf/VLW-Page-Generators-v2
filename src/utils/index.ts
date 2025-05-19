@@ -21,7 +21,7 @@ export const parseHeadersFromLanguages = (
 
   let needsRomanization = false;
   let needsEnglishTranslation = false;
-  let headersText: string[] = ["Colour", "Original", "Romanized", "English"];
+  let headersText: string[] = ["Row Styling", "Original", "Romanized", "English"];
   let isChinese = false;
 
   if (languages.length === 0) {
@@ -49,7 +49,7 @@ export const parseHeadersFromLanguages = (
     });
 
     headersText = [
-      "Colour", 
+      "Row Styling", 
       headerOriginalLanguages.join("/"),
       (needsRomanization ? headerRomanizedLanguages.join("/") : ''),
       "English"
@@ -162,7 +162,8 @@ export function generateLyricsTable(
   const rxSpanInlineColour = /<span\s+style\s*=\s*["'][^>]*color\s*:\s*([a-zA-Z0-9#]+)\s*[^>]*["']>.*?<\/span>/gm;
   let usedColours: Set<string> = new Set();
   for (let lyric of lyrics) {
-    usedColours.add(lyric.colour);
+    let detectedRowColour = lyric.customStyle.match(/color\s*:\s*([#0-9a-zA-Z]+);?/);
+    if (detectedRowColour !== null) usedColours.add(detectedRowColour[1]);
     const detectedInlineColours = lyric.original.matchAll(rxSpanInlineColour);
     for (let [_, colour] of detectedInlineColours) {
       usedColours.add(colour);
@@ -200,7 +201,7 @@ export function generateLyricsTable(
     if (hasMultipleSingerLines) singerTabs += '|All';
     res += `{| border="1" cellpadding="4" style="border-collapse:collapse; border:1px groove; line-height:1.5"\n!style="background-color:${bgColour}; color:${fgColour};"|Singer\n${
       singerTabs
-    }\n|}\n`;
+    }|}\n`;
   }
 
   if (outputAsWikiTable) {
@@ -220,8 +221,8 @@ export function generateLyricsTable(
   } else {
     // Generate as single-column div
     let prevLyrics: Lyric | null = null;
-    const arrSpans: { contents: string, colour: string | null }[] = [];
-    let curSpan: { contents: string, colour: string | null } = { contents: '', colour: null };
+    const arrSpans: { contents: string, customStyle: string | null }[] = [];
+    let curSpan: { contents: string, customStyle: string | null } = { contents: '', customStyle: null };
     for (let lyric of lyrics) {
       // Skip line breaks
       if (lyric.original === '') {
@@ -229,11 +230,11 @@ export function generateLyricsTable(
         continue;
       }
       // Add to array of spans to take note of when a change in text colour is detected
-      if (prevLyrics !== null && lyric.colour !== prevLyrics.colour) {
+      if (prevLyrics !== null && lyric.customStyle !== prevLyrics.customStyle) {
         arrSpans.push(curSpan);
-        curSpan = { contents: '',  colour: null };
+        curSpan = { contents: '',  customStyle: null };
       }
-      if (lyric.colour !== '') curSpan.colour = lyric.colour;
+      if (lyric.customStyle !== '') curSpan.customStyle = lyric.customStyle;
       // Store current line
       curSpan.contents += lyric.original + '\n';
       // Save lyrics to be compared
@@ -243,9 +244,9 @@ export function generateLyricsTable(
     console.log(arrSpans);
     
     res += `<poem>${
-      arrSpans.map(({ contents, colour }) => {
+      arrSpans.map(({ contents, customStyle }) => {
         contents = contents.replace(/\n$/, '');
-        if (colour !== null) contents = `<span style="color:${colour};">${contents}</span>`;
+        if (customStyle !== null) contents = `<span style="${customStyle}">${contents}</span>`;
         return contents;
       }).join('\n')
     }</poem>`

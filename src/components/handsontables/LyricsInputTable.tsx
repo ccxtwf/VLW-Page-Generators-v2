@@ -10,7 +10,22 @@ interface LyricsInputTableInterface {
 }
 
 const rxMatchBolded = /^\s*('{3})(.*)\1\s*$/;
+const rxMatchBoldedCss = /font-weight\s*:\s*bold\b\s*;*/;
 const rxMatchItalicised = /^\s*('{2})((?<=\1)(?:(?!')|'{3}(?!')).*(?:(?<!')|(?<!')'{3})(?=\1))\1\s*$/;
+const rxMatchItalicisedCss = /font-style\s*:\s*italic\b\s*;*/;
+
+// @ts-ignore
+const styleRenderer = (instance, td, row, col, prop, value, cellProperties) => {
+  td.innerHTML = '';
+  if (value === null) { return td; }
+  const kvPairs = (value as string).matchAll(/([a-zA-Z\-0-9]+)\s*:\s*([^;]*)/g);
+  const arr = [];
+  for (const [_, k, v] of kvPairs) {
+    arr.push( `<span style="${k}:${v};">${v}</span>` );
+  }
+  td.innerHTML = arr.join('; ');
+  return td;
+}
 
 // @ts-ignore
 const lyricRenderer = (instance, td, row, col, prop, value, cellProperties) => {
@@ -18,17 +33,18 @@ const lyricRenderer = (instance, td, row, col, prop, value, cellProperties) => {
     td.innerHTML = '';
     return td;
   }
-  const colour = instance.getDataAtCell(row, 0) || '';
+  const customStyle = instance.getDataAtCell(row, 0) || '';
   value = value.replace(/^[^\|\{\}\n]*?\|/, '');
   value = value.replace(/<br\s*\/?\s*>/, '\n');
   value = value.replace(/<ref\s*[^>]*\/>/gi, '<i class="asterisk tiny icon"></i>');
   value = value.replace(/<ref\s*[^>]*>(.*)<\/ref>/gsi, '<i class="asterisk tiny icon"></i>');
   value = value.replace(/'{3}(.*?)'{3}/g, '<b>$1</b>');
   value = value.replace(/'{2}(.*?)'{2}/g, '<i>$1</i>');
-  if (colour !== '') value = `<span style="color:${colour};">${value}</span>`;
+  value = value.replace(/\{\{(?:[Tt]emplate|)[Rr]uby\|([^\|]*)\|([^\}]*)\}\}/g, '<ruby>$1 <rp>(</rp><rt>$2</rt><rp>)</rp></ruby>');
+  if (customStyle !== '') value = `<span style="${customStyle}">${value}</span>`;
   value = value
-    .replace(/<(?!\/?(?:b|i|u|span|div|s|small|sub|sup|strong|em|mark)\b)/g, '&lt;')
-    .replace(/(?<!(?:b|i|u|span|div|s|small|sub|sup|strong|em|mark)\b[^<]*)>/g, '&gt;');
+    .replace(/<(?!\/?(?:b|i|u|span|div|s|small|sub|sup|strong|em|mark|ruby|rp|rt)\b)/g, '&lt;')
+    .replace(/(?<!(?:b|i|u|span|div|s|small|sub|sup|strong|em|mark|ruby|rp|rt)\b[^<]*)>/g, '&gt;');
   td.innerHTML = value;
   return td;
 }
@@ -49,7 +65,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
   }, [hiddenColumnsInternalState]);
 
   const columnDefinitions = useMemo(() => [
-    { type: 'text' },
+    { type: 'text', renderer: styleRenderer },
     { type: 'text', renderer: lyricRenderer },
     { type: 'text', renderer: lyricRenderer },
     { type: 'text', renderer: lyricRenderer },
@@ -106,7 +122,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
                   // Starting cell is a single cell
                   // In this case, limit the paste range to rows after fromRow and columns after fromCol
                   let numOverlappedExistingColumns = Math.min(
-                    6 - hiddenColumnsInternalState.length, 
+                    import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS+1 - hiddenColumnsInternalState.length, 
                     Math.max(...pasted.map(line => line.length))
                   );
                   for (let i = 0; i < numOverlappedExistingRows; i++) {
@@ -160,6 +176,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           hidden() {
             const selectedRows = getSelectedRowData(this);
             return selectedRows.some((lyrics) => {
+              if ((lyrics[0] || '').match(rxMatchBoldedCss) !== null) return true; 
               // Check if there are cells in the lyrics row that have been bolded 
               let res = false;
               for (let i = 1; i < lyrics.length; i++) {
@@ -179,10 +196,8 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
             //@ts-ignore
             const data = this.getData();
             for (let i = fromRow; i <= toRow; i++) {
-              for (let j = 1; i < data[i].length; j++) {
-                if (hiddenColumnsInternalState.includes(i)) continue;
-                data[i][j] = `'''${(data[i][j] || '').trim()}'''`;
-              }
+              if (!data[i][0]) data[i][0] = '';
+              data[i][0] += 'font-weight:bold;';
             }
             //@ts-ignore
             this.loadData(data);
@@ -193,6 +208,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           hidden() {
             const selectedRows = getSelectedRowData(this);
             return selectedRows.some((lyrics) => {
+              if ((lyrics[0] || '').match(rxMatchItalicisedCss) !== null) return true; 
               // Check if there are cells in the lyrics row that have been italicized 
               let res = false;
               for (let i = 1; i < lyrics.length; i++) {
@@ -212,10 +228,8 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
             //@ts-ignore
             const data = this.getData();
             for (let i = fromRow; i <= toRow; i++) {
-              for (let j = 1; i < data[i].length; j++) {
-                if (hiddenColumnsInternalState.includes(i)) continue;
-                data[i][j] = `''${(data[i][j] || '').trim()}''`;
-              }
+              if (!data[i][0]) data[i][0] = '';
+              data[i][0] += 'font-style:italic;';
             }
             //@ts-ignore
             this.loadData(data);
@@ -226,6 +240,7 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           hidden() {
             const selectedRows = getSelectedRowData(this);
             return !selectedRows.some((lyrics) => {
+              if ((lyrics[0] || '').match(rxMatchBoldedCss) !== null) return true; 
               // Check if there are cells in the lyrics row that have been bolded 
               let res = false;
               for (let i = 1; i < lyrics.length; i++) {
@@ -245,8 +260,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
             //@ts-ignore
             const data = this.getData();
             for (let i = fromRow; i <= toRow; i++) {
-              for (let j = 1; i < data[i].length; j++) {
-                if (hiddenColumnsInternalState.includes(i)) continue;
+              data[i][0] = (data[i][0] || '').replace(rxMatchBoldedCss, "");
+              for (let j = 1; j < data[i].length; j++) {
+                if (hiddenColumnsInternalState.includes(j)) continue;
                 data[i][j] = (data[i][j] || '').replace(rxMatchBolded, '$2');
               }
             }
@@ -258,7 +274,8 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
           name: () => ('Unitalicize row'),
           hidden() {
             const selectedRows = getSelectedRowData(this);
-            return selectedRows.some((lyrics) => {
+            return !selectedRows.some((lyrics) => {
+              if ((lyrics[0] || '').match(rxMatchItalicisedCss) !== null) return true; 
               // Check if there are cells in the lyrics row that have been italicized 
               let res = false;
               for (let i = 1; i < lyrics.length; i++) {
@@ -278,8 +295,9 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
             //@ts-ignore
             const data = this.getData();
             for (let i = fromRow; i <= toRow; i++) {
-              for (let j = 1; i < data[i].length; j++) {
-                if (hiddenColumnsInternalState.includes(i)) continue;
+              data[i][0] = (data[i][0] || '').replace(rxMatchItalicisedCss, "");
+              for (let j = 1; j < data[i].length; j++) {
+                if (hiddenColumnsInternalState.includes(j)) continue;
                 data[i][j] = (data[i][j] || '').replace(rxMatchItalicised, '$2');
               }
             }
@@ -310,28 +328,28 @@ const LyricsInputTable = forwardRef(function LyricsInputTable(
       };
       //@ts-ignore
       contextMenu.items['remove_col'] = { 
-          name: () => 'Remove last column',
-          disabled: function () {
-            let minHidden = Math.min(...hiddenColumnsInternalState);
-            return minHidden === 2;
-          },
-          callback: function () {
-            let hideColumnAtIndex;
-            if (hiddenColumnsInternalState.length === 0) {
-              hideColumnAtIndex = 5;
-            } else {
-              hideColumnAtIndex = Math.min(...hiddenColumnsInternalState) - 1;
-            }
-            setHiddenColumnsInternalState([hideColumnAtIndex, ...hiddenColumnsInternalState]);
-            //@ts-ignore
-            const data = this.getData();
-            for (let i = 0; i < data.length; i++) {
-              data[i][hideColumnAtIndex] = '';
-            }
-            //@ts-ignore
-            this.loadData(data);
+        name: () => 'Remove last column',
+        disabled: function () {
+          let minHidden = Math.min(...hiddenColumnsInternalState);
+          return minHidden === 2;
+        },
+        callback: function () {
+          let hideColumnAtIndex;
+          if (hiddenColumnsInternalState.length === 0) {
+            hideColumnAtIndex = +import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS;
+          } else {
+            hideColumnAtIndex = Math.min(...hiddenColumnsInternalState) - 1;
           }
-        };
+          setHiddenColumnsInternalState([hideColumnAtIndex, ...hiddenColumnsInternalState]);
+          //@ts-ignore
+          const data = this.getData();
+          for (let i = 0; i < data.length; i++) {
+            data[i][hideColumnAtIndex] = '';
+          }
+          //@ts-ignore
+          this.loadData(data);
+        }
+      };
     }
     return contextMenu;
   }, [hiddenColumnsInternalState]);

@@ -340,6 +340,8 @@ export const CONST_TOOLTIPS_PRODUCER_PAGES = {
 export const CONST_TOOLTIPS_LYRICS_EDITOR = {
   sourceInput: (
     <>
+    Use this tool to edit the lyrics table on a wikipage. It is primarily aimed for Japanese/Chinese/Korean song pages.
+    <hr/>
     To get the source code of the wiki page, you can either:
     <br/>
     <ol>

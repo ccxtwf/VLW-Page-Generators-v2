@@ -1,14 +1,16 @@
 import { IDictionary } from "../types";
 
 export class Lyric {
-  colour: string;
+  customStyle: string;
   original: string;
   romanized?: string;
   english?: string;
   additionalColumns?: string[];
 
   constructor({hasAdditionalColumns, skipColumns = []}: {hasAdditionalColumns: boolean, skipColumns?: number[] }, ...args: string[]) {
-    this.colour = (args[0] || '').trim();
+    // const m = (args[0] || '').trim().match(/style\s*=\s*["']\s*([^\n]*?)\s*;*\s*["']/);
+    // this.customStyle = m === null ? '' : `${m[1]};`;
+    this.customStyle = (args[0] || '').trim();
     this.original = (args[1] || '').trim();
     if (!skipColumns.includes(2)) this.romanized = (args[2] || '').trim();
     if (!skipColumns.includes(3)) this.english = (args[3] || '').trim();
@@ -21,8 +23,16 @@ export class Lyric {
     }
   }
 
+  getTableCellWikitext(contents?: string): string {
+    return `|${
+      (contents || '')
+        .replace(/^-/, "<nowiki>-</nowiki>")
+        .replace(/(~{4,})/g, "<nowiki>$1</nowiki>")
+    }\n`
+  }
+
   getWikitext(printEmptyEnglishColumn: boolean = false): string {
-    let wikitext: string = `|-${this.colour === '' ? ' ' : ` style="color:${this.colour}"`}\n`;
+    let wikitext: string = `|-${this.customStyle === '' ? ' ' : ` style="${this.customStyle}"`}\n`;
     let isLineBreak = (this.original === '' && (this.romanized || '') === '' && (this.english || '') === '');    
     let sharesColumns = (
       (this.romanized === undefined || this.original === this.romanized) &&
@@ -42,12 +52,12 @@ export class Lyric {
     } else if (sharesColumns) {
       wikitext += `| {{shared}} ${this.original}\n`;
     } else {
-      wikitext += `|${this.original.replace(/^-/, "<nowiki>-</nowiki>")}\n`;
-      if (this.romanized !== undefined) wikitext += `|${this.romanized.replace(/^-/, "<nowiki>-</nowiki>")}\n`;
-      if (printEmptyEnglishColumn) wikitext += `|${this.english?.replace(/^-/, "<nowiki>-</nowiki>") || ''}\n`;
+      wikitext += this.getTableCellWikitext(this.original);
+      if (this.romanized !== undefined) wikitext += this.getTableCellWikitext(this.romanized);
+      if (printEmptyEnglishColumn) wikitext += this.getTableCellWikitext(this.english);
       if (this.additionalColumns) {
         for (let additionalColumn of this.additionalColumns) {
-          wikitext += `|${additionalColumn.replace(/^-/, "<nowiki>-</nowiki>")}\n`;
+          wikitext += wikitext += this.getTableCellWikitext(additionalColumn);
         }
       }
     }

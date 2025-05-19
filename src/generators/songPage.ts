@@ -326,11 +326,6 @@ export function validate(input: ProcessedInput): {
     'The foreground colour is invalid.', 
     'fgColour'
   ]);
-  if (lyrics.some(lyric => !validateColour(lyric.colour))) res.push([
-    true, 
-    'One of the lyrics row colours is invalid.', 
-    'lyrics'
-  ]);
 
   if (singers === '') {
     res.push([

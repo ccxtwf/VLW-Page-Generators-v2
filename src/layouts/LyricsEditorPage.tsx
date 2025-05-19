@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Grid, GridColumn, GridRow, Divider,
   Form, 
@@ -63,15 +63,21 @@ function _parseLyricsFromTable(table: RegExpExecArray): {
 
   const { toggleElement, headers, isoLangCode } = _parseLyricsToggleParameters(tableDefinition);
   
-  const tableRows = Array.from(tableBody.matchAll(/\|-(.*?)\n([^]*?)\n(?=\|-|\|\})/g));
+  const tableRows = Array.from(tableBody.matchAll(/\|-(.*?)\n([^]*?)\n(?=\|-|\|\})/g))
+    .map(function (tableRow) {
+      const contents = tableRow[0];
+      const m = tableRow[1].match(/style\s*=\s*["']\s*([^\n]*?)\s*;*\s*["']/);
+      const customStyle = m === null ? '' : m[1]+';';
+      const lines = tableRow[2];
+      const rxResults = lines.matchAll(/(?<=\n\||^\|).*?(?=\n\||$)/g);
+      const splitLyrics = Array.from(rxResults).map((res) => res[0]);
+      numColumns = Math.max(numColumns, splitLyrics.length);
+      return { contents, customStyle, splitLyrics };
+    });
+  numColumns = Math.min(+import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS+1, numColumns);
+
   for (let tableRow of tableRows) {
-    let customStyle: any = tableRow[1];
-    customStyle = customStyle.match(/style\s*=\s*["'][^\n]*color\s*:\s*([#0-9a-zA-Z]+)[^\n]*["']/);
-    customStyle = customStyle === null ? '' : customStyle[1];
-    let lines = tableRow[2];
-    let rxResults = lines.matchAll(/(?<=\n\||^\|).*?(?=\n\||$)/g);
-    let splitLyrics = Array.from(rxResults).map(function (res) { return res[0]; });
-    numColumns = Math.max(splitLyrics.length, numColumns);
+    const { customStyle, splitLyrics } = tableRow;
     if (splitLyrics.length === 1) {
       const rxCheckSharedColumn = /^\s*(\{\{(?:[Tt]emplate:|)shared[^\}]*\}\}|colspan=\s*(?:["']|)\s*\d+\s*(?:["']|)\s*\|)/gi;
       let sharedRow = splitLyrics[0];
@@ -177,8 +183,13 @@ export default function LyricsEditorPage() {
   }, []);
 
   const [lyricsTables, setLyricsTables] = useState<RegExpExecArray[]>([]);
-  const [headersText, setHeadersText] = useState<string[]>(['Original', 'Romanized', 'English', 'Column 4', 'Column 5']);
-  const [hideColumns, setHideColumns] = useState<number[]>([4, 5]);
+  const [headersText, setHeadersText] = useState<string[]>([
+    'Original', 'Romanized', 'English', 
+    ...Array(import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS-3).fill(0).map((_, i) => `Column ${i+4}`)
+  ]);
+  const [hideColumns, setHideColumns] = useState<number[]>(
+    Array(import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS-3).fill(0).map((_, i) => i+4)
+  );
   // const [lyricsToggleWikitext, setLyricsToggleWikitext] = useState<string>('');
   const [isoLangCode, setIsoLangCode] = useState<string>('');
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
@@ -201,6 +212,65 @@ export default function LyricsEditorPage() {
       .matchMedia("(max-width: 768px)")
       .addEventListener('change', e => setIsMobileViewport( e.matches ));
   }, []);
+
+  const handleOnClickedParseButton = useMemo(() => () => {
+    if (selectedIndex === -1 || lyricsTables.length === 0) return;
+    const selectedTable = lyricsTables[selectedIndex];
+    const { lyrics, toggleElement, headers, isoLangCode, numColumns } = _parseLyricsFromTable(selectedTable);
+    setIsoLangCode(isoLangCode || '');
+    // @ts-ignore
+    document.getElementById('lyrics-toggle').value = toggleElement;
+    setHeadersText(headers);
+    if (numColumns >= import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS) {
+      setHideColumns([]);
+    } else {
+      const h = [];
+      for (let i = 1; i <= import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS-numColumns; i++) {
+        h.push(numColumns+i);
+      }
+      setHideColumns(h);
+    }
+    // @ts-ignore
+    const lyricsTable = refLyrics.current?.hotInstance;
+    lyricsTable?.loadData(lyrics);
+    const mTranslator = selectedTable[0].match(/\{\{(?:[Tt]emplate:|)[Tt]ranslator\|\s*([^\}]+?)\s*\}\}/);
+    //@ts-ignore
+    document.getElementById('translator-input').value = mTranslator === null ? '' : mTranslator[1];
+    //@ts-ignore
+    document.getElementById('is-official-translator-input').checked = (selectedTable[0].match(/\{\{(?:[Tt]emplate:|)[Oo]fficialEnglishNotify\s*\}\}/) !== null);
+    setFormData({
+      //@ts-ignore
+      translator: document.getElementById('translator-input').value,
+      //@ts-ignore
+      isOfficialTranslation: document.getElementById('is-official-translator-input').checked,
+    });
+  }, [selectedIndex, lyricsTables]);
+
+  const handleOnClickedGenerateButton = useMemo(() => () => {
+    // @ts-ignore
+    const lyricsTable = refLyrics.current?.hotInstance;
+    const skipColumns = lyricsTable?.getSettings()?.hiddenColumns?.columns;
+    const lyrics = lyricsTable.getData()?.map((arr: string[]) => (
+      new Lyric({ 
+        hasAdditionalColumns: true,
+        skipColumns,
+      },
+      ...arr)
+    ));
+    console.log(lyrics);
+    const output = generateLyricsTable(lyrics, {
+      langOptions: {
+        headersText: headersText,
+        skipColumns,
+      },
+      isoLangCode,
+      translator: formData.translator.trim(),
+      isOfficialTranslation: formData.isOfficialTranslation,
+      bgColour: 'black',
+      fgColour: 'white',
+    });
+    setResults(output);
+  }, [formData, headersText, isoLangCode]);
 
   return (
   <>
@@ -267,38 +337,7 @@ export default function LyricsEditorPage() {
     />
     <Button 
       color='violet' size='large' fluid style={{ marginTop: '10px' }}
-      onClick={() => {
-        if (selectedIndex === -1 || lyricsTables.length === 0) return;
-        const selectedTable = lyricsTables[selectedIndex];
-        const { lyrics, toggleElement, headers, isoLangCode, numColumns } = _parseLyricsFromTable(selectedTable);
-        setIsoLangCode(isoLangCode || '');
-        // @ts-ignore
-        document.getElementById('lyrics-toggle').value = toggleElement;
-        setHeadersText(headers);
-        if (numColumns >= 5) {
-          setHideColumns([]);
-        } else {
-          const h = [];
-          for (let i = 1; i <= 5-numColumns; i++) {
-            h.push(numColumns+i);
-          }
-          setHideColumns(h);
-        }
-        // @ts-ignore
-        const lyricsTable = refLyrics.current?.hotInstance;
-        lyricsTable?.loadData(lyrics);
-        const mTranslator = selectedTable[0].match(/\{\{(?:[Tt]emplate:|)[Tt]ranslator\|\s*([^\}]+?)\s*\}\}/);
-        //@ts-ignore
-        document.getElementById('translator-input').value = mTranslator === null ? '' : mTranslator[1];
-        //@ts-ignore
-        document.getElementById('is-official-translator-input').checked = (selectedTable[0].match(/\{\{(?:[Tt]emplate:|)[Oo]fficialEnglishNotify\s*\}\}/) !== null);
-        setFormData({
-          //@ts-ignore
-          translator: document.getElementById('translator-input').value,
-          //@ts-ignore
-          isOfficialTranslation: document.getElementById('is-official-translator-input').checked,
-        });
-      }}
+      onClick={handleOnClickedParseButton}
     >
       Extract Lyrics Table
     </Button>
@@ -333,7 +372,7 @@ export default function LyricsEditorPage() {
 
     {/* Lyrics Output */}
     <LyricsInputTable
-      headersText={['Colour' , ...headersText]}
+      headersText={['Row styling' , ...headersText]}
       hideColumns={hideColumns}
       allowColumnAdditionRemoval={true}
       ref={refLyrics}
@@ -525,31 +564,7 @@ export default function LyricsEditorPage() {
       color='violet' 
       size='large'
       fluid
-      onClick={() => {
-        // @ts-ignore
-        const lyricsTable = refLyrics.current?.hotInstance;
-        const skipColumns = lyricsTable?.getSettings()?.hiddenColumns?.columns;
-        const lyrics = lyricsTable.getData()?.map((arr: string[]) => (
-          new Lyric({ 
-            hasAdditionalColumns: true,
-            skipColumns,
-          },
-         ...arr)
-        ));
-        console.log(lyrics);
-        const output = generateLyricsTable(lyrics, {
-          langOptions: {
-            headersText: headersText,
-            skipColumns,
-          },
-          isoLangCode,
-          translator: formData.translator.trim(),
-          isOfficialTranslation: formData.isOfficialTranslation,
-          bgColour: 'black',
-          fgColour: 'white',
-        });
-        setResults(output);
-      }}
+      onClick={handleOnClickedGenerateButton}
     >
       Generate
     </Button>
