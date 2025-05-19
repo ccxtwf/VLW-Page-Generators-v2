@@ -1,5 +1,3 @@
-export const CONST_WIKI_DOMAIN = 'vocaloidlyrics';
-
 export const CONST_PV_SERVICE_ABBREVIATIONS = {
   "Niconico":       "NN",
   "YouTube":        "YT",
@@ -9,11 +7,40 @@ export const CONST_PV_SERVICE_ABBREVIATIONS = {
   "Vimeo":          "VM",
 };
 
+export const CONST_ALBUM_STREAMING_LINKS = [
+  {
+    name: 'Niconico Crossfade',
+    paramKey: 'nn-xfade',
+    regex: /^https?:\/\/www\.nicovideo\.jp\/watch\/(?<embedid>[^\/\?]+)/,
+  },
+  {
+    name: 'YouTube Crossfade',
+    paramKey: 'yt-xfade',
+    regex: /^https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)(?<embedid>[^\/\?]{11})/,
+  },
+  {
+    name: 'Spotify',
+    paramKey: 'sp-embed',
+    regex: /^https?:\/\/open\.spotify\.com\/album\/(?<embedid>[^\/\?]+)/,
+  },
+  {
+    name: 'YouTube Music Playlist',
+    paramKey: 'yt-playlist',
+    regex: /^https?:\/\/(?:music\.|www\.|)youtube\.com\/playlist\?list=(?<embedid>[^\/\?]+)/,
+  },
+  {
+    name: 'Bandamp Embed ID',
+    paramKey: 'bc-embed',
+    regex: /^(?<embedid>\d+)$/,
+  }
+];
+
 interface pvService {
   site: string
   re: RegExp
   sanitize?: RegExp
   isMedia?: boolean
+  isAlbumReadMoreLink?: boolean
 }
 
 export const CONST_PV_SERVICES: pvService[] = [
@@ -94,13 +121,15 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
     sanitize: /(?<head>https?:\/\/vocadb\.net\/(?:S|Ar|Al)\/)(?<id>\d+)/
   },
   {
-    site: "TuneCore Japan",
-    re: /^https?:\/\/www\.tunecore\.co\.jp\/.*/,
-    isMedia: true
+    site: "Discogs",
+    re: /^https?:\/\/www\.discogs\.com\/.*/,
+    isAlbumReadMoreLink: true,
   },
   {
-    site: "VOCALOID Lyrics Wiki",
-    re: /^https?:\/\/vocaloidlyrics\.fandom\.com\/*/
+    site: "TuneCore Japan",
+    re: /^https?:\/\/www\.tunecore\.co\.jp\/.*/,
+    isMedia: true,
+    isAlbumReadMoreLink: true,
   },
   {
     site: "VOCALOID Wiki",
@@ -108,11 +137,18 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
   },
   {
     site: "Hatsune Miku Wiki",
-    re: /^https?:\/\/www5\.atwiki\.jp\/hmiku\/.*/
+    re: /^https?:\/\/www5\.atwiki\.jp\/hmiku\/.*/,
+    isAlbumReadMoreLink: true,
   },
   {
     site: "Hatsune Miku Wiki",
-    re: /^https?:\/\/w\.atwiki\.jp\/hmiku\/.*/
+    re: /^https?:\/\/w\.atwiki\.jp\/hmiku\/.*/,
+    isAlbumReadMoreLink: true,
+  },
+  {
+    site: "UTAU Song Database",
+    re: /^https?:\/\/w\.atwiki\.jp\/utauuuta\/.*/,
+    isAlbumReadMoreLink: true,
   },
   {
     site: "Anime Lyrics",

@@ -1,6 +1,7 @@
 import { CONST_COLOUR_NAMES } from "../constants/colours";
 import { CONST_TRANSLATOR_LICENSES } from "../constants/translators";
 import { Lyric } from "../generators/classes";
+import { IDictionary } from "../types";
 
 export const validateColour = (colour: string) => {
   return (
@@ -83,27 +84,75 @@ export function detonePinyin(romText: string, bShowUmlaut = false) {
 interface LyricsGeneratorParams {
   langOptions: {
     headersText: string[],
-    needsRomanization: boolean,
-    needsEnglishTranslation: boolean
+    skipColumns?: number[]
   }
+  isoLangCode: string
   translator: string
   isOfficialTranslation: boolean
   bgColour: string
   fgColour: string
   overrideShowEnglishColumn?: boolean
 }
+function generateLyricsToggle(headersText: string[], needsRomanization: boolean, showEnglishColumn: boolean, isoLangCode: string) {
+  const lookupOriginalColumnSemanticId: IDictionary<string> = {
+    'Japanese': 'jp',
+    'Chinese': 'cn',
+    'Korean': 'kr',
+    'Cantonese': 'yue',
+    'Spanish': 'sp',
+    'Portuguese': 'pt',
+    'Indonesian': 'id',
+    'French': 'fr',
+    'German': 'de',
+    'Russian': 'ru',
+  };
+  const lookupRomanizedColumnSemanticId: IDictionary<string> = {
+    'Romanized': 'rom',
+    'Romaji': 'rom',
+    'Romaja': 'rom',
+    'Pinyin': 'py',
+  };
+  const skipCustomLangIsoCode: IDictionary<string> = {
+    'Japanese': 'ja',
+    'Chinese': 'zh-Hans',
+    'Korean': 'ko',
+    'Cantonese': 'zh-Hant',
+    'Spanish': 'es',
+    'Portuguese': 'pt',
+    'Indonesian': 'id',
+    'French': 'fr',
+    'German': 'de',
+    'Russian': 'ru',
+  }
+  
+  let res = "{{lyrics toggle|";
+  let idx = 0;
+  res += `${(lookupOriginalColumnSemanticId[headersText[idx]] || 'org')}:${headersText[idx++]}`;
+  if (needsRomanization) {
+    res += `|${(lookupRomanizedColumnSemanticId[headersText[idx]] || 'rom')}:${headersText[idx++]}`;
+  }
+  if (showEnglishColumn) {
+    res += `|eng:${headersText[idx++]}`;
+  }
+  if (!(headersText[0] in skipCustomLangIsoCode) || (isoLangCode !== '' && skipCustomLangIsoCode[headersText[0]] !== isoLangCode)) {
+    res += `|iso-lang=${isoLangCode}`;
+  }
+  res += "}}";
+  return res;
+}
 export function generateLyricsTable(
   lyrics: Lyric[], 
   { 
-    langOptions: { headersText, needsRomanization, needsEnglishTranslation }, 
-    translator, isOfficialTranslation,
+    langOptions: { headersText, skipColumns = [] }, 
+    isoLangCode, translator, isOfficialTranslation,
     bgColour, fgColour,
-    overrideShowEnglishColumn = false
   }: LyricsGeneratorParams
 ): string {
+  const needsRomanization = !skipColumns.includes(2);
+  const needsEnglishTranslation = !skipColumns.includes(3);
   const outputAsWikiTable = needsRomanization || needsEnglishTranslation;
   const hasEnglishTranslation = lyrics.some(lyric => !!lyric.english && lyric.english !== '');
-  const showEnglishColumn = overrideShowEnglishColumn || (needsEnglishTranslation && hasEnglishTranslation);
+  const showEnglishColumn = needsEnglishTranslation && hasEnglishTranslation;
 
   headersText = headersText.filter((header) => (header !== ''));
   
@@ -129,6 +178,10 @@ export function generateLyricsTable(
 
   let res: string = '';
 
+  // Lyrics columns
+  res += generateLyricsToggle(headersText, needsRomanization, showEnglishColumn, isoLangCode);
+  res += "\n";
+
   // Translator license
   const referLicense = CONST_TRANSLATOR_LICENSES.find(el => (
     el.id[0] === translator
@@ -142,37 +195,22 @@ export function generateLyricsTable(
     let hasMultipleSingerLines = usedColours.has('');
     if (hasMultipleSingerLines) usedColours.delete('');
     let singerTabs = [...usedColours].map(el => (
-      `|<span style="color:${el}">Singer</span>\n`
+      `|<span style="color:${el};">Singer</span>\n`
     )).join('');
     if (hasMultipleSingerLines) singerTabs += '|All';
-    res += `{| border="1" cellpadding="4" style="border-collapse:collapse; border:1px groove; line-height:1.5"\n!style="background-color:${bgColour}; color:${fgColour}"|Singer\n${
+    res += `{| border="1" cellpadding="4" style="border-collapse:collapse; border:1px groove; line-height:1.5"\n!style="background-color:${bgColour}; color:${fgColour};"|Singer\n${
       singerTabs
     }\n|}\n`;
   }
 
   if (outputAsWikiTable) {
     // Generate as multi-column table
-    let wikiHeaders: string = '';
     if (hasEnglishTranslation && isOfficialTranslation) {
-      wikiHeaders = headersText.map((el) => {
-        if (el === 'English') {
-          return '|{{OfficialEnglish}}\n';
-        } else {
-          return `|'''''${el}'''''\n`
-        }
-      }).join('');
-    } else {
-      wikiHeaders = headersText.map(el => {
-        if (!showEnglishColumn && el === 'English') return '';
-        return `|'''''${el}'''''\n`
-      }).join('');
+      res += '{{OfficialEnglishNotify}}\n';
     }
-
-    res += `{| style="width:100%"\n${
-      wikiHeaders
-    }${
-      lyrics.map(lyric => lyric.getWikitext(showEnglishColumn)).join('')
-    }|}`;
+    res += `{| {{lyrics table class}}\n|- class="lyrics-table-header"\n! {{lyrics header}}\n`;
+    res += lyrics.map(lyric => lyric.getWikitext(showEnglishColumn)).join('');
+    res += '|}';
 
     if (hasEnglishTranslation && (!isOfficialTranslation || translator !== '')) {
       res += `\n{{Translator|${
@@ -215,7 +253,7 @@ export function generateLyricsTable(
 
   // Lyrics/Translation Notes
   if (showNotes) {
-    res += `\n==${isTranslationNote ? 'Translation ' : ''}Notes==\n<references />\n`;
+    res += `\n==${isTranslationNote ? 'Translation ' : ''}Notes==\n{{Reflist}}\n`;
   }
   return res;
 }

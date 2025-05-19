@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useMemo } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { urlRenderer, sharedContextMenuOptions } from "./shared";
@@ -13,28 +13,31 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
   ref: ForwardedRef<any>
 ) {
 
-  const headerText = ['URL', 'Description', 'Official'];
-  const columnDefinitions = [
-    { 
-      type: 'text', 
-      renderer: urlRenderer
-    },
-    { type: 'text' },
-    { type: 'checkbox', className: 'htCenter htMiddle' }
-  ];
-  let columnWidths = [60, 30, 10];
-  if (forProducerPages) {
-    headerText.push(...['Media', 'Inactive?']);
-    columnDefinitions.push(...[
-      { type: 'checkbox', className: 'htCenter htMiddle' },
+  const { headerText, columnDefinitions, columnWidths } = useMemo(() => {
+    const headerText = ['URL', 'Description', 'Official'];
+    const columnDefinitions = [
+      { 
+        type: 'text', 
+        renderer: urlRenderer
+      },
+      { type: 'text' },
       { type: 'checkbox', className: 'htCenter htMiddle' }
-    ])
-    columnWidths = [60, 25, 5, 5, 5];
-  }
+    ];
+    let columnWidths = [60, 30, 10];
+    if (forProducerPages) {
+      headerText.push(...['Media', 'Inactive?']);
+      columnDefinitions.push(...[
+        { type: 'checkbox', className: 'htCenter htMiddle' },
+        { type: 'checkbox', className: 'htCenter htMiddle' }
+      ])
+      columnWidths = [60, 25, 5, 5, 5];
+    }
+    return { headerText, columnDefinitions, columnWidths };
+  }, []);
 
-  const handleChanges = (changes: any[][] | null) => {
+  const handleChanges = useMemo(() => (changes: any[][] | null) => {
     for (let change of (changes || [])) {
-      const [rowId, colId, _, newValue] = change;      
+      const [rowId, colId, _, newValue] = change;
       if (colId === 0) {    // changed cell is URL 
         const referUrl = CONST_RECOGNIZED_LINKS.find(({ re }) => {
           return newValue.match(re) !== null;
@@ -52,7 +55,7 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
         }
       }
     }
-  }
+  }, []);
 
   return (
     <div className="table-container">

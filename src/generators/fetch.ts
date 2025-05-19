@@ -1,6 +1,6 @@
 import { AppDataSource } from "../components/DatabaseProvider";
 
-import { CONST_WIKI_DOMAIN, CONST_RECOGNIZED_LINKS } from "../constants/linkDomains";
+import { CONST_RECOGNIZED_LINKS } from "../constants/linkDomains";
 import { CONST_LANGUAGES } from "../constants/languages";
 
 import {
@@ -111,11 +111,7 @@ function queryVocalist(vdbId: number, fallbackName: string): {
   if (rawQueryResults.length > 0) {
     // @ts-ignore
     const [baseName, wikiCat, qEngine] = rawQueryResults[0].values[0];
-    if (baseName === wikiCat) {
-      wikitext = `[[${wikiCat}]]`;
-    } else {
-      wikitext = `[[${wikiCat}|${baseName}]]`;
-    }
+    wikitext = `[[${wikiCat}]]`;
     base = baseName?.toString() || '';
     engine = qEngine?.toString() || '';
     isSuccess = true;
@@ -616,7 +612,7 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
     while (true) {
       
       let res = await fetch(
-        `https://${CONST_WIKI_DOMAIN}.fandom.com/api.php?` + 
+        `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_API_ENTRYPOINT}?` + 
         `action=query&format=json&list=categorymembers` + 
         `&cmtitle=Category:${encodeURI(prodcat)}_songs_list` +
         `&cmprop=title|sortkeyprefix&cmlimit=500` + 
@@ -660,7 +656,7 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
       const arr: { title: string, sortkey: string }[] = [];
       while (true) {
         let res = await fetch(
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/api.php?` + 
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_API_ENTRYPOINT}?` + 
           `action=query&format=json&list=categorymembers` + 
           `&cmtitle=${encodeURI(subcat)}` +
           `&cmprop=title|sortkeyprefix&cmlimit=500` + 
@@ -698,7 +694,7 @@ export async function fetchDiscographyFromVlw(prodcat: string): Promise<discogra
       const arr: { title: string, isCompilation: boolean }[] = [];
       while (true) {
         let res = await fetch(
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/api.php?` + 
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_API_ENTRYPOINT}?` + 
           `action=query&format=json&generator=categorymembers` + 
           `&indexpageids=true` +
           `&gcmtitle=${encodeURI(subcat)}` +

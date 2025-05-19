@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useMemo } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { CONST_PV_SERVICES } from "../../constants/linkDomains";
@@ -11,7 +11,7 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
 
   const headerText = ['Site', 'URL', 'Reprint?', 'Auto-gen?', 'Deleted?', 'View Count'];
 
-  const handleChanges = (changes: any[][] | null) => {
+  const handleChanges = useMemo(() => (changes: any[][] | null) => {
     for (let change of (changes || [])) {
       let [rowId, colId, _, newValue] = change;      
       if (colId === 1) {    // changed cell is URL 
@@ -29,9 +29,9 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
         }
       }
     }
-  }
+  }, []);
   
-  const columnDefinitions = [
+  const columnDefinitions = useMemo(() => [
     { 
       type: 'dropdown',
       source: CONST_PV_SERVICES.map(el => el.site),
@@ -47,7 +47,7 @@ const PlayLinksInputTable = forwardRef(function PlayLinksInputTable(
     { type: 'checkbox', className: 'htCenter htMiddle' },
     { type: 'checkbox', className: 'htCenter htMiddle' },
     { type: 'text' }
-  ];
+  ], []);
 
   return (
     <div className="table-container">

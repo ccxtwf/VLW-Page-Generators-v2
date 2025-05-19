@@ -1,9 +1,7 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useMemo } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { sharedContextMenuOptions } from "./shared";
-
-import { CONST_WIKI_DOMAIN } from "../../constants/linkDomains";
 
 interface DiscographyTableInterface {
   forAlbums?: boolean
@@ -15,69 +13,72 @@ const DiscographyInputTable = forwardRef(function DiscographyInputTable(
 ) {
 
   // @ts-ignore
-  const vlwPageRenderer = (instance, td, row, col, prop, value, cellProperties) => {
+  const vlwPageRenderer = useMemo(() => (instance, td, row, col, prop, value, cellProperties) => {
     if (!value || value === '') {
       td.innerText = '';
       return td;
     } else {
       value = value.replace('<', '&lt;').replace('>', '&gt;');
       let slug = encodeURI(value).replace(/\?/g, '%3F');
-      td.innerHTML = `<a href="https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/${slug}" target="_blank" rel="noopener noreferrer">${value}</a>`;
+      td.innerHTML = `<a href="${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/${slug}" target="_blank" rel="noopener noreferrer">${value}</a>`;
     }
     return td;
-  }
+  }, []);
 
-  let headerText = null;
-  let columnDefinitions = null;
-  let columnWidths = null;
+  const { headerText, columnDefinitions, columnWidths } = useMemo(() => {
+    let headerText = null;
+    let columnDefinitions = null;
+    let columnWidths = null;
+    if (forAlbums) {
+      headerText = [
+        'Album pages', 
+        'Additional template parameters',
+        'Is Compilation?'
+      ];
+      columnDefinitions = [
+        { 
+          type: 'text', 
+          renderer: vlwPageRenderer
+        },
+        { type: 'text' },
+        { type: 'checkbox', className: 'htCenter htMiddle' },
+      ];
+      columnWidths = [60, 25, 15];
+    } else {
+      headerText = [
+        'Song pages', 
+        'Additional template parameters'
+      ];
+      columnDefinitions = [
+        { 
+          type: 'text', 
+          renderer: vlwPageRenderer
+        },
+        { type: 'text' }
+      ];
+      columnWidths = [60, 40];
+    }
+    return { headerText, columnDefinitions, columnWidths };
+  }, []);
 
-  if (forAlbums) {
-    headerText = [
-      'Album pages', 
-      'Additional template parameters',
-      'Is Compilation?'
-    ];
-    columnDefinitions = [
-      { 
-        type: 'text', 
-        renderer: vlwPageRenderer
-      },
-      { type: 'text' },
-      { type: 'checkbox', className: 'htCenter htMiddle' },
-    ];
-    columnWidths = [60, 25, 15];
-  } else {
-    headerText = [
-      'Song pages', 
-      'Additional template parameters'
-    ];
-    columnDefinitions = [
-      { 
-        type: 'text', 
-        renderer: vlwPageRenderer
-      },
-      { type: 'text' }
-    ];
-    columnWidths = [60, 40];
-  }
-
-  const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
+  const handleVlwPageUrlInputEvent = useMemo(() => (changes: (any[] | null)[]) => {
     for (let change of changes) {
       // @ts-ignore
-      const [rowId, colId, prevValue, newValue] = change || [];      
+      let [rowId, colId, prevValue, newValue] = change || [];
+      newValue = `${newValue || ''}`;
       if (colId === 0) {
         // Detect if inputted value in page name cell is a URL that links to VLW
         // If so, automatically change the cell value to the page title
-        const tryMatch = newValue?.match(/^https?:\/\/vocaloidlyrics\.fandom\.com\/wiki\/([^\?]+)/) || null;
-        if (tryMatch !== null) {
-          let wikiPageName = tryMatch[1];
+        const ownWikiUrlHead = `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/`;
+        if ((newValue as string).startsWith(ownWikiUrlHead)) {
+          let wikiPageName = (newValue as string).replace(ownWikiUrlHead, '');
           wikiPageName = decodeURI(wikiPageName).replace(/_/g, ' ').replace(/%3F/g, '?');
           // @ts-ignore
           change[3] = wikiPageName;
         }
       }
     }
-  }
+  }, []);
 
   return (
     <div className="table-container">

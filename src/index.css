@@ -121,7 +121,9 @@ textarea {
 
 .handsontable:has(.playlinks-table) textarea.handsontableInput {
   height: 0px;
+  height: min-content;
   min-height: 0px;
+  min-height: min-content;
   max-height: 0px;
 }
 

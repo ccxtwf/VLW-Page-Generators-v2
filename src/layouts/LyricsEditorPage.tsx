@@ -14,87 +14,117 @@ import { CONST_TOOLTIPS_LYRICS_EDITOR } from '../constants/tooltips';
 
 import CopyButton from '../components/reusables/CopyButton';
 
-import { lyricsEditorFormInterface } from "../types";
+import { IDictionary, lyricsEditorFormInterface } from "../types";
 import { generateLyricsTable, detonePinyin } from "../utils";
 import { Lyric } from "../generators/classes";
 
-function _parseLyricsTablesFromSourceCode(sourceCode: string): string[] {
-  const lyricsTables = sourceCode.match(/\{\|\s*style\s*=.*?\|\}/gs);
-  if (lyricsTables === null) {
-    return [];
-  }
-  return lyricsTables.map(el => el.toString());
+function _parseLyricsTablesFromSourceCode(wikipageContents: string): RegExpExecArray[] {
+  const rx = /(\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]toggle[^\}]+\}\}(?:.*?)|)(\{\|\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]table[ _]class\}\}\s*\n\|-\s*class\s*=\s*["'][^\n]*\blyrics-table-header\b[^\n]*["']\s*\n!\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]header\}\})\s*\n(.*?\|\})\s*(\{\{(?:[Tt]emplate:|)[Tt]ranslator[^\}]*\}\}|)/gs;
+  return Array.from(wikipageContents.matchAll(rx));
 }
-function _parseLyricsFromTable(sourceCode: string): {
-  headers: string[], lyrics: string[][]
-} {  
-  let headerMatchResults = /(?<=\{\|.*\n)(?:\|'{2,}(\w+)'{2,}\s*\n)(?:\|'{2,}(\w+)'{2,}\s*\n)?(?:\|'{2,}(\w+)'{2,}\s*\n)?/gm
-    .exec(sourceCode);
-  let headers: string[] = [];
-  if (headerMatchResults === null) {
-    headers = ['Original', 'Romanized', 'English'];
-  } else {
-    headers = [
-      headerMatchResults[1] || 'Original', 
-      headerMatchResults[2] || 'Romanized', 
-      headerMatchResults[3] || 'English'
-    ]
-  }
 
-  let lyrics: string[][] = [];
-  let lineMatchResults = sourceCode.matchAll(/\|-(.*?)\n(.*?)\n(?=\|-|\|\})/gs);
-  for (let line of lineMatchResults) {
-
-    const [_, customStyle, lines] = line;
-    
-    let customColourMatch = /style\s*=\s*["']\s*color\s*:\s*([#a-zA-Z0-9]+)\s*;?\s*["']/g.exec(customStyle);
-    let customColour = customColourMatch === null ? '' : customColourMatch[1] || '';
-
-    let rxResults = lines.matchAll(/(?<=\n\||^\|).*?(?=\n\||$)/gs);
-    let splitLyrics = Array.from(rxResults).map(res => res[0]);
-
-    if (splitLyrics.length === 1) {
-      const rxCheckSharedColumn = /^\s*(\{\{shared[^\}]*\}\}|colspan=["']\d+["']\s*\|)/gi
-      let sharedRow = splitLyrics[0];
-      if (sharedRow.match(/^\s*<br\s*\/?\s*>\s*$/)) {
-        lyrics.push([customColour, '', '', '']);
-      } else if (sharedRow.match(rxCheckSharedColumn)) {
-        sharedRow = sharedRow.replace(rxCheckSharedColumn, '');
-        lyrics.push([customColour, sharedRow, sharedRow, sharedRow]);
-      } else {
-        lyrics.push([customColour, splitLyrics[0] || '', '', '']);
+function _parseLyricsToggleParameters(lyricsToggleWikitext: string): { toggleElement: string, headers: string[], isoLangCode: string | null, miscParams: IDictionary<string> } {
+  const headers: string[] = [];
+  let isoLangCode = null;
+  const miscParams: IDictionary<string> = {};
+  const template = lyricsToggleWikitext.match(/\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]toggle\|(.*)\}\}/);
+  
+  if (template === null || template[1] === '') {
+    return { 
+      toggleElement: template === null ? '' : template[0], 
+      headers, isoLangCode, miscParams 
+    };
+  } 
+  for (let param of template[1].split('|')) {
+    if (param.includes('=')) {
+      const [_, paramKey, paramValue] = param.match(/^\s*(.*?)\s*=\s*(.*)\s*$/) || ['', '', ''];
+      switch (paramKey) {
+        case 'iso-lang':
+          isoLangCode = paramValue;
+          break;
+        default:
+          miscParams[paramKey] = paramValue;
+          break;
       }
     } else {
-      lyrics.push([
-        customColour, 
-        splitLyrics[0] || '',
-        splitLyrics[1] || '',
-        splitLyrics[2] || ''
-      ]);
+      headers.push(param.replace(/^.*?:\s*?(.*)\s*?$/, '$1'));
     }
   }
-
-  return { headers, lyrics };
+  return { toggleElement: template[0], headers, isoLangCode, miscParams };
 }
+  
+function _parseLyricsFromTable(table: RegExpExecArray): { 
+  lyrics: string[][], toggleElement: string, headers: string[], isoLangCode: string | null, numColumns: number 
+} {
+  const lyrics = [];
+  let numColumns = 0;
+
+  const [ _, tableDefinition, tableHead, tableBody ] = table;
+
+  const { toggleElement, headers, isoLangCode } = _parseLyricsToggleParameters(tableDefinition);
+  
+  const tableRows = Array.from(tableBody.matchAll(/\|-(.*?)\n([^]*?)\n(?=\|-|\|\})/g));
+  for (let tableRow of tableRows) {
+    let customStyle: any = tableRow[1];
+    customStyle = customStyle.match(/style\s*=\s*["'][^\n]*color\s*:\s*([#0-9a-zA-Z]+)[^\n]*["']/);
+    customStyle = customStyle === null ? '' : customStyle[1];
+    let lines = tableRow[2];
+    let rxResults = lines.matchAll(/(?<=\n\||^\|).*?(?=\n\||$)/g);
+    let splitLyrics = Array.from(rxResults).map(function (res) { return res[0]; });
+    numColumns = Math.max(splitLyrics.length, numColumns);
+    if (splitLyrics.length === 1) {
+      const rxCheckSharedColumn = /^\s*(\{\{(?:[Tt]emplate:|)shared[^\}]*\}\}|colspan=\s*(?:["']|)\s*\d+\s*(?:["']|)\s*\|)/gi;
+      let sharedRow = splitLyrics[0];
+      if (sharedRow.match(/^\s*<br\s*\/?\s*>\s*$/)) {
+        let lyricRow = [customStyle];
+        for (let j = 0; j < numColumns; j++) {
+          lyricRow.push('');
+        }
+        lyrics.push(lyricRow);
+      } else if (sharedRow.match(rxCheckSharedColumn)) {
+        sharedRow = sharedRow.replace(rxCheckSharedColumn, '');
+        let lyricRow = [customStyle];
+        for (let j = 0; j < numColumns; j++) {
+          lyricRow.push(sharedRow);
+        }
+        lyrics.push(lyricRow);
+      } else {
+        let lyricRow = [customStyle, splitLyrics[0] || ''];
+        for (let j = 1; j < numColumns; j++) {
+          lyricRow.push('');
+        }
+        lyrics.push(lyricRow);
+      }
+    } else {
+      let lyricRow = [customStyle];
+      for (let j = 0; j < numColumns; j++) {
+        lyricRow.push(splitLyrics[j] || '');
+      }
+      lyrics.push(lyricRow);
+    }
+  }
+  
+  return { lyrics, toggleElement, headers, isoLangCode, numColumns };
+}
+
 function _consolidateCellInlineColourFormatting(lyrics: string[][]): string[][] {
   const rxCellInlineColourFormatting = /^\s*<[Ss][Pp][Aa][Nn]\s+style\s*=\s*["']\s*color\s*:\s*([a-zA-Z0-9#]+);?["']\s*>(.*)<\/\s*[Ss][Pp][Aa][Nn]\s*>\s*$/;
   const rxSpanTagHead = /<span(?:\s+[^>]+|)\s*>/i;
   return lyrics.map((lyric) => {
-    const l1 = (lyric[1] || '').trim();
-    const l2 = (lyric[2] || '').trim();
-    const l3 = (lyric[3] || '').trim();
-    const m1 = l1.match(rxCellInlineColourFormatting);
-    const m2 = l2.match(rxCellInlineColourFormatting);
-    const m3 = l3.match(rxCellInlineColourFormatting);
-
-    // Check if original lyrics, romanized lyrics, and translated lyrics are all enclosed within "<span style=color:<COLOR>;></span>" tags.
-    if (!!m1 && (l2 === '' || !!m2) && (l3 === '' || !!m3)) {
+    let m = [];
+    for (let i = 1; i < lyric.length; i++) {
+      const l = (lyric[i] || '').trim()
+      const rxResults = l.match(rxCellInlineColourFormatting);
+      m.push({ rxResults, isEmpty: l === '' });
+    }
+    if (m.every((el => el.isEmpty || !!el.rxResults))) {
       // Skip if the contents enclosed within the span tags in the original lyrics contain another span tag.
-      if (!m1[2].match(rxSpanTagHead)) {
-        lyric[0] = m1[1];
-        lyric[1] = m1[2];
-        if (l2 !== '' && !!m2) lyric[2] = m2[2];
-        if (l3 !== '' && !!m3) lyric[3] = m3[2];
+      if (!!m[0].rxResults && !m[0].rxResults[2].match(rxSpanTagHead)) {
+        lyric[0] = m[0].rxResults[1];
+        for (let i = 1; i < lyric.length; i++) {
+          //@ts-ignore
+          if (!!m[i-1].rxResults) lyric[i] = m[i-1].rxResults[2];
+        }
       }
     }
     return lyric;
@@ -142,19 +172,19 @@ export default function LyricsEditorPage() {
     // @ts-ignore
     const lyricsTable = refLyrics.current?.hotInstance;
     lyricsTable?.loadData(
-      Array(20).fill(null).map(_ => (["", "", "", ""]))
+      Array(20).fill(null).map(_ => (["", "", "", "", "", ""]))
     );
   }, []);
 
-  const [headersText, setHeadersText] = useState<string[]>(
-    ['Colour', 'Original', 'Romanized', 'English']
-  );
-  const [lyricsTables, setLyricsTables] = useState<string[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [lyricsTables, setLyricsTables] = useState<RegExpExecArray[]>([]);
+  const [headersText, setHeadersText] = useState<string[]>(['Original', 'Romanized', 'English', 'Column 4', 'Column 5']);
+  const [hideColumns, setHideColumns] = useState<number[]>([4, 5]);
+  // const [lyricsToggleWikitext, setLyricsToggleWikitext] = useState<string>('');
+  const [isoLangCode, setIsoLangCode] = useState<string>('');
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [formData, setFormData] = useState<lyricsEditorFormInterface>({
     translator: "",
     isOfficialTranslation: false,
-    outputThirdColumn: false
   });
   const [results, setResults] = useState<string>('');
   const [controlOpenTools, setControlOpenTools] = useState<{ spC: boolean, wkF: boolean }>({
@@ -232,30 +262,80 @@ export default function LyricsEditorPage() {
       onInput={(_, data) => {
         const parsedTables = _parseLyricsTablesFromSourceCode(`${data?.value || ''}`);        
         setLyricsTables(parsedTables);
+        setSelectedIndex(parsedTables.length === 0 ? -1 : 0);
       }}
     />
     <Button 
       color='violet' size='large' fluid style={{ marginTop: '10px' }}
       onClick={() => {
+        if (selectedIndex === -1 || lyricsTables.length === 0) return;
         const selectedTable = lyricsTables[selectedIndex];
-        const { headers, lyrics } = _parseLyricsFromTable(selectedTable);
-        setHeadersText(['Colour', ...headers]);
+        const { lyrics, toggleElement, headers, isoLangCode, numColumns } = _parseLyricsFromTable(selectedTable);
+        setIsoLangCode(isoLangCode || '');
+        // @ts-ignore
+        document.getElementById('lyrics-toggle').value = toggleElement;
+        setHeadersText(headers);
+        if (numColumns >= 5) {
+          setHideColumns([]);
+        } else {
+          const h = [];
+          for (let i = 1; i <= 5-numColumns; i++) {
+            h.push(numColumns+i);
+          }
+          setHideColumns(h);
+        }
         // @ts-ignore
         const lyricsTable = refLyrics.current?.hotInstance;
         lyricsTable?.loadData(lyrics);
+        const mTranslator = selectedTable[0].match(/\{\{(?:[Tt]emplate:|)[Tt]ranslator\|\s*([^\}]+?)\s*\}\}/);
+        //@ts-ignore
+        document.getElementById('translator-input').value = mTranslator === null ? '' : mTranslator[1];
+        //@ts-ignore
+        document.getElementById('is-official-translator-input').checked = (selectedTable[0].match(/\{\{(?:[Tt]emplate:|)[Oo]fficialEnglishNotify\s*\}\}/) !== null);
+        setFormData({
+          //@ts-ignore
+          translator: document.getElementById('translator-input').value,
+          //@ts-ignore
+          isOfficialTranslation: document.getElementById('is-official-translator-input').checked,
+        });
       }}
     >
       Extract Lyrics Table
     </Button>
 
     <Divider />
+    
+    <h3>Parsed Lyrics:</h3>
+    <Grid stackable verticalAlign='middle'>
+      <GridRow>
+        <GridColumn width={3}>
+          <h4>Lyrics Toggle Wikitext:</h4>
+        </GridColumn>
+        <GridColumn width={13}>
+          <Input 
+            id="lyrics-toggle"
+            fluid 
+            placeholder="{{lyrics toggle|jp:Japanese|rom:Romaji|eng:English}}"
+            onBlur={(e: Event) => {
+              //@ts-ignore
+              const newValue: string = e?.target?.value || '';
+              // setLyricsToggleWikitext(newValue);
+              const res = _parseLyricsToggleParameters(newValue);
+              setIsoLangCode(res.isoLangCode ?? '');
+              if (res.headers !== null) setHeadersText(res.headers);
+            }}
+          />
+        </GridColumn>
+      </GridRow>
+    </Grid>
+
+    <br />
 
     {/* Lyrics Output */}
-    <h3>Parsed Lyrics:</h3>
     <LyricsInputTable
-      headersText={headersText}
-      needsRomanization={true}
-      needsEnglishTranslation={true} 
+      headersText={['Colour' , ...headersText]}
+      hideColumns={hideColumns}
+      allowColumnAdditionRemoval={true}
       ref={refLyrics}
     />
 
@@ -267,23 +347,24 @@ export default function LyricsEditorPage() {
           <h4>Translator:</h4>
         </GridColumn>
         <GridColumn width={10}>
-          <Input fluid {...bindInput('translator')} />
+          <Input fluid {...bindInput('translator')} id='translator-input' />
         </GridColumn>
         <GridColumn width={3}>
           <Checkbox 
+            id='is-official-translator-input'
             label='Is official translation?' 
             {...bindCheckbox('isOfficialTranslation')} 
           />
         </GridColumn>
       </GridRow>
-      <GridRow>
+      {/* <GridRow>
         <GridColumn width={16}>
           <Checkbox 
             label='Must show English lyrics column' 
             {...bindCheckbox('outputThirdColumn')} 
           />
         </GridColumn>
-      </GridRow>
+      </GridRow> */}
     </Grid>
 
     <br />
@@ -365,7 +446,8 @@ export default function LyricsEditorPage() {
             <b>Internal link</b>: [[Page name]]<br />
             <b>Hyperlink (external website)</b>: [https://www.example.org displayed text]<br />
             <b>Link to wikipedia</b>: [[wikipedia:Page_name|displayed text]]<br />
-            <b>Link to other FANDOM wiki</b>: [[w:c:Wiki_name:Page_name|displayed text]]
+            <b>Link to FANDOM wiki</b>: {`{{FandomWiki|Wiki_name|Page_name|displayed text}}`}<br />
+            <b>Link to other Miraheze wiki</b>: [[mh:Wiki_name:Page_name|displayed text]]
           </div>
         }
         on='click'
@@ -446,20 +528,25 @@ export default function LyricsEditorPage() {
       onClick={() => {
         // @ts-ignore
         const lyricsTable = refLyrics.current?.hotInstance;
+        const skipColumns = lyricsTable?.getSettings()?.hiddenColumns?.columns;
         const lyrics = lyricsTable.getData()?.map((arr: string[]) => (
-          new Lyric(true, true, ...arr)
+          new Lyric({ 
+            hasAdditionalColumns: true,
+            skipColumns,
+          },
+         ...arr)
         ));
+        console.log(lyrics);
         const output = generateLyricsTable(lyrics, {
           langOptions: {
-            headersText: [headersText[1], headersText[2], headersText[3]],
-            needsRomanization: true,
-            needsEnglishTranslation: true
+            headersText: headersText,
+            skipColumns,
           },
+          isoLangCode,
           translator: formData.translator.trim(),
           isOfficialTranslation: formData.isOfficialTranslation,
           bgColour: 'black',
           fgColour: 'white',
-          overrideShowEnglishColumn: formData.outputThirdColumn
         });
         setResults(output);
       }}

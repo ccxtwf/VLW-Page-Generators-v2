@@ -10,6 +10,7 @@ import Tooltip from '../components/reusables/Tooltip';
 
 import TracklistInputTable from '../components/handsontables/TracklistInputTable';
 import ExternalLinksInputTable from '../components/handsontables/ExternalLinksInputTable';
+import OfficialAlbumStreamingInputTable from '../components/handsontables/OfficialAlbumStreamingInputTable';
 
 import CopyButton from '../components/reusables/CopyButton';
 import DisplayError from '../components/reusables/DisplayErrors';
@@ -27,6 +28,7 @@ import { albumPageFormInterface, displayErrorsInterface } from "../types";
 import { parseInput, validate, autoloadCategories, generateAlbumPage } from "../generators/albumPage";
 import { fetchDataFromVocaDbForAlbumPage } from "../generators/fetch";
 import { CONST_MONTHS } from '../constants/months';
+import { CONST_ALBUM_STREAMING_LINKS } from '../constants/linkDomains';
 
 const defaultInputData: albumPageFormInterface = {
   origTitle: "",
@@ -70,6 +72,7 @@ export default function AlbumGeneratorPage() {
   // HANDSONTABLES
   const refTracklist = useRef(null);
   const refExtLinks = useRef(null);
+  const refOfficialStreaming = useRef(null);
 
   const { bindInput, bindDropdown, bindCheckbox } = useTwoWayBinding<albumPageFormInterface>(formData, setFormData);
 
@@ -91,6 +94,10 @@ export default function AlbumGeneratorPage() {
     // @ts-ignore
     refTracklist.current?.hotInstance?.loadData(
       Array(12).fill(null).map(_ => ['', '', '', '', ''])
+    );
+    // @ts-ignore
+    refOfficialStreaming.current?.hotInstance?.loadData(
+      CONST_ALBUM_STREAMING_LINKS.map(el => [el.name, ''])
     );
   }, []);
 
@@ -121,8 +128,6 @@ export default function AlbumGeneratorPage() {
             engines, vdbAlbumId, vocaWikiPage, imageSrc 
           }, tracklistData, extLinksData
           } = data;
-
-          console.log(">> HANDLING FETCH: ", data);
 
           // SET INTERNAL STATES
           setFormData(() => ({
@@ -163,6 +168,7 @@ export default function AlbumGeneratorPage() {
           refExtLinks.current?.hotInstance?.loadData(extLinksData);
           // @ts-ignore
           refTracklist.current?.hotInstance?.loadData(tracklistData);
+          
           window.alert('Finished fetching from VocaDB');
         })
         .catch((err) => {
@@ -211,6 +217,10 @@ export default function AlbumGeneratorPage() {
       refTracklist.current?.hotInstance?.loadData(
         Array(12).fill(null).map(_ => ['', '', '', '', ''])
       );
+      // @ts-ignore
+      refOfficialStreaming.current?.hotInstance?.loadData(
+        CONST_ALBUM_STREAMING_LINKS.map(el => [el.name, ''])
+      );
 
       setNotify({
         errors: [], warnings: [],
@@ -228,8 +238,10 @@ export default function AlbumGeneratorPage() {
       // @ts-ignore
       tracklistData: refTracklist.current?.hotInstance?.getData() || [],
       // @ts-ignore
-      extLinksData: refExtLinks.current?.hotInstance?.getData() || []
-    });
+      officialStreamingData: refOfficialStreaming.current?.hotInstance?.getData() || [],
+      // @ts-ignore
+      extLinksData: refExtLinks.current?.hotInstance?.getData() || [],
+    });    
 
     const { errors, recommendToAutoloadCategories } = validate(parsedInput);
     let hasFatalError: boolean = false;
@@ -623,6 +635,24 @@ export default function AlbumGeneratorPage() {
           id="album-generator-input-vocaWikiPage"
           fluid placeholder="Vocaloid Wiki Page Name" 
           {...bindInput("vocaWikiPage")} 
+        />
+      </GridColumn>
+    </GridRow>
+
+    {/* Crossfades & Streaming */}
+    <GridRow className={bindElementWithErrorNotification('official-streaming')}>
+      <GridColumn width={3}>
+        <div className='label-column'>
+          <div>Official Crossfades & Streaming:</div>
+          <Tooltip 
+            content={CONST_TOOLTIPS_ALBUM_PAGES.officialStreaming} 
+            position={tooltipPosition}
+          />
+        </div>
+      </GridColumn>
+      <GridColumn width={13}>
+        <OfficialAlbumStreamingInputTable 
+          ref={refOfficialStreaming}
         />
       </GridColumn>
     </GridRow>

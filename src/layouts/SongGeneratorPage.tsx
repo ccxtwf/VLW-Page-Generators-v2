@@ -5,7 +5,8 @@ import {
   Input, Dropdown, TextArea,
   Button, Checkbox, 
   Image,
-  ImageGroup
+  ImageGroup,
+  DropdownProps
 } from 'semantic-ui-react';
 import Tooltip from '../components/reusables/Tooltip';
 
@@ -34,6 +35,7 @@ const defaultInputData: songPageFormInterface =  {
   cwState: ENUM_CW_STATES.noWarnings,
   cwText: '',
   hasEpilepsyWarning: false,
+  isoLangCode: '',
   origTitle: '',
   altChTitle: '',
   altChIsTraditional: true,
@@ -77,6 +79,7 @@ export default function SongGeneratorPage() {
 
   // const [showDarkMode, setShowDarkMode] = useState<boolean>(false);
 
+  const [isoLang, setIsoLang] = useState<string>('');
   const [ignoreErrors, setIgnoreErrors] = useState<boolean>(false);
   const [results, setResults] = useState<string>('');
   const [elementsWithErrors, setElementsWithErrors] = useState<string[]>([]);
@@ -101,6 +104,12 @@ export default function SongGeneratorPage() {
   const [ needsRomanization, needsEnglishTranslation, headersText, isChinese ] = useMemo(() => (
     parseHeadersFromLanguages(languages)
   ), [languages]);
+  const hideLyricsTableColumns = useMemo(() => {
+    const res = [4, 5];
+    if (!needsRomanization) res.push(2);
+    if (!needsEnglishTranslation) res.push(3);
+    return res;
+  }, [needsRomanization, needsEnglishTranslation]);
   const bindElementWithErrorNotification = useMemo(() => (
     (key: string) => {
       if (elementsWithErrors.includes(key)) return 'error'
@@ -163,6 +172,10 @@ export default function SongGeneratorPage() {
             uploadDate, singers, producers
           })
           setLanguageIds(() => languageIds);
+          if (languageIds.length > 0) {
+            const isoLangCode = (CONST_LANGUAGES[languageIds[0]] || {}).iso || '';
+            setIsoLang(isoLangCode);
+          }
           setUsedEngines(() => engines);
           setImgProps(() => imageProps);
 
@@ -202,9 +215,7 @@ export default function SongGeneratorPage() {
 
   function handleAutoloadCategories() {
     const categories = autoloadCategories({
-      languageIds, needsEnglishTranslation, 
-      engines: usedEngines, 
-      singers: formData.singers, 
+      needsEnglishTranslation, 
       producers: formData.producers, 
       isAlbumOnly: formData.isAlbumOnly,
       // @ts-ignore
@@ -256,6 +267,18 @@ export default function SongGeneratorPage() {
     }
   }
 
+  function handleLanguageDropdownChange(_: React.SyntheticEvent<HTMLElement>, data: DropdownProps) {
+    const newData = (data.value as number[]);
+    setLanguageIds(newData);
+    if (newData.length === 1) {
+      const langId = (data.value as number[])[0];
+      const isoLangCode = (CONST_LANGUAGES[langId] || {}).iso || '';
+      setIsoLang(isoLangCode);
+    } else if (newData.length === 0) {
+      setIsoLang('');
+    }
+  }
+
   function generateOutput() {
     const parsedInput = parseInput({
       data: {
@@ -263,8 +286,9 @@ export default function SongGeneratorPage() {
         languageIds, usedEngines
       }, 
       langOptions: {
-        needsRomanization, needsEnglishTranslation, 
-        headersText: [...headersText.slice(1)]
+        headersText: [...headersText.slice(1)],
+        //@ts-ignore
+        skipColumns: refLyrics.current?.hotInstance?.getSettings()?.hiddenColumns?.columns,
       }, 
       // @ts-ignore
       playLinksData: refPlayLinks.current?.hotInstance?.getData() || [],
@@ -414,8 +438,36 @@ export default function SongGeneratorPage() {
           })}
           className={bindElementWithErrorNotification('languageIds')}
           value={languageIds}
-          // @ts-ignore
-          onChange={(_, data) => setLanguageIds(data.value)}
+          onChange={handleLanguageDropdownChange}
+        />
+      </GridColumn>
+    </GridRow>
+    <GridRow>
+      <GridColumn width={3}>
+        <div className='label-column'>
+          <div>Language ISO Code:</div>
+          <Tooltip 
+            required 
+            content={CONST_TOOLTIPS_SONG_PAGES.isoLangCode} 
+            position={tooltipPosition} 
+          />
+        </div>
+      </GridColumn>
+      <GridColumn width={13}>
+        <Input
+          id="song-generator-input-isoLangCode"
+          placeholder='ja'
+          className={bindElementWithErrorNotification('isoLangCode')}
+          value={isoLang}
+          onBlur={(e: Event) => {
+            //@ts-ignore
+            setIsoLang(e.target.value);
+            setFormData({
+              ...formData,
+              //@ts-ignore
+              isoLangCode: e.target.value
+            })
+          }}
         />
       </GridColumn>
     </GridRow>
@@ -745,9 +797,9 @@ export default function SongGeneratorPage() {
         </div> */}
         <LyricsInputTable 
           headersText={headersText}
-          needsRomanization={needsRomanization}
-          needsEnglishTranslation={needsEnglishTranslation}
+          hideColumns={hideLyricsTableColumns}
           // mode={showDarkMode ? 'dark' : 'light'}
+          allowColumnAdditionRemoval={false}
           mode='light'
           ref={refLyrics}
         />

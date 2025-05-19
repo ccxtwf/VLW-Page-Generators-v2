@@ -21,7 +21,6 @@ import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 
 import { CONST_LANGUAGES } from '../constants/languages';
 import { CONST_TOOLTIPS_PRODUCER_PAGES } from '../constants/tooltips';
-import { CONST_WIKI_DOMAIN } from '../constants/linkDomains';
 
 import { producerPageFormInterface, producerRoles, displayErrorsInterface } from "../types";
 
@@ -608,9 +607,9 @@ export default function AlbumGeneratorPage() {
       <GridColumn width={13}>
         <div>
         Use the "Fetch discography from wiki" button to get the song & album pages that have been tagged in Vocaloid Lyrics wiki.<br />Alternatively, you can use <a href={
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/Special:CategoryTree`
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/Special:CategoryTree`
         } target='_blank' rel="noopener noreferrer">the Category Tree tool in Vocaloid Lyrics wiki</a> to manually get the list of song & album pages. See this example for <a href={
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/Special:CategoryTree?target=Category%3APinocchioP+songs+list&mode=all&namespaces=`
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/Special:CategoryTree?target=Category%3APinocchioP+songs+list&mode=all&namespaces=`
         } target='_blank' rel="noopener noreferrer">PinocchioP</a>.<br /><br />Do note that the Category Tree tool can only query a maximum of 200 pages per category.
         </div>
       </GridColumn>

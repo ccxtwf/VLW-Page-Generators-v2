@@ -1,9 +1,9 @@
 import { ENUM_CW_STATES } from "../types";
 import { Lyric, PlayLink, ExternalLink } from "./classes";
-import { CONST_LANGUAGES } from "../constants/languages";
 import { CONST_PV_SERVICE_ABBREVIATIONS } from '../constants/linkDomains';
 import { CONST_MONTHS } from "../constants/months";
 import { generateLyricsTable, detonePinyin, validateColour } from "../utils";
+import { CONST_LANGUAGES } from "../constants/languages";
 
 interface RawInput {
   data: {
@@ -17,6 +17,7 @@ interface RawInput {
     engTitle: string
     titleIsOfficiallyTranslated: boolean
     languageIds: number[]
+    isoLangCode: string
     bgColour: string
     fgColour: string
     uploadDate: string
@@ -32,8 +33,7 @@ interface RawInput {
   }
   langOptions: {
     headersText: string[]
-    needsRomanization: boolean
-    needsEnglishTranslation: boolean
+    skipColumns?: number[]
   },
   playLinksData: any[][]
   lyricsData: any[][]
@@ -44,7 +44,8 @@ interface ProcessedInput {
     cwState: ENUM_CW_STATES
     cwText: string
     hasEpilepsyWarning: boolean
-    languageIds: number[]
+    languages: string[]
+    isoLangCode: string
     origTitle: string
     altChTitle: string
     altChIsTraditional: boolean
@@ -66,18 +67,14 @@ interface ProcessedInput {
   },
   langOptions: {
     headersText: string[],
-    needsRomanization: boolean,
-    needsEnglishTranslation: boolean
+    skipColumns?: number[]
   },
   playLinks: PlayLink[],
   lyrics: Lyric[],
   extLinks: ExternalLink[]
 }
 interface AutoloadCategoriesInput {
-  languageIds: number[]
   needsEnglishTranslation: boolean 
-  engines: string[]
-  singers: string
   producers: string
   isAlbumOnly: boolean
   lyricsData: string[][]
@@ -89,7 +86,7 @@ export function parseInput({
 }: RawInput): ProcessedInput {
   let {
     cwText, 
-    origTitle, altChTitle, romTitle, engTitle,
+    origTitle, altChTitle, romTitle, engTitle, isoLangCode,
     bgColour, fgColour,
     uploadDate: uploadDateRaw,
     singers, producers,
@@ -98,6 +95,7 @@ export function parseInput({
     categoriesRaw
   } = data;
   cwText = cwText.trim();
+  isoLangCode = isoLangCode.trim();
   origTitle = origTitle.trim();
   altChTitle = altChTitle.trim();
   romTitle = romTitle.trim();
@@ -111,6 +109,11 @@ export function parseInput({
   singers = convertRawTextAreaInput(singers.trim());
   producers = convertRawTextAreaInput(producers.trim());
   description = convertRawTextAreaInput(description.trim());
+  const languages = data.languageIds.map((languageId) => {
+    const { name } = CONST_LANGUAGES[languageId] || {};
+    if (name === 'Non-lexical lyrics') return 'Nonlexical';
+    return name;
+  })
   let categories: string[] = [];
   categoriesRaw = categoriesRaw.trim();
   if (categoriesRaw !== '') categories = categoriesRaw.split(/[\r\s]*\n+[\r\s]*/);
@@ -122,7 +125,12 @@ export function parseInput({
     .map(arr => new ExternalLink(arr[0], arr[1], arr[2]))
     .filter(el => el.url !== '');
   const lyrics: Lyric[] = lyricsData.map(arr => (
-    new Lyric(langOptions.needsRomanization, langOptions.needsEnglishTranslation, ...arr)
+    new Lyric(
+      { 
+        hasAdditionalColumns: false,
+        skipColumns: langOptions.skipColumns,
+      }, 
+      ...arr)
   ));
 
   return {
@@ -130,7 +138,8 @@ export function parseInput({
       cwState: data.cwState, cwText, hasEpilepsyWarning: data.hasEpilepsyWarning,
       origTitle, altChTitle, altChIsTraditional: data.altChIsTraditional, romTitle, engTitle, 
       titleIsOfficiallyTranslated: data.titleIsOfficiallyTranslated,
-      languageIds: data.languageIds, 
+      languages: languages, 
+      isoLangCode,
       engines: data.usedEngines,
       bgColour, fgColour,
       uploadDate, 
@@ -145,55 +154,12 @@ export function parseInput({
 }
 
 export function autoloadCategories({
-  languageIds, needsEnglishTranslation, 
-  engines, singers, producers, 
-  isAlbumOnly, lyricsData
+  needsEnglishTranslation, 
+  producers, 
+  isAlbumOnly, 
+  lyricsData
 }: AutoloadCategoriesInput): string[] {
   const res = [];
-  
-  for (let id of languageIds) {
-    const referLang = CONST_LANGUAGES[id];
-    if (!referLang) continue;
-    if (referLang.specCat) {
-      res.push(referLang.specCat);
-    } else {
-      res.push(`${referLang.name || ''} songs`);
-    }
-  }
-
-  const splitSingersByLine = singers.split('\n');
-  const detectedSingers = [];
-  let numMainSingers: number = 0;
-  for (let line of splitSingersByLine) {
-    let areMainSingers = line.match(/^\s*<small>.*<\/small>$\s*/i) === null;
-    const singersInMarkup = line.matchAll(
-      /\[\[(?<base>[^\|\n\]]*)\|?(?<cap>(?<=\|)[^\]]*)?\]\]/g
-    );
-    const singersInTemplate = line.matchAll(
-      /\{\{[Ss]inger\|(?<base>[^\|\}]+)\|?(?<cap>(?<=\|)[^\}]*)?\}\}/g
-    );
-    for (let singer of singersInMarkup) {      
-      let { base = '' } = singer.groups || {};
-      if (base === '') continue;
-      detectedSingers.push(base.trim());
-      if (areMainSingers) numMainSingers += 1;
-    }
-    for (let singer of singersInTemplate) {
-      let { base = '' } = singer.groups || {};
-      if (base === '') continue;
-      detectedSingers.push(base.trim());
-      if (areMainSingers) numMainSingers += 1;
-    }
-  }
-  res.push(...engines.map(engine => `${engine} original songs`));
-  res.push(...detectedSingers.map(singer => `Songs featuring ${singer}`));
-  if (numMainSingers > 1) {
-    res.push(
-      numMainSingers === 2 ? 'Duet songs' :
-      numMainSingers === 3 ? 'Trio songs' : 
-      'Group rendition songs'
-    );
-  }
   
   const tryMatchCircle = /'{2,}\[\[(?<base>[^\|\n\]]*)\|?(?<cap>(?<=\|)[^\|\n\]]*)?\]\]'{2,}/
     .exec(producers);
@@ -294,13 +260,13 @@ export function validate(input: ProcessedInput): {
   let { 
     data: {
       cwState, cwText, 
-      origTitle, languageIds,
+      origTitle, languages,
       bgColour, fgColour, uploadDate,
       singers, engines, producers, isAlbumOnly, isUnavailable,
       translator, isOfficialTranslation,
       categories
     }, 
-    langOptions: { needsRomanization, needsEnglishTranslation }, 
+    langOptions: { skipColumns }, 
     playLinks, lyrics 
   } = input;
 
@@ -315,7 +281,7 @@ export function validate(input: ProcessedInput): {
     ]);
   }
 
-  if (languageIds.length === 0) {
+  if (languages.length === 0) {
     res.push([
       true, 
       'You haven\'t chosen a language.', 
@@ -401,7 +367,7 @@ export function validate(input: ProcessedInput): {
     if (producers.match(/\[\[[^\]]*\]\]/gm) === null) {
       res.push([
         false, 
-        'If the producer already has a page on Vocaloid Lyrics wiki, then you should add the name of that producer in markup, e.g. "[[wowaka]] (music)" or "[[nagimiso]] (illustration)". Clicking the "Autoload Categories" button again in this case will automatically generate the category for that producer.', 
+        'If the producer already has a page on VOCALOID Lyrics wiki, then you should add the name of that producer in markup, e.g. "[[wowaka]] (music)" or "[[nagimiso]] (illustration)". Clicking the "Autoload Categories" button again in this case will automatically generate the category for that producer.', 
         'producers'
       ]);
       recommendToAutoloadCategories = true;
@@ -444,13 +410,13 @@ export function validate(input: ProcessedInput): {
   ]);
 
   const hasRomanization = lyrics.some(lyric => !!lyric.romanized && lyric.romanized !== '');
-  if (needsRomanization && !hasRomanization) res.push([
+  if (!skipColumns?.includes(2) && !hasRomanization) res.push([
     true, 
     'Romanized/transliterated lyrics column is empty.', 
     'lyrics'
   ]);
 
-  const hasEnglishTranslation = needsEnglishTranslation && lyrics.some(lyric => !!lyric.english && lyric.english !== '');
+  const hasEnglishTranslation = !skipColumns?.includes(3) && lyrics.some(lyric => !!lyric.english && lyric.english !== '');
   if (hasEnglishTranslation && translator === '' && !isOfficialTranslation) res.push([
     false, 
     'A translation exists, but the translator is uncredited. Is it made by an anonymous contributor?', 
@@ -467,11 +433,11 @@ export function generateSongPage(input: ProcessedInput): string {
       cwState, cwText, hasEpilepsyWarning, 
       origTitle, altChTitle, altChIsTraditional, romTitle, engTitle, titleIsOfficiallyTranslated,
       bgColour, fgColour, uploadDate,
-      singers, producers, description, isUnavailable,
+      singers, producers, description, languages, isoLangCode, isUnavailable,
       translator, isOfficialTranslation, 
       categories
     }, 
-    langOptions: { headersText, needsRomanization, needsEnglishTranslation }, 
+    langOptions: { headersText, skipColumns }, 
     playLinks, extLinks, lyrics 
   } = input;
   
@@ -484,9 +450,13 @@ export function generateSongPage(input: ProcessedInput): string {
   let lyricsSegment: string = '';
   let songLinksSegment: string = '';
   let viewCountsSegment: string = '';
+  let languageSegment: string = languages.join(';');
   let officialLinksWikitext: string = '';
   let unofficialLinksWikitext: string = '';
   let extLinksSegment: string = '';
+
+  const needsRomanization = !skipColumns?.includes(2);
+  const needsEnglishTranslation = !skipColumns?.includes(3);
 
   if (needsRomanization && romTitle !== '') {
     sortTemplate = '{{sort';
@@ -528,7 +498,7 @@ export function generateSongPage(input: ProcessedInput): string {
   }
   
   if (playLinks.length === 0) songLinksSegment = 'N/A'
-  else songLinksSegment = playLinks.map((playLink) => playLink.getWikitext()).join(' / ');
+  else songLinksSegment = playLinks.map((playLink) => playLink.getWikitext()).join(' ');
   const viewCounts = playLinks
     .filter((playLink) => (
       !playLink.isReprint &&
@@ -548,7 +518,8 @@ export function generateSongPage(input: ProcessedInput): string {
   if (viewCountsSegment === '') viewCountsSegment = 'N/A';
 
   lyricsSegment = generateLyricsTable(lyrics, { 
-    langOptions: { headersText, needsRomanization, needsEnglishTranslation }, 
+    langOptions: { headersText, skipColumns }, 
+    isoLangCode,
     translator, isOfficialTranslation, bgColour, fgColour 
   });
 
@@ -570,7 +541,6 @@ export function generateSongPage(input: ProcessedInput): string {
   return (
 `${displayTitleTemplate}${sortTemplate}${unavailableTemplate}${cwTemplates}
 {{Infobox_Song
-|image = 
 |songtitle = ${titlesSegment}
 |color = ${bgColour}; color:${fgColour}
 |original upload date = ${dateSegment}
@@ -578,6 +548,7 @@ export function generateSongPage(input: ProcessedInput): string {
 |producer = ${producers}
 |#views = ${viewCountsSegment}
 |link = ${songLinksSegment}${description ? `\n|description = ${description}` : ''}
+|language = ${languageSegment}
 }}
 
 ==Lyrics==

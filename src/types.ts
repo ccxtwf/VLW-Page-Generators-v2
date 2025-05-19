@@ -1,3 +1,7 @@
+export interface IDictionary<T> {
+  [key: string]: T;
+}
+
 export enum ENUM_CW_STATES {
   noWarnings,
   questionable,
@@ -8,6 +12,7 @@ export interface songPageFormInterface {
   cwState: ENUM_CW_STATES
   cwText: string
   hasEpilepsyWarning: boolean
+  isoLangCode: string
   origTitle: string
   altChTitle: string
   altChIsTraditional: boolean
@@ -71,7 +76,6 @@ export interface producerRoles {
 export interface lyricsEditorFormInterface {
   translator: string
   isOfficialTranslation: boolean
-  outputThirdColumn: boolean
 }
 
 export interface displayErrorsInterface {

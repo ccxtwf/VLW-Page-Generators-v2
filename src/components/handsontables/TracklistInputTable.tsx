@@ -1,7 +1,6 @@
 import { ForwardedRef, forwardRef, useMemo } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
-import { CONST_WIKI_DOMAIN } from "../../constants/linkDomains";
 
 const TracklistInputTable = forwardRef(function TracklistInputTable(
   _, 
@@ -9,34 +8,37 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
 ) {
 
   // @ts-ignore
-  const vlwPageRenderer = (instance, td, row, col, prop, value, cellProperties) => {
+  const vlwPageRenderer = useMemo(() => (instance, td, row, col, prop, value, cellProperties) => {
     if (!value || value === '') {
       td.innerText = '';
       return td;
     }
-    const tryMatch = value?.match(/^(?:\[\[(?!w:c:))(?:([^\|]*)(?:|\|.*))\]\]$/i) || null;
+    const tryMatch = value?.match(/^(?:\[\[(?!fandom:|wikia:|mh:|m:|meta:|metawiki:|commons:|w:))(?:([^\|]*)(?:|\|.*))\]\]$/i) || null;
     if (tryMatch !== null) {
       value = value.replace('<', '&lt;').replace('>', '&gt;');
       let slug = encodeURI(tryMatch[1]).replace(/\?/g, '%3F');
-      td.innerHTML = `<a href="https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/${slug}" target="_blank" rel="noopener noreferrer">${value}</a>`;
+      td.innerHTML = `<a href="${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/${slug}" target="_blank" rel="noopener noreferrer">${value}</a>`;
     } else {
       td.innerText = value;
     }
     return td;
-  }
+  }, []);
 
-  const headerText = ['Disk no', 'Track no', 'Track name/VLW Page Title', 'Feat. Producers', 'Feat. Singers'];
-  const columnDefinitions = [
-    { type: 'numeric' },
-    { type: 'numeric' },
-    { 
-      type: 'text',
-      renderer: vlwPageRenderer
-    },
-    { type: 'text' },
-    { type: 'text' }
-  ];
-  let columnWidths = [5, 5, 50, 20, 20];
+  const { headerText, columnDefinitions, columnWidths } = useMemo(() => {
+    const headerText = ['Disk no', 'Track no', 'Track name/VLW Page Title', 'Feat. Producers', 'Feat. Singers'];
+    const columnDefinitions = [
+      { type: 'numeric' },
+      { type: 'numeric' },
+      { 
+        type: 'text',
+        renderer: vlwPageRenderer
+      },
+      { type: 'text' },
+      { type: 'text' }
+    ];
+    let columnWidths = [5, 5, 50, 20, 20];
+    return { headerText, columnDefinitions, columnWidths };
+  }, []);
 
   const rxListSeparator = useMemo(() => (
     /(,\s*(?!and\b)|,?\s+and\s+|\s+&\s+)/
@@ -196,23 +198,24 @@ const TracklistInputTable = forwardRef(function TracklistInputTable(
     }
   }), []);
 
-  const handleVlwPageUrlInputEvent = (changes: (any[] | null)[]) => {
+  const handleVlwPageUrlInputEvent = useMemo(() => (changes: (any[] | null)[]) => {
     for (let change of changes) {
       // @ts-ignore
-      const [rowId, colId, prevValue, newValue] = change || [];      
+      let [rowId, colId, prevValue, newValue] = change || [];
+      newValue = `${newValue || ''}`;  
       if (colId === 2) {
         // Detect if inputted value in track name cell is a URL that links to VLW
         // If so, automatically change the cell value to the page title
-        const tryMatch = newValue?.match(/^https?:\/\/vocaloidlyrics\.fandom\.com\/wiki\/([^\?]+)/) || null;
-        if (tryMatch !== null) {
-          let wikiPageName = tryMatch[1];
+        const ownWikiUrlHead = `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/`;
+        if ((newValue as string).startsWith(ownWikiUrlHead)) {
+          let wikiPageName = (newValue as string).replace(ownWikiUrlHead, '');
           wikiPageName = decodeURI(wikiPageName).replace(/_/g, ' ').replace(/%3F/g, '?');
           // @ts-ignore
           change[3] = `[[${wikiPageName}]]`;
         }
       }
     }
-  }
+  }, []);
 
   return (
     <div className="table-container">

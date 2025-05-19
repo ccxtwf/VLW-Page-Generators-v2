@@ -1,5 +1,3 @@
-import { CONST_WIKI_DOMAIN } from "../constants/linkDomains";
-
 export const CONST_TOOLTIPS_SONG_PAGES = {
   vdb: (
     <>
@@ -27,6 +25,12 @@ export const CONST_TOOLTIPS_SONG_PAGES = {
   language: (
     <>
     The language the song lyrics are written in.
+    </>
+  ),
+  isoLangCode: (
+    <>
+    The ISO Language of the original lyrics, used to ensure proper rendering of the lyrics column (refer to this <a href="https://meta.miraheze.org/wiki/User:PetraMagna/Why_you_should_use_language_attributes" target="_blank" rel="noopener noreferrer">blogpost</a> for more details on how this works).<br /><br />
+    List of ISO Language Codes: <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener noreferrer">[W3Schools]</a> <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank" rel="noopener noreferrer">[Library of Congress]</a>
     </>
   ),
   origTitle: (
@@ -194,7 +198,7 @@ export const CONST_TOOLTIPS_ALBUM_PAGES = {
     <br/>
     Track names should follow the naming convention of song articles (e.g. "すろぉもぉしょん (Slow Motion)").
     <br/><br/>
-    If a song page exists on Vocaloid Lyrics wiki then you can copy and paste the URL to that song page to the cell in the third column ("Track name/VLW Page Title"). The site will automatically detect the page title in this scenario.
+    If a song page exists on VOCALOID Lyrics wiki then you can copy and paste the URL to that song page to the cell in the third column ("Track name/VLW Page Title"). The site will automatically detect the page title in this scenario.
     <br/><br/>
     Markup to featured producers and singers should only be added for the first mention of that artist/synth.
     </>
@@ -206,7 +210,12 @@ export const CONST_TOOLTIPS_ALBUM_PAGES = {
   ),
   vocaWikiPage: (
     <>
-    The Vocaloid Wiki page for the album, if it exists. Only the page name should be given.
+    The VOCALOID Wiki page for the album, if it exists. Only the page name should be given.
+    </>
+  ),
+  officialStreaming: (
+    <>
+    Official links to album crossfades/trailers/announcements and streaming links (Spotify, YouTube Music & Bandcamp)
     </>
   ),
   extLinks: (
@@ -246,7 +255,7 @@ export const CONST_TOOLTIPS_PRODUCER_PAGES = {
     <>
     This will be used as the parameter of the &#123;&#123;ProdLinks&#125;&#125; template on the producer page, which will link to the producer's songs list category on the wiki
     <br/><br/>
-    Click on the "Fetch discography from wiki" button to get this site to query the list of song & album pages from the producer category on Vocaloid Lyrics Wiki.
+    Click on the "Fetch discography from wiki" button to get this site to query the list of song & album pages from the producer category on VOCALOID Lyrics Wiki.
     <br/><br/>
     Use the toggle option on the right to split the album discography into "Original Albums" and "Compilation Albums".
     </>
@@ -335,12 +344,12 @@ export const CONST_TOOLTIPS_LYRICS_EDITOR = {
     <br/>
     <ol>
       <li>
-        Open the wiki page in <a href="https://community.fandom.com/wiki/Help:Source_editor" target="_blank" rel="noopener noreferrer">Source Editor</a>
+        Open the wiki page on Wiki Editor.
       </li>
       <li>
         Append "?action=raw" to the URL of the wiki page, e.g. <a href={
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/ECHO/Crusher-P?action=raw`
-        } target="_blank" rel="noopener noreferrer">https://{CONST_WIKI_DOMAIN}.fandom.com/wiki/ECHO/Crusher-P?action=raw</a>
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/ECHO/Crusher-P?action=raw`
+        } target="_blank" rel="noopener noreferrer">${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/ECHO/Crusher-P?action=raw</a>
       </li>
     </ol>
     Copy and paste the contents of the source code into the box below.

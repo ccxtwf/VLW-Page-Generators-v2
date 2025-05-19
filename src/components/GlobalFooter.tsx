@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { CONST_WIKI_DOMAIN } from "../constants/linkDomains";
 
 const cbDetermineActiveNativeLink = ({ isActive }: { isActive: boolean }) => (
   isActive ? 'active-nav-link' : ''
@@ -12,9 +11,9 @@ export default function GlobalFooter() {
         <div className="footer-item-left">
 
         Author: <a href="https://coolmikehatsune22.wordpress.com/about-me/" target="_blank" rel="noopener noreferrer">CoolMikeHatsune22</a>, based on earlier work by <a href={
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/User:ElectricRaichu`
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/User:ElectricRaichu`
         } target="_blank" rel="noopener noreferrer">ElectricRaichu</a> and <a href={
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/User:Nefere`
+          `https://community.fandom.com/wiki/User:Nefere`
         } target="_blank" rel="noopener noreferrer">Nefere</a>.
         
         <br />
@@ -28,7 +27,7 @@ export default function GlobalFooter() {
         <br />
         
         Re-use and modification permitted under the CC license.<br />Feel free to report any bugs/issues or suggest any improvement to <a href={
-          `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/User:CoolMikeHatsune22`
+          `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/User:CoolMikeHatsune22`
         } target="_blank" rel="noopener noreferrer">my VLW profile</a>.
 
         </div>

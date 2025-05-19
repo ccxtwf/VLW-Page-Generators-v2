@@ -1,14 +1,13 @@
 import { useLocation } from "react-router-dom";
-import { CONST_WIKI_DOMAIN } from "../constants/linkDomains";
 
 const getHeaderTextAndPolicyGuidelines = (path: string) => {
   switch (path) {
     case "/song-pages":
-      return ["Song Page Generator", `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/Vocaloid_Lyrics_Wiki:Song_Article_Guideline`];
+      return ["Song Page Generator", `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/Help:Song_Article_Guideline`];
     case "/album-pages":
-      return ["Album Page Generator", `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/Vocaloid_Lyrics_Wiki:Album_Article_Guideline`];
+      return ["Album Page Generator", `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/Help:Album_Article_Guideline`];
     case "/producer-pages":
-      return ["Producer Page Generator", `https://${CONST_WIKI_DOMAIN}.fandom.com/wiki/Vocaloid_Lyrics_Wiki:Producer_Article_Guideline`];
+      return ["Producer Page Generator", `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/Help:Producer_Article_Guideline`];
     case "/lyrics-editor":
       return ["Lyrics Editor", null];
     default:
