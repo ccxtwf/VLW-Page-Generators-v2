@@ -126,7 +126,7 @@ export default function AlbumGeneratorPage() {
             isCompilationAlbum,
             publishedYear, publishedMonth, publishedDay,
             engines, vdbAlbumId, vocaWikiPage, imageSrc 
-          }, tracklistData, extLinksData
+          }, tracklistData, extLinksData, officialStreamingData
           } = data;
 
           // SET INTERNAL STATES
@@ -168,6 +168,8 @@ export default function AlbumGeneratorPage() {
           refExtLinks.current?.hotInstance?.loadData(extLinksData);
           // @ts-ignore
           refTracklist.current?.hotInstance?.loadData(tracklistData);
+          // @ts-ignore
+          refOfficialStreaming.current?.hotInstance?.loadData(officialStreamingData);
           
           window.alert('Finished fetching from VocaDB');
         })

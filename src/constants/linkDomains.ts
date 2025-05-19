@@ -32,6 +32,11 @@ export const CONST_ALBUM_STREAMING_LINKS = [
     name: 'Bandamp Embed ID',
     paramKey: 'bc-embed',
     regex: /^(?<embedid>\d+)$/,
+  },
+  {
+    name: 'SoundCloud Crossfade',
+    paramKey: 'sc-xfade',
+    regex: /^(https?:\/\/soundcloud\.com\/.*)$/,
   }
 ];
 
@@ -40,7 +45,7 @@ interface pvService {
   re: RegExp
   sanitize?: RegExp
   isMedia?: boolean
-  isAlbumReadMoreLink?: boolean
+  mapToAlbumInfoboxReadMoreParam?: string
 }
 
 export const CONST_PV_SERVICES: pvService[] = [
@@ -123,13 +128,17 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
   {
     site: "Discogs",
     re: /^https?:\/\/www\.discogs\.com\/.*/,
-    isAlbumReadMoreLink: true,
+    mapToAlbumInfoboxReadMoreParam: 'discogs',
   },
   {
     site: "TuneCore Japan",
     re: /^https?:\/\/www\.tunecore\.co\.jp\/.*/,
-    isMedia: true,
-    isAlbumReadMoreLink: true,
+    mapToAlbumInfoboxReadMoreParam: 'tunecore',
+  },
+  {
+    site: "TuneCore",
+    re: /^https?:\/\/linkco\.re\/.*/,
+    mapToAlbumInfoboxReadMoreParam: 'tunecore',
   },
   {
     site: "VOCALOID Wiki",
@@ -138,17 +147,17 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
   {
     site: "Hatsune Miku Wiki",
     re: /^https?:\/\/www5\.atwiki\.jp\/hmiku\/.*/,
-    isAlbumReadMoreLink: true,
+    mapToAlbumInfoboxReadMoreParam: 'hmwiki',
   },
   {
     site: "Hatsune Miku Wiki",
     re: /^https?:\/\/w\.atwiki\.jp\/hmiku\/.*/,
-    isAlbumReadMoreLink: true,
+    mapToAlbumInfoboxReadMoreParam: 'hmwiki',
   },
   {
     site: "UTAU Song Database",
     re: /^https?:\/\/w\.atwiki\.jp\/utauuuta\/.*/,
-    isAlbumReadMoreLink: true,
+    mapToAlbumInfoboxReadMoreParam: 'atutau',
   },
   {
     site: "Anime Lyrics",

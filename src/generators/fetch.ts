@@ -1,6 +1,6 @@
 import { AppDataSource } from "../components/DatabaseProvider";
 
-import { CONST_RECOGNIZED_LINKS } from "../constants/linkDomains";
+import { CONST_RECOGNIZED_LINKS, CONST_ALBUM_STREAMING_LINKS } from "../constants/linkDomains";
 import { CONST_LANGUAGES } from "../constants/languages";
 
 import {
@@ -58,6 +58,7 @@ interface parsedAlbumPageInfo {
   }
   tracklistData: (string | number)[][]
   extLinksData: (string | boolean)[][]
+  officialStreamingData: string[][]
 }
 interface parsedProducerPageInfo {
   formData: {
@@ -458,6 +459,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
 
     const trackList: (string | number)[][] = [];
     const extLinks: (string | boolean)[][] = [];
+    const officialStreaming: string[][] = [];
     const addedMarkupSingers: Map<number, string> = new Map();
 
     for (let track of (json.tracks || [])) {
@@ -506,14 +508,43 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       let description = dictConvertPvServiceName[link.service] || null;
       description = 'Album crossfade' + (description === null ? '' : ` - ${description}`);
       extLinks.push([ url, description, true ]);
+      
+      switch (link.service) {
+        case PvService.yt:
+          officialStreaming.push(['YouTube Crossfade', url]);
+          break;
+        case PvService.nnd:
+          officialStreaming.push(['Niconico Crossfade', url]);
+          break;
+        case PvService.sc:
+          officialStreaming.push(['SoundCloud Crossfade', url]);
+          break;
+      }
     }
     for (let link of (json.webLinks || [])) {
       const url = link.url || '';
-      let description = link.description || '';
-      const tryMatchVocawiki = /^https?:\/\/vocaloid\.fandom\.com\/wiki\/([^\?]+)/.exec(url);
-      if (tryMatchVocawiki !== null) vocaWikiPage = tryMatchVocawiki[1];
-      if (description === 'MikuWiki') description = 'Hatsune Miku Wiki';
+      let description;
       const isOfficial = link.category === WebLinkCategory.official || link.category === WebLinkCategory.commercial;
+      const am = CONST_ALBUM_STREAMING_LINKS.find(({ regex }) => {
+        return (regex.exec(url) !== null);
+      }) || null;
+      const m = CONST_RECOGNIZED_LINKS.find(({ re }) => {
+        return (re.exec(url) !== null);
+      }) || null;
+      if (m === null) {
+        description = description = link.description || '';
+      } else {
+        description = m?.site || '';
+        if (m.site === 'VOCALOID Wiki') {
+          //@ts-ignore
+          vocaWikiPage = (/^https?:\/\/vocaloid\.fandom\.com\/wiki\/([^\?]+)/.exec(url)?.groups || {})[1] || '';
+        }
+        if (am !== null) {
+          officialStreaming.push([am.name || '', url]);
+        }
+      }
+
+      
       extLinks.push([ url, description, isOfficial ]);
     }
 
@@ -530,11 +561,11 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       vocaWikiPage,
       imageSrc
     }
-    console.log(">> IN fetch.js", formData);
     return {
       formData,
       tracklistData: trackList,
-      extLinksData: extLinks
+      extLinksData: extLinks,
+      officialStreamingData: officialStreaming,
     }
   } catch(err) {
     throw err;

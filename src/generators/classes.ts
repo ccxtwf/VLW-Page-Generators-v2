@@ -188,21 +188,21 @@ export class ExternalLink {
   isOfficial: boolean;
   isMedia?: boolean;
   isInactive?: boolean;
-  isAlbumReadMoreLink?: boolean;
+  mapToAlbumInfoboxReadMoreParam: string | null;
 
   constructor(
     url: string, description: string, 
     isOfficial: boolean | string, 
     isMedia?: boolean | string, 
     isInactive?: boolean | string, 
-    isAlbumReadMoreLink?: boolean | string,
+    mapToAlbumInfoboxReadMoreParam?: string,
   ) {
     this.url = (url || '').trim();
     this.description = (description || '').trim();
     this.isOfficial = (isOfficial === 'false' || isOfficial === '' ? false : !!isOfficial);
     this.isMedia = (isMedia === 'false' || isMedia === '' ? false : !!isMedia);
     this.isInactive = (isInactive === 'false' || isInactive === '' ? false : !!isInactive);
-    this.isAlbumReadMoreLink = (isAlbumReadMoreLink === 'false' || isAlbumReadMoreLink === '' ? false : !!isAlbumReadMoreLink);
+    this.mapToAlbumInfoboxReadMoreParam = mapToAlbumInfoboxReadMoreParam || null;
   }
 
   recognizedFandomInterwiki: IDictionary<string> = {

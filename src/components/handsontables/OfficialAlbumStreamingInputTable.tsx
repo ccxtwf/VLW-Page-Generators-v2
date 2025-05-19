@@ -42,7 +42,6 @@ const OfficialAlbumStreamingInputTable = forwardRef(function OfficialAlbumStream
   const rowAddingIsDisabled = useMemo(() => (options: string[]) => {
     const hasBlanks = options.some((el) => (el || '') === '');
     if (hasBlanks) return true;
-    console.log(selectedOptions);
     const hasAvailableOptions = Object.values(selectedOptions).every(el => el > 0);
     return hasAvailableOptions;
   }, [selectedOptions]);
@@ -78,7 +77,6 @@ const OfficialAlbumStreamingInputTable = forwardRef(function OfficialAlbumStream
           for (let i = fromRow; i <= toRow; i++) {
             //@ts-ignore
             const removedOption = ref?.current?.hotInstance.getDataAtCell(i, 0) || '';
-            console.log(removedOption);
             if (removedOption !== '') options[removedOption] = 0;
           }
           setSelectedOptions(options);
@@ -91,8 +89,6 @@ const OfficialAlbumStreamingInputTable = forwardRef(function OfficialAlbumStream
   }), [selectedOptions]);
 
   const handleChanges = useMemo(() => (changes: any[][] | null) => {
-    console.log('Detected change');
-    console.log('selectedOptions', selectedOptions)
     for (let change of (changes || [])) {
       const [_, colId, oldValue, newValue] = change;
       if (colId !== 0) return;
@@ -117,8 +113,6 @@ const OfficialAlbumStreamingInputTable = forwardRef(function OfficialAlbumStream
   }, [selectedOptions]);
   
   useEffect(() => {
-    console.log('Updated settings');
-    console.log(columnDefinitions);
     //@ts-ignore
     ref?.current?.hotInstance?.updateSettings({
       columns: columnDefinitions,
