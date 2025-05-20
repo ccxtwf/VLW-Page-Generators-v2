@@ -27,7 +27,7 @@ export class Lyric {
     return `|${
       (contents || '')
         .replace(/^-/, "<nowiki>-</nowiki>")
-        .replace(/(~{4,})/g, "<nowiki>$1</nowiki>")
+        .replace(/(?<!<nowiki>)(~{4,})(?!<\/nowiki>)/g, "<nowiki>$1</nowiki>")
     }\n`
   }
 
@@ -57,7 +57,7 @@ export class Lyric {
       if (printEmptyEnglishColumn) wikitext += this.getTableCellWikitext(this.english);
       if (this.additionalColumns) {
         for (let additionalColumn of this.additionalColumns) {
-          wikitext += wikitext += this.getTableCellWikitext(additionalColumn);
+          wikitext += this.getTableCellWikitext(additionalColumn);
         }
       }
     }

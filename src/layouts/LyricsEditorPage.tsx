@@ -257,7 +257,6 @@ export default function LyricsEditorPage() {
       },
       ...arr)
     ));
-    console.log(lyrics);
     const output = generateLyricsTable(lyrics, {
       langOptions: {
         headersText: headersText,
