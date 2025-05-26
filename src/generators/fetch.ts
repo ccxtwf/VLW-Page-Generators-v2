@@ -14,6 +14,7 @@ import {
   SchemaFetchedDiscographyAlbum
 } from "./fetch-schemas";
 import { CONST_MONTHS } from "../constants/months";
+import { convertAvidToBvId } from "../utils";
 
 const origin = 'ccxtwf.github.io';
 
@@ -266,8 +267,18 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
     for (let pv of (json.pvs || [])) {
       const pvService = dictConvertPvServiceName[pv.service] || null;
       let pvUrl = '';
-      if (pv.service === PvService.yt) pvUrl = `https://www.youtube.com/watch?v=${pv.pvId || ''}`
-      else pvUrl = pv.url || '';
+      if (pv.service === PvService.yt) {
+        pvUrl = `https://www.youtube.com/watch?v=${pv.pvId || ''}`;
+      } else if (pv.service === PvService.bb) {
+        const avid = (pv.url || '').match(/^https?:\/\/www\.bilibili\.com\/video\/(av\d+)/);
+        if (avid !== null) {
+          pvUrl = `https://www.bilibili.com/video/${convertAvidToBvId(avid[1])}`;
+        } else {
+          pvUrl = pv.url || '';
+        }
+      } else {
+        pvUrl = pv.url || '';
+      }
       const isDeleted = pv.disabled;
       const isReprint = pv.pvType !== PvType.original;
       if (pvService === null) {
