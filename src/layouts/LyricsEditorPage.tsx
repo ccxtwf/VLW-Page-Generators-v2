@@ -257,7 +257,11 @@ export default function LyricsEditorPage() {
       },
       ...arr)
     ));
-    const output = generateLyricsTable(lyrics, {
+    let output = '';
+    //@ts-ignore
+    output += document.getElementById('lyrics-toggle')?.value || '';
+    output += '\n';
+    output += generateLyricsTable(lyrics, {
       langOptions: {
         headersText: headersText,
         skipColumns,
@@ -267,6 +271,7 @@ export default function LyricsEditorPage() {
       isOfficialTranslation: formData.isOfficialTranslation,
       bgColour: 'black',
       fgColour: 'white',
+      createToggleElement: false,
     });
     setResults(output);
   }, [formData, headersText, isoLangCode]);

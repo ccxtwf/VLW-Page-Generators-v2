@@ -91,7 +91,7 @@ export function parseInput({ formData, tracklistData, officialStreamingData, ext
       );
     })
     .filter(el => el.url !== '');
-    
+  
   return {
     formData: {
       ...formData,
@@ -443,7 +443,7 @@ ${displayTitleTemplate}{{Album Infobox
 |vdb = ${vdbAlbumId}
 |vw = ${vocaWikiPage}${isCompilationAlbum ? '\n|compilation = 1' : ''}${moreInfoLinksSegment === '' ? '' : '\n'+moreInfoLinksSegment}
 
-${streamingSegment === '' ? streamingSegment+'\n' : ''}|color = ${bgColour}; color:${fgColour}
+${streamingSegment === '' ? '' : streamingSegment+'\n\n'}|color = ${bgColour}; color:${fgColour}
 ${trackListSegment}
 }}
 

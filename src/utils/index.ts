@@ -91,7 +91,7 @@ interface LyricsGeneratorParams {
   isOfficialTranslation: boolean
   bgColour: string
   fgColour: string
-  overrideShowEnglishColumn?: boolean
+  createToggleElement?: boolean
 }
 function generateLyricsToggle(headersText: string[], needsRomanization: boolean, showEnglishColumn: boolean, isoLangCode: string) {
   const lookupOriginalColumnSemanticId: IDictionary<string> = {
@@ -146,6 +146,7 @@ export function generateLyricsTable(
     langOptions: { headersText, skipColumns = [] }, 
     isoLangCode, translator, isOfficialTranslation,
     bgColour, fgColour,
+    createToggleElement = true,
   }: LyricsGeneratorParams
 ): string {
   const needsRomanization = !skipColumns.includes(2);
@@ -179,9 +180,11 @@ export function generateLyricsTable(
 
   let res: string = '';
 
-  // Lyrics columns
-  res += generateLyricsToggle(headersText, needsRomanization, showEnglishColumn, isoLangCode);
-  res += "\n";
+  if (createToggleElement) {
+    // Lyrics toggle & column headers definition
+    res += generateLyricsToggle(headersText, needsRomanization, showEnglishColumn, isoLangCode);
+    res += "\n";
+  }
 
   // Translator license
   const referLicense = CONST_TRANSLATOR_LICENSES.find(el => (

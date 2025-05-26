@@ -397,6 +397,15 @@ export function validate(input: ProcessedInput): {
     'playLinks'
   ]);
 
+  const hasAvid = playLinks.some(link => (
+    link.url.match(/^https?:\/\/www\.bilibili\.com\/video\/(av\d+)/) !== null
+  ));
+  if (hasAvid) res.push([
+    false,
+    'The Vocaloid Lyrics Wiki recommends attaching Bilibili links in the new BVid format rather than the old avid format.',
+    'playLinks'
+  ]);
+
   const hasNoOriginalLyrics = lyrics.every(lyric => lyric.original === '');
   if (hasNoOriginalLyrics) res.push([
     true,
@@ -535,7 +544,7 @@ export function generateSongPage(input: ProcessedInput): string {
 
   return (
 `${displayTitleTemplate}${sortTemplate}${unavailableTemplate}${cwTemplates}
-{{Infobox_Song
+{{Infobox Song
 |songtitle = ${titlesSegment}
 |color = ${bgColour}; color:${fgColour}
 |original upload date = ${dateSegment}

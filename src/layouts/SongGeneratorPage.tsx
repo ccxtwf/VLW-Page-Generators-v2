@@ -79,7 +79,6 @@ export default function SongGeneratorPage() {
 
   // const [showDarkMode, setShowDarkMode] = useState<boolean>(false);
 
-  const [isoLang, setIsoLang] = useState<string>('');
   const [ignoreErrors, setIgnoreErrors] = useState<boolean>(false);
   const [results, setResults] = useState<string>('');
   const [elementsWithErrors, setElementsWithErrors] = useState<string[]>([]);
@@ -158,7 +157,7 @@ export default function SongGeneratorPage() {
         .then( data => {
           const { 
             formData: { 
-              languageIds, origTitle, romTitle, engTitle, 
+              languageIds, origTitle, romTitle, engTitle,
               uploadDate, singers, engines, producers, 
               imageProps
             }, 
@@ -166,16 +165,16 @@ export default function SongGeneratorPage() {
           } = data;
 
           // SET INTERNAL STATES
-          setFormData({
-            ...defaultInputData,
-            origTitle, romTitle, engTitle, 
-            uploadDate, singers, producers
-          })
+          let isoLangCode = '';
           setLanguageIds(() => languageIds);
           if (languageIds.length > 0) {
-            const isoLangCode = (CONST_LANGUAGES[languageIds[0]] || {}).iso || '';
-            setIsoLang(isoLangCode);
+            isoLangCode = (CONST_LANGUAGES[languageIds[0]] || {}).iso || '';
           }
+          setFormData({
+            ...defaultInputData,
+            origTitle, romTitle, engTitle, isoLangCode, 
+            uploadDate, singers, producers
+          });
           setUsedEngines(() => engines);
           setImgProps(() => imageProps);
 
@@ -186,6 +185,8 @@ export default function SongGeneratorPage() {
           document.getElementById("song-generator-input-romTitle").value = romTitle;
           // @ts-ignore
           document.getElementById("song-generator-input-engTitle").value = engTitle;
+          // @ts-ignore
+          document.getElementById("song-generator-input-isoLangCode").value = isoLangCode;
           // @ts-ignore
           document.getElementById("song-generator-input-uploadDate").value = uploadDate;
           // @ts-ignore
@@ -273,9 +274,13 @@ export default function SongGeneratorPage() {
     if (newData.length === 1) {
       const langId = (data.value as number[])[0];
       const isoLangCode = (CONST_LANGUAGES[langId] || {}).iso || '';
-      setIsoLang(isoLangCode);
+      setFormData({...formData, isoLangCode});
+      // @ts-ignore
+      document.getElementById("song-generator-input-isoLangCode").value = isoLangCode;
     } else if (newData.length === 0) {
-      setIsoLang('');
+      setFormData({...formData, isoLangCode: ''});
+      // @ts-ignore
+      document.getElementById("song-generator-input-isoLangCode").value = '';
     }
   }
 
@@ -458,16 +463,7 @@ export default function SongGeneratorPage() {
           id="song-generator-input-isoLangCode"
           placeholder='ja'
           className={bindElementWithErrorNotification('isoLangCode')}
-          value={isoLang}
-          onBlur={(e: Event) => {
-            //@ts-ignore
-            setIsoLang(e.target.value);
-            setFormData({
-              ...formData,
-              //@ts-ignore
-              isoLangCode: e.target.value
-            })
-          }}
+          {...bindInput('isoLangCode')}
         />
       </GridColumn>
     </GridRow>
