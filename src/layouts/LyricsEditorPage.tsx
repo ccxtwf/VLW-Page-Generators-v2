@@ -18,7 +18,7 @@ import { IDictionary, lyricsEditorFormInterface } from "../types";
 import { generateLyricsTable, detonePinyin } from "../utils";
 import { Lyric } from "../generators/classes";
 
-function _parseLyricsTablesFromSourceCode(wikipageContents: string): RegExpExecArray[] {
+function _parseLyricsTablesFromSourceCode(wikipageContents: string): RegExpMatchArray[] {
   const rx = /(\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]toggle[^\}]+\}\}(?:.*?)|)(\{\|\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]table[ _]class\}\}\s*\n\|-\s*class\s*=\s*["'][^\n]*\blyrics-table-header\b[^\n]*["']\s*\n!\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]header\}\})\s*\n(.*?\|\})\s*(\{\{(?:[Tt]emplate:|)[Tt]ranslator[^\}]*\}\}|)/gs;
   return Array.from(wikipageContents.matchAll(rx));
 }
@@ -53,13 +53,13 @@ function _parseLyricsToggleParameters(lyricsToggleWikitext: string): { toggleEle
   return { toggleElement: template[0], headers, isoLangCode, miscParams };
 }
   
-function _parseLyricsFromTable(table: RegExpExecArray): { 
+function _parseLyricsFromTable(table: RegExpMatchArray): { 
   lyrics: string[][], toggleElement: string, headers: string[], isoLangCode: string | null, numColumns: number 
 } {
   const lyrics = [];
   let numColumns = 0;
 
-  const [ _, tableDefinition, tableHead, tableBody ] = table;
+  const [ _, tableDefinition, __, tableBody ] = table;
 
   const { toggleElement, headers, isoLangCode } = _parseLyricsToggleParameters(tableDefinition);
   
@@ -182,7 +182,7 @@ export default function LyricsEditorPage() {
     );
   }, []);
 
-  const [lyricsTables, setLyricsTables] = useState<RegExpExecArray[]>([]);
+  const [lyricsTables, setLyricsTables] = useState<RegExpMatchArray[]>([]);
   const [headersText, setHeadersText] = useState<string[]>([
     'Original', 'Romanized', 'English', 
     ...Array(import.meta.env.VITE_LYRICS_TABLE_MAX_COLUMNS-3).fill(0).map((_, i) => `Column ${i+4}`)

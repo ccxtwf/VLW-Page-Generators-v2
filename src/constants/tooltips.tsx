@@ -351,7 +351,7 @@ export const CONST_TOOLTIPS_LYRICS_EDITOR = {
       <li>
         Append "?action=raw" to the URL of the wiki page, e.g. <a href={
           `${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/ECHO/Crusher-P?action=raw`
-        } target="_blank" rel="noopener noreferrer">${import.meta.env.VITE_VLW_WIKI_DOMAIN}${import.meta.env.VITE_WIKI_ENTRYPOINT}/ECHO/Crusher-P?action=raw</a>
+        } target="_blank" rel="noopener noreferrer">{import.meta.env.VITE_VLW_WIKI_DOMAIN}{import.meta.env.VITE_WIKI_ENTRYPOINT}/ECHO/Crusher-P?action=raw</a>
       </li>
     </ol>
     Copy and paste the contents of the source code into the box below.
