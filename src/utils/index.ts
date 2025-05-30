@@ -180,7 +180,7 @@ export function generateLyricsTable(
 
   let res: string = '';
 
-  if (createToggleElement) {
+  if (createToggleElement && (needsRomanization || needsEnglishTranslation)) {
     // Lyrics toggle & column headers definition
     res += generateLyricsToggle(headersText, needsRomanization, showEnglishColumn, isoLangCode);
     res += "\n";
