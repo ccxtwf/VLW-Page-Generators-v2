@@ -195,7 +195,7 @@ export function generateLyricsTable(
   }
 
   // Singer coloured lines
-  if (usedColours.size > 1) {
+  if (usedColours.size >= 1) {
     let hasMultipleSingerLines = usedColours.has('');
     if (hasMultipleSingerLines) usedColours.delete('');
     let singerTabs = [...usedColours].map(el => (
