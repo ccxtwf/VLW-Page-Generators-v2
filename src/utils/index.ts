@@ -164,7 +164,11 @@ export function generateLyricsTable(
   let usedColours: Set<string> = new Set();
   for (let lyric of lyrics) {
     let detectedRowColour = lyric.customStyle.match(/color\s*:\s*([#0-9a-zA-Z]+);?/);
-    if (detectedRowColour !== null) usedColours.add(detectedRowColour[1]);
+    if (detectedRowColour === null) {
+      usedColours.add('');
+    } else {
+      usedColours.add(detectedRowColour[1]);
+    }
     const detectedInlineColours = lyric.original.matchAll(rxSpanInlineColour);
     for (let [_, colour] of detectedInlineColours) {
       usedColours.add(colour);
@@ -195,7 +199,7 @@ export function generateLyricsTable(
   }
 
   // Singer coloured lines
-  if (usedColours.size >= 1) {
+  if (usedColours.size > 1) {
     let hasMultipleSingerLines = usedColours.has('');
     if (hasMultipleSingerLines) usedColours.delete('');
     let singerTabs = [...usedColours].map(el => (

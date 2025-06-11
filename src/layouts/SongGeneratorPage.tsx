@@ -17,6 +17,7 @@ import ExternalLinksInputTable from '../components/handsontables/ExternalLinksIn
 import CopyButton from '../components/reusables/CopyButton';
 import DisplayError from '../components/reusables/DisplayErrors';
 import PreloadFromVdb from '../components/reusables/PreloadFromVdb';
+import WikiFormatGlossary from '../components/reusables/WikiFormatGlossary';
 import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
@@ -399,7 +400,7 @@ export default function SongGeneratorPage() {
               options={[
                 { key: 0, text: 'No warnings', value: ENUM_CW_STATES.noWarnings },
                 { key: 1, text: 'Questionable', value: ENUM_CW_STATES.questionable },
-                { key: 2, text: 'Explicit', value: ENUM_CW_STATES.explicit }
+                // { key: 2, text: 'Explicit', value: ENUM_CW_STATES.explicit }
               ]}
               {...bindDropdown('cwState')}
               className={
@@ -834,6 +835,10 @@ export default function SongGeneratorPage() {
         />
       </GridColumn>
     </GridRow>
+    
+    <Divider />
+
+    <WikiFormatGlossary isMobileViewport={isMobileViewport} />
 
     <Divider />
 
