@@ -36,7 +36,7 @@ export const CONST_ALBUM_STREAMING_LINKS = [
   {
     name: 'SoundCloud Crossfade',
     paramKey: 'sc-xfade',
-    regex: /^(https?:\/\/soundcloud\.com\/.*)$/,
+    regex: /^(?<embedid>https?:\/\/soundcloud\.com\/.*)$/,
   }
 ];
 

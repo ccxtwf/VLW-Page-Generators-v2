@@ -127,7 +127,7 @@ function _consolidateCellInlineColourFormatting(lyrics: string[][]): string[][] 
     if (m.every((el => el.isEmpty || !!el.rxResults))) {
       // Skip if the contents enclosed within the span tags in the original lyrics contain another span tag.
       if (!!m[0].rxResults && !m[0].rxResults[2].match(rxSpanTagHead)) {
-        lyric[0] = m[0].rxResults[1];
+        lyric[0] = `color:${m[0].rxResults[1]};`;
         for (let i = 1; i < lyric.length; i++) {
           //@ts-ignore
           if (!!m[i-1].rxResults) lyric[i] = m[i-1].rxResults[2];
