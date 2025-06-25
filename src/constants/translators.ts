@@ -20,6 +20,10 @@ export const CONST_TRANSLATOR_LICENSES = [
     license: "https://ejtranslations.wordpress.com/"
   },
   {
+    id: ["Clicki"],
+    license: null
+  },
+  {
     id: ["CoolMikeHatsune22"],
     license: "https://coolmikehatsune22.wordpress.com/about-me/"
   },
@@ -30,6 +34,10 @@ export const CONST_TRANSLATOR_LICENSES = [
   {
     id: ["ElectricRaichu", "Len's Lyrics", "Raichu"],
     license: "https://vocaloidlyrics.fandom.com/wiki/Talk:ElectricRaichu/Translator_Licence|his website"
+  },
+  {
+    id: ["Lynde"],
+    license: null
   },
   {
     id: ["Magenetra", "Kagamine_Neko", "aquariantwin", "Mellifera_x3"],
@@ -54,6 +62,10 @@ export const CONST_TRANSLATOR_LICENSES = [
   {
     id: ["Releska"],
     license: "https://releska.com/|his blog"
+  },
+  {
+    id: ["Seraphim"],
+    license: null
   },
   {
     id: ["Tackmyn Y."],

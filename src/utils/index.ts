@@ -195,7 +195,7 @@ export function generateLyricsTable(
     el.id[0] === translator
   ));
   if (referLicense) {
-    res += `{{TranslatorLicense|${referLicense.id[0]}|${referLicense.license}}}\n`;
+    res += `{{TranslatorLicense2|${referLicense.id[0]}}}\n`;
   }
 
   // Singer coloured lines
@@ -205,7 +205,7 @@ export function generateLyricsTable(
     let singerTabs = [...usedColours].map(el => (
       `|<span style="color:${el};">Singer</span>\n`
     )).join('');
-    if (hasMultipleSingerLines) singerTabs += '|All';
+    if (hasMultipleSingerLines) singerTabs += '|All\n';
     res += `{| border="1" cellpadding="4" style="border-collapse:collapse; border:1px groove; line-height:1.5"\n!style="background-color:${bgColour}; color:${fgColour};"|Singer\n${
       singerTabs
     }|}\n`;
