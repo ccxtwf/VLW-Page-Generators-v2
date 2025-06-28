@@ -1,4 +1,4 @@
-import { ENUM_CW_STATES } from "../types";
+import { ENUM_AI_WARNING_TYPE, ENUM_CW_STATES } from "../types";
 import { Lyric, PlayLink, ExternalLink } from "./classes";
 import { CONST_PV_SERVICE_ABBREVIATIONS } from '../constants/linkDomains';
 import { CONST_MONTHS } from "../constants/months";
@@ -7,6 +7,9 @@ import { CONST_LANGUAGES } from "../constants/languages";
 
 interface RawInput {
   data: {
+    aiCwState: ENUM_AI_WARNING_TYPE
+    aiWarningText1: string
+    aiWarningText2: string
     cwState: ENUM_CW_STATES
     cwText: string
     hasEpilepsyWarning: boolean
@@ -41,6 +44,9 @@ interface RawInput {
 }
 interface ProcessedInput {
   data: {
+    aiCwState: ENUM_AI_WARNING_TYPE
+    aiWarningText1: string
+    aiWarningText2: string
     cwState: ENUM_CW_STATES
     cwText: string
     hasEpilepsyWarning: boolean
@@ -85,7 +91,7 @@ export function parseInput({
   playLinksData, lyricsData, extLinksData
 }: RawInput): ProcessedInput {
   let {
-    cwText, 
+    aiWarningText1, aiWarningText2, cwText, 
     origTitle, altChTitle, romTitle, engTitle, isoLangCode,
     bgColour, fgColour,
     uploadDate: uploadDateRaw,
@@ -94,6 +100,8 @@ export function parseInput({
     translator, 
     categoriesRaw
   } = data;
+  aiWarningText1 = aiWarningText1.trim();
+  aiWarningText2 = aiWarningText2.trim();
   cwText = cwText.trim();
   isoLangCode = isoLangCode.trim();
   origTitle = origTitle.trim();
@@ -135,7 +143,9 @@ export function parseInput({
 
   return {
     data: {
-      cwState: data.cwState, cwText, hasEpilepsyWarning: data.hasEpilepsyWarning,
+      aiCwState: data.aiCwState, aiWarningText1, aiWarningText2,
+      cwState: data.cwState, cwText, 
+      hasEpilepsyWarning: data.hasEpilepsyWarning,
       origTitle, altChTitle, altChIsTraditional: data.altChIsTraditional, romTitle, engTitle, 
       titleIsOfficiallyTranslated: data.titleIsOfficiallyTranslated,
       languages: languages, 
@@ -259,6 +269,7 @@ export function validate(input: ProcessedInput): {
 } {
   let { 
     data: {
+      aiCwState, aiWarningText1, aiWarningText2,
       cwState, cwText, 
       origTitle, languages,
       bgColour, fgColour, uploadDate,
@@ -278,6 +289,20 @@ export function validate(input: ProcessedInput): {
       true, 
       'You must add a reason for wanting to add a content warning onto the page, e.g. violent content, sexual content, etc.', 
       'cwText'
+    ]);
+  }
+  if (aiCwState !== ENUM_AI_WARNING_TYPE.none && aiWarningText1 === '') {
+    res.push([
+      true, 
+      'You must specify which part of the song/video uses Generative AI, e.g. illustration, lyrics.', 
+      'aiWarningText'
+    ]);
+  }
+  if (aiCwState !== ENUM_AI_WARNING_TYPE.none && aiWarningText2 === '') {
+    res.push([
+      true, 
+      'You must add a source/explanation attributing to the verified/suspected usage of Generative AI.', 
+      'aiWarningText'
     ]);
   }
 
@@ -434,7 +459,7 @@ export function generateSongPage(input: ProcessedInput): string {
   
   let { 
     data: {
-      cwState, cwText, hasEpilepsyWarning, 
+      aiCwState, aiWarningText1, aiWarningText2, cwState, cwText, hasEpilepsyWarning, 
       origTitle, altChTitle, altChIsTraditional, romTitle, engTitle, titleIsOfficiallyTranslated,
       bgColour, fgColour, uploadDate,
       singers, producers, description, languages, isoLangCode, isUnavailable,
@@ -475,6 +500,9 @@ export function generateSongPage(input: ProcessedInput): string {
     cwState === ENUM_CW_STATES.explicit ? `{{Explicit${cwText === '' ? '' : `|${cwText}`}}}` : 
     ''
   );
+  if (aiCwState !== ENUM_AI_WARNING_TYPE.none) {
+    cwTemplates += `{{AIusage|${aiWarningText1}|${aiWarningText2}${aiCwState === ENUM_AI_WARNING_TYPE.suspected ? '|unverified=1' : ''}}}`;
+  }
 
   // const hasOfficiallyAvailablePlayLinks = playLinks.some(link => link.isOfficiallyAvailable);
   if (isUnavailable) unavailableTemplate = '{{Unavailable}}';

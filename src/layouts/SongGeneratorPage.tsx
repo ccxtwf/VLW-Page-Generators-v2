@@ -27,12 +27,15 @@ import { convertColourStringToHexCode, parseHeadersFromLanguages } from '../util
 import { CONST_TOOLTIPS_SONG_PAGES } from '../constants/tooltips';
 import { CONST_LANGUAGES } from '../constants/languages';
 
-import { ENUM_CW_STATES, songPageFormInterface, displayErrorsInterface } from "../types";
+import { ENUM_CW_STATES, ENUM_AI_WARNING_TYPE, songPageFormInterface, displayErrorsInterface } from "../types";
 
 import { parseInput, validate, autoloadCategories, generateSongPage } from "../generators/songPage";
 import { fetchDataFromVocaDbForSongPage } from "../generators/fetch";
 
 const defaultInputData: songPageFormInterface =  {
+  aiCwState: ENUM_AI_WARNING_TYPE.none,
+  aiWarningText1: '',
+  aiWarningText2: '',
   cwState: ENUM_CW_STATES.noWarnings,
   cwText: '',
   hasEpilepsyWarning: false,
@@ -378,6 +381,48 @@ export default function SongGeneratorPage() {
     <Divider />
 
     {/* Content Warnings */}
+    <GridRow>
+      <GridColumn width={3}>
+        <div className='label-column'>
+          <div>GenAI Warning</div>
+          <Tooltip 
+            content={CONST_TOOLTIPS_SONG_PAGES.ai} 
+            position={tooltipPosition} 
+          />
+        </div>
+      </GridColumn>
+      <GridColumn width={13}>
+        <Input 
+          id="song-generator-input-aiWarningText1"
+          fluid 
+          placeholder="the part of the song/video featuring usage of GenAI" 
+          label={
+            <Dropdown
+              id="song-generator-input-aiCwState"
+              selection
+              options={[
+                { key: 0, text: 'N/A', value: ENUM_AI_WARNING_TYPE.none },
+                { key: 1, text: 'Verified', value: ENUM_AI_WARNING_TYPE.verified },
+                { key: 2, text: 'Suspected', value: ENUM_AI_WARNING_TYPE.suspected },
+              ]}
+              {...bindDropdown('aiCwState')}
+              style={{backgroundColor: '#00c200', color: '#fff'}}
+            />
+          }
+          labelPosition='left'
+          {...bindInput('aiWarningText1')}
+          className={bindElementWithErrorNotification('aiWarningText1')}
+        />
+        <Input 
+          id="song-generator-input-aiWarningText2"
+          fluid 
+          placeholder="source/explanation of AI warning" 
+          {...bindInput('aiWarningText2')}
+          className={bindElementWithErrorNotification('aiWarningText2')}
+          style={{display: formData.aiCwState === ENUM_AI_WARNING_TYPE.none ? 'none' : ''}}
+        />
+      </GridColumn>
+    </GridRow>
     <GridRow style={{paddingBottom: "20px"}}>
       <GridColumn width={3}>
         <div className='label-column'>

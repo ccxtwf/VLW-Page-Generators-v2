@@ -8,7 +8,16 @@ export enum ENUM_CW_STATES {
   explicit
 }
 
+export enum ENUM_AI_WARNING_TYPE {
+  none,
+  verified,
+  suspected,
+}
+
 export interface songPageFormInterface {
+  aiCwState: ENUM_AI_WARNING_TYPE
+  aiWarningText1: string
+  aiWarningText2: string
   cwState: ENUM_CW_STATES
   cwText: string
   hasEpilepsyWarning: boolean

@@ -2,7 +2,7 @@
   "name": "vlw-new-page-generators",
   "homepage": "https://ccxtwf.github.io/VLW-Page-Generators-v2",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite",

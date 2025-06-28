@@ -22,6 +22,13 @@ export const CONST_TOOLTIPS_SONG_PAGES = {
     You are required to add the justification for adding a content warning, e.g. if it contains violent/sexual content, or if it deals with mature themes.
     </>
   ),
+  ai: (
+    <>
+    Add a notice warning for usage of GenAI to the top of page.
+    <br/><br/>
+    Be sure to include the source attributing the usage of GenAI for verified cases (e.g. video description, producer comment, etc.), or an explanation detailing inconsistencies that raise credible suspicion of GenAI usage for non-verified cases. 
+    </>
+  ),
   language: (
     <>
     The language the song lyrics are written in.
