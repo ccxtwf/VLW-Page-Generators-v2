@@ -395,7 +395,7 @@ export default function SongGeneratorPage() {
         <Input 
           id="song-generator-input-aiWarningText1"
           fluid 
-          placeholder="the part of the song/video featuring usage of GenAI" 
+          placeholder="the part of the song/video featuring usage of generative AI" 
           label={
             <Dropdown
               id="song-generator-input-aiCwState"

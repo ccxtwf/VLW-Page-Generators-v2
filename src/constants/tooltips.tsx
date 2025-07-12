@@ -24,9 +24,9 @@ export const CONST_TOOLTIPS_SONG_PAGES = {
   ),
   ai: (
     <>
-    Add a notice warning for usage of GenAI to the top of page.
+    Add a notice warning for usage of generative AI to the top of page.
     <br/><br/>
-    Be sure to include the source attributing the usage of GenAI for verified cases (e.g. video description, producer comment, etc.), or an explanation detailing inconsistencies that raise credible suspicion of GenAI usage for non-verified cases. 
+    Be sure to include the source attributing the usage of generative AI for verified cases (e.g. video description, producer comment, etc.), or an explanation detailing inconsistencies that raise credible suspicion of generative AI usage for non-verified cases. 
     </>
   ),
   language: (
