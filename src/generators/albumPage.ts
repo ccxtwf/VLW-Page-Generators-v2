@@ -300,7 +300,7 @@ export function validate(input: ProcessedInput): {
 
   if (officialStreamingLinks.length === 0) {
     res.push([
-      true,
+      false,
       'You should add at least one album crossfade or streaming (Spotify, YouTube Music, Bandcamp) link.',
       'official-streaming'
     ]);
@@ -406,7 +406,6 @@ export function generateAlbumPage(input: ProcessedInput): string {
       moreInfoLinks[extLink.mapToAlbumInfoboxReadMoreParam] = extLink.url;
     }
   }
-  console.log(moreInfoLinks);
   unofficialLinksWikitext = unofficialLinks
     .map(el => '* ' + el.getWikitext())
     .join('\n');
@@ -423,7 +422,7 @@ export function generateAlbumPage(input: ProcessedInput): string {
     extLinksSegment += unofficialLinksWikitext === '' ? '' : `===Unofficial===\n${unofficialLinksWikitext}\n\n`;
   }
 
-  if (romTitle !== origTitle && origTitle !== "") {
+  if (romTitle !== origTitle && romTitle !== "") {
     sortTemplateSegment = "{{sort-album"
     const plcRom = detonePinyin(romTitle, false);
     if (plcRom.replace(/[ -~]/g, "") !== "") {
@@ -435,8 +434,7 @@ export function generateAlbumPage(input: ProcessedInput): string {
   return (
     `
 ${displayTitleTemplate}{{Album Infobox
-|title = ${romTitle === '' ? origTitle : romTitle}
-|orgtitle = ${romTitle === '' ? '' : origTitle}${engTitle === '' ? '' : `\n|english = ${engTitle}`}
+|title = ${romTitle === '' ? origTitle : romTitle}${romTitle === '' ? '' : `\n|orgtitle = ${origTitle}`}${engTitle === '' ? '' : `\n|english = ${engTitle}`}
 |label = ${label}
 |desc = ${description}
 |date = ${dateSegment}
