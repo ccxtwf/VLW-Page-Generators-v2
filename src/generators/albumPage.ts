@@ -249,8 +249,8 @@ export function validate(input: ProcessedInput): {
   }
 
   if (vdbAlbumId === '') res.push([
-    true, 
-    'You must add a numeric page ID for the VocaDB link.', 
+    false, 
+    'It is recommended to add a link to the VocaDB album page if it exists.', 
     'vdbAlbumId'
   ]);
 

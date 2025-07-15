@@ -205,6 +205,11 @@ export class ExternalLink {
     this.mapToAlbumInfoboxReadMoreParam = mapToAlbumInfoboxReadMoreParam || null;
   }
 
+  recognizedMirahezeInterwiki: IDictionary<string> = {
+    'nndcompass': 'nndcompass',
+    'projectsekai': 'sekaipedia',
+    'bandori': 'bandori',
+  }
   recognizedFandomInterwiki: IDictionary<string> = {
     'vocaloid': 'vocaloid',
     'synthv': 'synthv',
@@ -214,7 +219,8 @@ export class ExternalLink {
     'utaite': 'utaite',
     'virtualyoutuber': 'vtuber',
     'odorite': 'odorite',
-    'projectsekai': 'proseka'
+    'projectsekai': 'proseka',
+    'bandori': 'bandori',
   }
 
   getWikitext(): string {
@@ -233,6 +239,8 @@ export class ExternalLink {
       case (matchMirahezeWiki !== null):
         if (matchMirahezeWiki[1] === import.meta.env.VITE_VLW_WIKI_NAME) {
           wikitext = `[[${matchMirahezeWiki[2]}|${this.description}]]`;
+        } else if (matchMirahezeWiki[1] in this.recognizedMirahezeInterwiki) {
+          wikitext = `{{${this.recognizedFandomInterwiki[matchMirahezeWiki[1]]}|${matchMirahezeWiki[2]}|${this.description}}}`;
         } else {
           wikitext = `[[mh:${matchMirahezeWiki[1]}|${matchMirahezeWiki[2]}|${this.description}]]`;
         }
@@ -248,7 +256,7 @@ export class ExternalLink {
         wikitext = `{{HMWiki|${matchHMWiki[1]}}}`
         break;
       case (matchMgp !== null):
-        wikitext = `{{MGP|${matchMgp[1]}}}`;
+        wikitext = `{{MGP|${decodeURI(matchMgp[1])}|Moegirlpedia}}`;
         break;
       default:
         wikitext = `[${this.url} ${this.description}]`;
