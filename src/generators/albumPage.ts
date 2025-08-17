@@ -423,12 +423,12 @@ export function generateAlbumPage(input: ProcessedInput): string {
   }
 
   if (romTitle !== origTitle && romTitle !== "") {
-    sortTemplateSegment = "{{sort-album"
+    sortTemplateSegment = "{{sort-album";
     const plcRom = detonePinyin(romTitle, false);
     if (plcRom.replace(/[ -~]/g, "") !== "") {
-      sortTemplateSegment += `|${plcRom}}}`
+      sortTemplateSegment += `|${plcRom}}}\n`;
     }
-    else {sortTemplateSegment += "}}"}
+    else {sortTemplateSegment += "}}\n"}
   };
 
   return (
@@ -445,9 +445,7 @@ ${streamingSegment === '' ? '' : streamingSegment+'\n\n'}|color = ${bgColour}; c
 ${trackListSegment}
 }}
 
-${extLinksSegment}
-${sortTemplateSegment}
-${
+${extLinksSegment}${sortTemplateSegment}${
   categories.map(cat => `[[Category:${cat}]]`).join('\n')
 }`.trim()
   )

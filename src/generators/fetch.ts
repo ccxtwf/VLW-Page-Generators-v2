@@ -9,6 +9,7 @@ import {
   WebLinkCategory, 
   AlbumType,
   VdbSystemLanguage,
+  VdbSongType,
   SchemaFetchedSongPageJson, SchemaFetchedAlbumPageJson, SchemaFetchedArtistPageJson,
   SchemaFetchedDiscography,
   SchemaFetchedDiscographyAlbum
@@ -412,7 +413,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       return el.language === 'English'
     })?.value || '';
 
-    let imageSrc: string | null = json.mainPicture.urlOriginal;
+    let imageSrc: string | null = json.mainPicture?.urlOriginal || null;
 
     const circles: string[] = [];
     const mainProducers: string[] = [];
@@ -471,36 +472,45 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     const trackList: (string | number)[][] = [];
     const extLinks: (string | boolean)[][] = [];
     const officialStreaming: string[][] = [];
-    const addedMarkupSingers: Map<number, string> = new Map();
+    const vdbSingerIdsCache: Map<number, string> = new Map();
+    const addedSingers: Set<string> = new Set();
 
     for (let track of (json.tracks || [])) {
       const { discNumber, trackNumber, song: { artists, defaultName: songTitle } = {} } = track;
       const songProducers: string[] = [];
-      const songSingers: string[] = [];
+      const songSingers: Set<string> = new Set();
       for (let artist of (artists || [])) {
         if (artist.isSupport) continue;
         if (artist.categories === ArtistCategory.vocalist) {
           const id = artist.artist?.id || null;
           if (id === null) {
-            songSingers.push(artist?.name || '');
-          } else if (addedMarkupSingers.has(id)) {
-            songSingers.push(addedMarkupSingers.get(id) || '');
+            songSingers.add(artist?.name || '');
+          } else if (vdbSingerIdsCache.has(id)) {
+            songSingers.add(vdbSingerIdsCache.get(id) || '');
           } else {
             // Try searching for the vocalist in the SQLite db
             const { wikitext, base, engine, isSuccess } = queryVocalist(id, artist.artist?.name || '');
             if (isSuccess) {
-              songSingers.push(wikitext);
               engines.add(engine);
-              addedMarkupSingers.set(id, base);
+              vdbSingerIdsCache.set(id, base);
+              if (addedSingers.has(base)) {
+                songSingers.add(base);
+              } else {
+                songSingers.add(wikitext);
+                addedSingers.add(base);
+              }
             } else {
-              songSingers.push(wikitext);
+              songSingers.add(wikitext);
             }
           }
         } else {
           const roles = artist.effectiveRoles.split(', ');
-          const isMainProducer = roles.some((role) => (
-            role === ArtistRole.default || role === ArtistRole.composer
-          ));
+          const isMainProducer = roles.some((role) => {
+            const isDerivative = new Set<String>([
+              VdbSongType.cover, VdbSongType.remix, VdbSongType.arrangement, VdbSongType.live
+            ]).has(track.song.songType);
+            return role === ArtistRole.default || role === ArtistRole.composer || (isDerivative && role === ArtistRole.arranger);
+          });
           if (isMainProducer) songProducers.push(artist?.name || '');
         }
       }
@@ -508,7 +518,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
         discNumber, trackNumber, 
         songTitle || '', 
         commaList(songProducers), 
-        commaList(songSingers)
+        commaList(Array.from(songSingers.values()))
       ]);
     }
 
@@ -598,7 +608,7 @@ export async function fetchDataFromVocaDbForProducerPage(url: string): Promise<p
     const labels: string[] = [];
     const affiliations: string[] = [];
 
-    let imageSrc: string | null = json.mainPicture.urlOriginal;
+    let imageSrc: string | null = json.mainPicture?.urlOriginal || null;;
 
     const extLinks: (string | boolean)[][] = [];
 

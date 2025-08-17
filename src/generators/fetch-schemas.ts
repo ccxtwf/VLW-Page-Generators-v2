@@ -118,6 +118,21 @@ export enum AlbumType {
   instrumental='Instrumental',
   other='Other'
 }
+export enum VdbSongType {
+  unspecified="Unspecified",
+  original="Original",
+  remaster="Remaster",
+  remix="Remix",
+  cover="Cover",
+  arrangement="Arrangement",
+  instrumental="Instrumental",
+  mashup="Mashup",
+  musicpv="MusicPV",
+  dramapv="DramaPV",
+  live="Live",
+  illustration="Illustration",
+  other="Other"
+}
 
 interface VdbArtistEntity {
   artist?: {
@@ -176,7 +191,7 @@ export interface SchemaFetchedSongPageJson {
   pvs: VdbPvEntity[] | null
   pvServices: string
   ratingScore: number
-  songType: string
+  songType: VdbSongType
   status: EntryStatus
   version: number
   webLinks: VdbWebLinkEntity[] | null
@@ -191,7 +206,7 @@ export interface SchemaFetchedAlbumPageJson {
   defaultNameLanguage: VdbSystemLanguage
   discType: AlbumType
   id: number
-  mainPicture: {
+  mainPicture?: {
     mime: string | null
     urlOriginal: string | null
     urlSmallThumb: string | null
@@ -231,7 +246,7 @@ export interface SchemaFetchedAlbumPageJson {
       publishDate: string | null
       pvServices: string
       ratingScore: number
-      songType: string
+      songType: VdbSongType
       status: EntryStatus
       version: number
       cultureCodes: string[] | null
@@ -296,7 +311,7 @@ export interface SchemaFetchedArtistPageJson {
   defaultNameLanguage: VdbSystemLanguage
   description: string | null
   id: number
-  mainPicture: {
+  mainPicture?: {
     mime: string | null
     urlOriginal: string | null
     urlSmallThumb: string | null

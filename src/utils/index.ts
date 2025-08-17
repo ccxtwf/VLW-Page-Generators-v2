@@ -190,6 +190,10 @@ export function generateLyricsTable(
     res += "\n";
   }
 
+  if (outputAsWikiTable && hasEnglishTranslation && isOfficialTranslation) {
+    res += '{{OfficialEnglishNotify}}\n';
+  }
+
   // Translator license
   const referLicense = CONST_TRANSLATOR_LICENSES.find(el => (
     el.id[0] === translator
@@ -213,9 +217,6 @@ export function generateLyricsTable(
 
   if (outputAsWikiTable) {
     // Generate as multi-column table
-    if (hasEnglishTranslation && isOfficialTranslation) {
-      res += '{{OfficialEnglishNotify}}\n';
-    }
     res += `{| {{lyrics table class}}\n|- class="lyrics-table-header"\n! {{lyrics header}}\n`;
     res += lyrics.map(lyric => lyric.getWikitext(showEnglishColumn)).join('');
     res += '|}';
@@ -223,7 +224,7 @@ export function generateLyricsTable(
     if (hasEnglishTranslation && (!isOfficialTranslation || translator !== '')) {
       res += `\n{{Translator|${
         translator === '' ? 'Anonymous' : translator
-      }}}\n`
+      }}}`
     }
   } else {
     // Generate as single-column div
@@ -261,7 +262,7 @@ export function generateLyricsTable(
 
   // Lyrics/Translation Notes
   if (showNotes) {
-    res += `\n==${isTranslationNote ? 'Translation ' : ''}Notes==\n{{Reflist}}`;
+    res += `\n\n==${isTranslationNote ? 'Translation ' : ''}Notes==\n{{Reflist}}`;
   }
   return res;
 }

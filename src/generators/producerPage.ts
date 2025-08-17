@@ -316,7 +316,6 @@ ${
 }|}
 
 ${ albumListSegment }
-__NOTOC__
 ${ 
   categories.map(cat => `[[Category:${cat}]]`).join('\n')
 }`.trim())
