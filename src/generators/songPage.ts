@@ -26,7 +26,6 @@ interface RawInput {
     uploadDate: string
     isAlbumOnly: boolean
     isUnavailable: boolean
-    usedEngines: string[]
     singers: string
     producers: string
     description: string
@@ -62,7 +61,6 @@ interface ProcessedInput {
     fgColour: string
     uploadDate: Date | null
     singers: string
-    engines: string[]
     producers: string
     description: string
     isAlbumOnly: boolean
@@ -150,7 +148,6 @@ export function parseInput({
       titleIsOfficiallyTranslated: data.titleIsOfficiallyTranslated,
       languages: languages, 
       isoLangCode,
-      engines: data.usedEngines,
       bgColour, fgColour,
       uploadDate, 
       isAlbumOnly: data.isAlbumOnly, isUnavailable: data.isUnavailable,
@@ -273,7 +270,7 @@ export function validate(input: ProcessedInput): {
       cwState, cwText, 
       origTitle, languages,
       bgColour, fgColour, uploadDate,
-      singers, engines, producers, isAlbumOnly, isUnavailable,
+      singers, producers, isAlbumOnly, isUnavailable,
       translator, isOfficialTranslation,
       categories
     }, 
@@ -365,14 +362,6 @@ export function validate(input: ProcessedInput): {
       true, 
       'You need to list at least one singer in markup, e.g. [[Kagamine Rin]].', 
       'singers'
-    ]);
-    recommendToAutoloadCategories = true;
-  }
-  if (engines.length === 0) {
-    res.push([
-      true, 
-      'Please list at least one vocal synth engine, e.g. VOCALOID. Choose "Other/Unlisted" if not on the list.', 
-      'engines'
     ]);
     recommendToAutoloadCategories = true;
   }

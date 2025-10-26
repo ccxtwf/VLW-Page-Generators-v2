@@ -21,7 +21,6 @@ import WikiFormatGlossary from '../components/reusables/WikiFormatGlossary';
 import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
-import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 import { convertColourStringToHexCode, parseHeadersFromLanguages } from '../utils';
 
 import { CONST_TOOLTIPS_SONG_PAGES } from '../constants/tooltips';
@@ -72,7 +71,6 @@ export default function SongGeneratorPage() {
     ...defaultInputData
   });
   const [languageIds, setLanguageIds] = useState<number[]>([]);
-  const [usedEngines, setUsedEngines] = useState<string[]>([]);
   
   const [imgProps, setImgProps] = useState<{
     src: string, alt: string, 
@@ -98,8 +96,6 @@ export default function SongGeneratorPage() {
   const refExtLinks = useRef(null);
 
   const { bindInput, bindTextArea, bindCheckbox, bindDropdown } = useTwoWayBinding<songPageFormInterface>(formData, setFormData);
-
-  const engines = useFetchListOfEngines();
 
   const languages = useMemo(() => (
     languageIds.map((el: number) => CONST_LANGUAGES[el])
@@ -162,7 +158,7 @@ export default function SongGeneratorPage() {
           const { 
             formData: { 
               languageIds, origTitle, romTitle, engTitle,
-              uploadDate, singers, engines, producers, 
+              uploadDate, singers, producers, 
               imageProps
             }, 
             playLinksData, extLinksData 
@@ -179,7 +175,6 @@ export default function SongGeneratorPage() {
             origTitle, romTitle, engTitle, isoLangCode, 
             uploadDate, singers, producers
           });
-          setUsedEngines(() => engines);
           setImgProps(() => imageProps);
 
           // SET DOM
@@ -236,7 +231,6 @@ export default function SongGeneratorPage() {
       setPreload({ url: '', loading: false });
       setFormData({...defaultInputData});
       setLanguageIds([]);
-      setUsedEngines([]);
       setImgProps([]);
       setIgnoreErrors(false);
 
@@ -292,7 +286,7 @@ export default function SongGeneratorPage() {
     const parsedInput = parseInput({
       data: {
         ...formData,
-        languageIds, usedEngines
+        languageIds, 
       }, 
       langOptions: {
         headersText: [...headersText.slice(1)],
@@ -724,15 +718,6 @@ export default function SongGeneratorPage() {
         </div>
       </GridColumn>
       <GridColumn width={13}>
-        <Dropdown
-          placeholder='Featuring Synth Engines'
-          fluid multiple selection
-          options={engines.map((engine) => ({ key: engine.id, text: engine.name, value: engine.name }))}
-          value={usedEngines}
-          // @ts-ignore
-          onChange={(_, data) => setUsedEngines(data.value)}
-          className={bindElementWithErrorNotification('engines')}
-        />
         <TextArea 
           id="song-generator-input-singers"
           {...bindTextArea('singers')}
