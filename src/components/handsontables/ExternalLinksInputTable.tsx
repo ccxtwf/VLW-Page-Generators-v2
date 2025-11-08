@@ -2,7 +2,8 @@ import { ForwardedRef, forwardRef, useMemo } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { urlRenderer, sharedContextMenuOptions } from "./shared";
-import { CONST_RECOGNIZED_LINKS } from "../../constants/linkDomains";
+import { RECOGNIZED_LINKS, PV_SERVICE_PROVIDER } from "../../constants/linkDomains";
+import { convertTwitterLink, standardizeYoutubeLink, upgradeInsecureHttpLink } from "../../utils";
 
 interface ExternalLinksTableInterface {
   forProducerPages?: boolean
@@ -37,21 +38,26 @@ const ExternalLinksInputTable = forwardRef(function ExternalLinksInputTable(
 
   const handleChanges = useMemo(() => (changes: any[][] | null) => {
     for (let change of (changes || [])) {
-      const [rowId, colId, _, newValue] = change;
+      let [rowId, colId, oldValue, newValue] = change;
+      if (oldValue === newValue) continue;
       if (colId === 0) {    // changed cell is URL 
-        const referUrl = CONST_RECOGNIZED_LINKS.find(({ re }) => {
+        const referUrl = RECOGNIZED_LINKS.find(({ re }) => {
           return newValue.match(re) !== null;
         });
-        if (referUrl !== null) {
+        if (!!referUrl) {
           // @ts-ignore
-          ref?.current?.hotInstance?.setDataAtCell(rowId, 1, referUrl?.site);   // set description automatically
-        }
-
-        // Auto-detect YT URLs
-        let detectYTWatchId = /^https?:\/\/youtu\.be\/([^\?]+)/.exec(newValue);
-        if (detectYTWatchId === null) detectYTWatchId = /^https?:\/\/www\.youtube\.com\/watch\?v=([^\?&]+)/.exec(newValue);
-        if (detectYTWatchId !== null) {
-          change[3] = `https://www.youtube.com/watch?v=${detectYTWatchId[1]}`;
+          ref?.current?.hotInstance?.setDataAtCell(rowId, 1, referUrl.site);   // set description automatically
+          if (referUrl.site === PV_SERVICE_PROVIDER.youtube) {
+            newValue = standardizeYoutubeLink(newValue); 
+          }
+          if (referUrl.site === PV_SERVICE_PROVIDER.xitter) {
+            newValue = convertTwitterLink(newValue);
+          }
+          if ((Object.values(PV_SERVICE_PROVIDER) as string[]).includes(referUrl.site || '')) {
+            newValue = upgradeInsecureHttpLink(newValue);
+          }
+          // @ts-ignore
+          ref?.current?.hotInstance?.setDataAtCell(rowId, colId, newValue);
         }
       }
     }

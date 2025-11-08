@@ -1,5 +1,5 @@
-import { CONST_COLOUR_NAMES } from "../constants/colours";
-import { CONST_TRANSLATOR_LICENSES } from "../constants/translators";
+import { COLOURS } from "../constants/colours";
+import { TRANSLATOR_LICENSES } from "../constants/translators";
 import { Lyric } from "../generators/classes";
 import { IDictionary } from "../types";
 
@@ -7,12 +7,12 @@ export const validateColour = (colour: string) => {
   return (
     colour === "" || 
     colour.match(/^#[0-9a-fA-F]{3,6}$/) || 
-    Object.keys(CONST_COLOUR_NAMES).includes(colour)
+    Object.keys(COLOURS).includes(colour)
   );
 }
 
 export const convertColourStringToHexCode = (colour: string): string => {
-  return (CONST_COLOUR_NAMES as any)[colour] || colour
+  return (COLOURS as any)[colour] || colour
 }
 
 export const parseHeadersFromLanguages = (
@@ -59,7 +59,7 @@ export const parseHeadersFromLanguages = (
   return [needsRomanization, needsEnglishTranslation, headersText, isChinese]
 }
 
-export function detonePinyin(romText: string, bShowUmlaut = false) {
+export function detonePinyin(romText: string, bShowUmlaut = false): string {
   romText = romText.replace(/[āáǎà]/gm, "a");
   romText = romText.replace(/[ĀÁǍÀ]/gm, "A");
   romText = romText.replace(/[īíǐì]/gm, "i");
@@ -195,7 +195,7 @@ export function generateLyricsTable(
   }
 
   // Translator license
-  const referLicense = CONST_TRANSLATOR_LICENSES.find(el => (
+  const referLicense = TRANSLATOR_LICENSES.find(el => (
     el.id[0] === translator
   ));
   if (referLicense) {
@@ -257,7 +257,7 @@ export function generateLyricsTable(
         if (customStyle !== null) contents = `<span style="${customStyle}">${contents}</span>`;
         return contents;
       }).join('\n')
-    }</poem>`
+    }</poem>`;
   }
 
   // Lyrics/Translation Notes
@@ -267,9 +267,11 @@ export function generateLyricsTable(
   return res;
 }
 
-export function convertAvidToBvId(avid: string) {
-  let id: string | RegExpMatchArray | null = avid.match(/^av(\d+)$/);
-  if (id === null) throw new Error('bilibili AV ID is invalid');
+export function convertAvidToBvId(url: string): string {
+  let id: string | RegExpMatchArray | null = url.match(/^https?:\/\/www\.bilibili\.com\/video\/av(\d+)/);
+  if (id === null) {
+    return url;
+  }
   id = id[1];
   const XOR_CODE = 23442827791579n;
   const MAX_AID = 1n << 51n;
@@ -285,5 +287,23 @@ export function convertAvidToBvId(avid: string) {
   }
   [bytes[3], bytes[9]] = [bytes[9], bytes[3]];
   [bytes[4], bytes[7]] = [bytes[7], bytes[4]];
-  return bytes.join('');
+  return `https://www.bilibili.com/video/${bytes.join('')}`;
+}
+
+export function standardizeYoutubeLink(url: string) {
+  const matchDomain = /^https?:\/\/(?:(?:www\.|)youtube\.com\/watch\?v=|youtu\.be\/)([^&\?]+)/;
+  const m = url.match(matchDomain);
+  if (m === null) return url;
+  return `https://www.youtube.com/watch?v=${m[1]}`;
+}
+
+export function upgradeInsecureHttpLink(url: string) {
+  return url.replace(/^http:\/\//, 'https://');
+}
+
+export function convertTwitterLink(url: string) {
+  const matchDomain = /^https?:\/\/(?:www\.|)twitter\.com\/(.*)$/;
+  const m = url.match(matchDomain);
+  if (m === null) return url;
+  return `https://x.com/${m[1]}`;
 }

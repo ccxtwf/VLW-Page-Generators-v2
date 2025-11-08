@@ -2,7 +2,7 @@ import { ForwardedRef, forwardRef, useMemo, useState, useEffect } from "react";
 // @ts-ignore
 import { HotTable } from '@handsontable/react';
 import { urlRenderer } from "./shared";
-import { CONST_ALBUM_STREAMING_LINKS } from "../../constants/linkDomains";
+import { ALBUM_STREAMING_LINKS } from "../../constants/linkDomains";
 import { IDictionary } from "../../types";
 
 const OfficialAlbumStreamingInputTable = forwardRef(function OfficialAlbumStreamingInputTable(
@@ -16,7 +16,7 @@ const OfficialAlbumStreamingInputTable = forwardRef(function OfficialAlbumStream
   const [selectedOptions, setSelectedOptions] = useState<IDictionary<number>>(
     () => {
       const options: IDictionary<number> = {};
-      for (let o of CONST_ALBUM_STREAMING_LINKS.map(el => el.name)) {
+      for (let o of ALBUM_STREAMING_LINKS.map(el => el.name)) {
         options[o] = 1;
       }
       return options;

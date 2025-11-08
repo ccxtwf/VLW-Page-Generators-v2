@@ -400,8 +400,7 @@ export function validate(input: ProcessedInput): {
 
   const forgotViewCounts = playLinks.filter(link => (
     link.isOfficiallyAvailable && 
-    // @ts-ignore
-    PV_SERVICE_ABBREVIATIONS[link.site] !== undefined
+    PV_SERVICE_ABBREVIATIONS.has(link.site)
   )).some(link => link.viewCount === '');
   if (forgotViewCounts) res.push([
     false,
@@ -521,13 +520,12 @@ export function generateSongPage(input: ProcessedInput): string {
   const viewCounts = playLinks
     .filter((playLink) => (
       !playLink.isReprint &&
-      // @ts-ignore
-      PV_SERVICE_ABBREVIATIONS[playLink.site] !== undefined
+      PV_SERVICE_ABBREVIATIONS.has(playLink.site)
     ))
     .map((playLink) => ({ 
       vc: playLink.getFormattedViewCount(), 
       // @ts-ignore
-      abbr: PV_SERVICE_ABBREVIATIONS[playLink.site] 
+      abbr: PV_SERVICE_ABBREVIATIONS.get(playLink.site) 
     }));
   if (viewCounts.length > 1) {
     viewCountsSegment = viewCounts.map(el => `${el.vc} (${el.abbr})`).join(', ');

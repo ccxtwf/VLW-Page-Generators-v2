@@ -1,7 +1,7 @@
 import { AppDataSource } from "../components/DatabaseProvider";
 
-import { CONST_RECOGNIZED_LINKS, CONST_ALBUM_STREAMING_LINKS } from "../constants/linkDomains";
-import { CONST_LANGUAGES } from "../constants/languages";
+import { RECOGNIZED_LINKS, ALBUM_STREAMING_LINKS, PV_SERVICE_PROVIDER } from "../constants/linkDomains";
+import { LANGUAGES } from "../constants/languages";
 
 import {
   ArtistCategory, ArtistRole, ArtistType, VocalSynthEngine,
@@ -14,12 +14,17 @@ import {
   SchemaFetchedDiscography,
   SchemaFetchedDiscographyAlbum
 } from "./fetch-schemas";
-import { CONST_MONTHS } from "../constants/months";
-import { convertAvidToBvId } from "../utils";
+import { MONTHS } from "../constants/months";
+import { 
+  convertAvidToBvId, 
+  convertTwitterLink, 
+  standardizeYoutubeLink,
+  upgradeInsecureHttpLink 
+} from "../utils";
 
 const origin = 'ccxtwf.github.io';
 
-interface parsedSongPageInfo {
+interface ParsedSongPageInfo {
   formData: {
     languageIds: number[]
     origTitle: string
@@ -42,7 +47,7 @@ interface parsedSongPageInfo {
   playLinksData: (string | boolean)[][]
   extLinksData: (string | boolean)[][]
 }
-interface parsedAlbumPageInfo {
+interface ParsedAlbumPageInfo {
   formData: {
     origTitle: string
     romTitle: string
@@ -62,7 +67,7 @@ interface parsedAlbumPageInfo {
   extLinksData: (string | boolean)[][]
   officialStreamingData: string[][]
 }
-interface parsedProducerPageInfo {
+interface ParsedProducerPageInfo {
   formData: {
     prodCategory: string
     affiliations: string
@@ -154,7 +159,28 @@ const dictConvertPvServiceName = {
 //   return '';
 // }
 
-export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parsedSongPageInfo> {
+function processExternalLinkFromVocaDb(url: string) {
+  const referUrl = RECOGNIZED_LINKS.find(({ re }) => {
+    return url.match(re) !== null;
+  });
+  if (!!referUrl) {
+    if (referUrl.site === PV_SERVICE_PROVIDER.xitter) {
+      url = convertTwitterLink(url);
+    }
+    if (referUrl.site === PV_SERVICE_PROVIDER.youtube) {
+      url = standardizeYoutubeLink(url);
+    }
+    if (referUrl.site === PV_SERVICE_PROVIDER.bilibili) {
+      url = convertAvidToBvId(url);
+    }
+    if ((Object.values(PV_SERVICE_PROVIDER) as string[]).includes(referUrl.site || '')) {
+      url = upgradeInsecureHttpLink(url);
+    }
+  }
+  return url;
+}
+
+export async function fetchDataFromVocaDbForSongPage(url: string): Promise<ParsedSongPageInfo> {
   try {
     const vdbPageId = getVdbPageId(url, 'S');
     if (vdbPageId === null) throw new Error('VocaDB page ID is empty or invalid!');
@@ -165,7 +191,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
     const json: SchemaFetchedSongPageJson = await res.json();
     const languageIds = (json.cultureCodes || [])
       .map((code) => (
-        CONST_LANGUAGES.findIndex(el => el.code === code)
+        LANGUAGES.findIndex(el => el.code === code)
       ))
       .filter(el => el > -1);
     const origTitle = json.defaultName || '';
@@ -226,10 +252,9 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
       if (artist.categories === ArtistCategory.vocalist) {
         if (artist.artist && (Object.values(VocalSynthEngine) as string[]).includes((artist.artist?.artistType as string))) {
           // Try searching for the vocalist in the SQLite db
-          const { wikitext, engine, isSuccess } = queryVocalist(artist.artist.id, addName);
+          const { wikitext, isSuccess } = queryVocalist(artist.artist.id, addName);
           if (isSuccess) {
             addName = wikitext;
-            engines.add(engine);
           }
         }
         if (artist.isSupport) {
@@ -267,19 +292,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
     
     for (let pv of (json.pvs || [])) {
       const pvService = dictConvertPvServiceName[pv.service] || null;
-      let pvUrl = '';
-      if (pv.service === PvService.yt) {
-        pvUrl = `https://www.youtube.com/watch?v=${pv.pvId || ''}`;
-      } else if (pv.service === PvService.bb) {
-        const avid = (pv.url || '').match(/^https?:\/\/www\.bilibili\.com\/video\/(av\d+)/);
-        if (avid !== null) {
-          pvUrl = `https://www.bilibili.com/video/${convertAvidToBvId(avid[1])}`;
-        } else {
-          pvUrl = pv.url || '';
-        }
-      } else {
-        pvUrl = pv.url || '';
-      }
+      const pvUrl = processExternalLinkFromVocaDb(pv.url || '');
       const isDeleted = pv.disabled;
       const isReprint = pv.pvType !== PvType.original;
       if (pvService === null) {
@@ -367,7 +380,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
     }
 
     for (let link of (json.webLinks || [])) {
-      const url = link.url || '';
+      const url = processExternalLinkFromVocaDb(link.url || '');
       let description = link.description || '';
       if (description === 'MikuWiki') description = 'Hatsune Miku Wiki';
       const isOfficial = link.category === WebLinkCategory.official || link.category === WebLinkCategory.commercial;
@@ -394,7 +407,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<parse
   }
 }
 
-export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<parsedAlbumPageInfo> {
+export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<ParsedAlbumPageInfo> {
   try {
     const vdbPageId = getVdbPageId(url, 'Al');
     if (vdbPageId === null) throw new Error('VocaDB page ID is empty or invalid!');
@@ -465,7 +478,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     if (json.releaseDate.isEmpty === false) {
       const { year, month, day } = json.releaseDate;
       publishedYear = `${year || ''}`;
-      publishedMonth = month === null ? '' : CONST_MONTHS[month-1];
+      publishedMonth = month === null ? '' : MONTHS[month-1];
       publishedDay = `${day || ''}`;
     }
 
@@ -523,9 +536,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
     }
 
     for (let link of (json.pvs || [])) {
-      let url = '';
-      if (link.service === PvService.yt) url = `https://www.youtube.com/watch?v=${link.pvId || ''}`
-      else url = link.url || '';
+      const url = processExternalLinkFromVocaDb(link.url || '');
       let description = dictConvertPvServiceName[link.service] || null;
       description = 'Album crossfade' + (description === null ? '' : ` - ${description}`);
       extLinks.push([ url, description, true ]);
@@ -543,13 +554,13 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
       }
     }
     for (let link of (json.webLinks || [])) {
-      const url = link.url || '';
+      const url = processExternalLinkFromVocaDb(link.url || '');
       let description;
       const isOfficial = link.category === WebLinkCategory.official || link.category === WebLinkCategory.commercial;
-      const am = CONST_ALBUM_STREAMING_LINKS.find(({ regex }) => {
+      const am = ALBUM_STREAMING_LINKS.find(({ regex }) => {
         return (regex.exec(url) !== null);
       }) || null;
-      const m = CONST_RECOGNIZED_LINKS.find(({ re }) => {
+      const m = RECOGNIZED_LINKS.find(({ re }) => {
         return (re.exec(url) !== null);
       }) || null;
       if (m === null) {
@@ -564,7 +575,6 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
           officialStreaming.push([am.name || '', url]);
         }
       }
-
       
       extLinks.push([ url, description, isOfficial ]);
     }
@@ -593,7 +603,7 @@ export async function fetchDataFromVocaDbForAlbumPage(url: string): Promise<pars
   }
 }
 
-export async function fetchDataFromVocaDbForProducerPage(url: string): Promise<parsedProducerPageInfo> {
+export async function fetchDataFromVocaDbForProducerPage(url: string): Promise<ParsedProducerPageInfo> {
   try {
     const vdbPageId = getVdbPageId(url, 'Ar');
     if (vdbPageId === null) throw new Error('VocaDB page ID is empty or invalid!');
@@ -624,11 +634,11 @@ export async function fetchDataFromVocaDbForProducerPage(url: string): Promise<p
       `https://vocadb.net/Ar/${vdbPageId}`, 'VocaDB', false, false, false
     ])
     for (let link of (json.webLinks || [])) {
-      const url = link.url || '';
+      const url = processExternalLinkFromVocaDb(link.url || '');
       let description = link.description || '';
       if (description === 'MikuWiki') description = 'Hatsune Miku Wiki';
       const isOfficial = link.category === WebLinkCategory.official || link.category === WebLinkCategory.commercial;
-      const isMedia = isOfficial && !!CONST_RECOGNIZED_LINKS.filter(el => el.isMedia).find(el => el.re.exec(url));
+      const isMedia = isOfficial && !!RECOGNIZED_LINKS.filter(el => el.isMedia).find(el => el.re.exec(url));
       const isInactive = link.disabled;
       extLinks.push([ url, description, isOfficial, isMedia, isInactive ]);
     }
