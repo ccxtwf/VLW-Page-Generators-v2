@@ -9,16 +9,16 @@ interface LyricsInputTableInterface {
   mode?: 'dark' | 'light'
 }
 
-const rxMatchBolded = /^\s*('{3})(.*)\1\s*$/;
+const rxMatchBolded = /^\s*('{3}|<b>)(?<text>.*)('{3}|<\/b>)\s*$/;
 const rxMatchBoldedCss = /font-weight\s*:\s*bold\b\s*;*/;
-const rxMatchItalicised = /^\s*('{2})((?<=\1)(?:(?!')|'{3}(?!')).*(?:(?<!')|(?<!')'{3})(?=\1))\1\s*$/;
+const rxMatchItalicised = /^\s*('{2}|<i>)(?='{3,}|\s*\b)(?<text>.*)(?<='{3,}|\b\s*)('{2}|<\/i>)\s*$/;
 const rxMatchItalicisedCss = /font-style\s*:\s*italic\b\s*;*/;
 
 // @ts-ignore
 const styleRenderer = (instance, td, row, col, prop, value, cellProperties) => {
   td.innerHTML = '';
   if (value === null) { return td; }
-  const kvPairs = (value as string).matchAll(/([a-zA-Z\-0-9]+)\s*:\s*([^;]*)/g);
+  const kvPairs = (value as string).matchAll(/([a-zA-Z\-0-9]+)\s*:\s*([^;<>]*)/g);
   const arr = [];
   for (const [_, k, v] of kvPairs) {
     arr.push( `<span style="${k}:${v};">${v}</span>` );
