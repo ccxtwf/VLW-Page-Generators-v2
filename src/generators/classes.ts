@@ -27,7 +27,7 @@ export class Lyric {
     return `|${
       (contents || '')
         .replace(/^-/, "<nowiki>-</nowiki>")
-        .replace(/(?<!<nowiki>)(~{4,})(?!<\/nowiki>)/g, "<nowiki>$1</nowiki>")
+        .replace(/(?<!<nowiki>)(~{3,})(?!<\/nowiki>)/g, "<nowiki>$1</nowiki>")
     }\n`
   }
 
