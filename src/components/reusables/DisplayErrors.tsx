@@ -1,7 +1,7 @@
 import { Message, MessageHeader } from 'semantic-ui-react';
-import { displayErrorsInterface } from "../../types";
+import { DisplayErrors } from "../../types";
 
-export default function DisplayError({ errors, warnings, recommendToAutoloadCategories }: displayErrorsInterface) {
+export default function DisplayError({ errors, warnings, recommendToAutoloadCategories }: DisplayErrors) {
   return (
     <div>
       {

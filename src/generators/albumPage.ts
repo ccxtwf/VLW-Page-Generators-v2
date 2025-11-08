@@ -1,10 +1,10 @@
-import { albumPageFormInterface, IDictionary } from "../types";
+import { AlbumPageForm, IDictionary } from "../types";
 import { TrackItem, ExternalLink } from "./classes";
 import { validateColour, detonePinyin } from "../utils";
-import { CONST_ALBUM_STREAMING_LINKS, CONST_RECOGNIZED_LINKS } from "../constants/linkDomains";
+import { ALBUM_STREAMING_LINKS, RECOGNIZED_LINKS } from "../constants/linkDomains";
 
 interface RawInput {
-  formData: albumPageFormInterface
+  formData: AlbumPageForm
   tracklistData: any[][]
   officialStreamingData: any[][]
   extLinksData: any[][]
@@ -71,7 +71,7 @@ export function parseInput({ formData, tracklistData, officialStreamingData, ext
     name = (name || '').trim();
     url = (url || '').trim();
     if (name === '' || url === '') continue;
-    const l = CONST_ALBUM_STREAMING_LINKS.find(el => el.name === name);
+    const l = ALBUM_STREAMING_LINKS.find(el => el.name === name);
     if (!l) continue;
     const paramKey = l.paramKey;
     const regex = l.regex;
@@ -80,7 +80,7 @@ export function parseInput({ formData, tracklistData, officialStreamingData, ext
   }
   const extLinks: ExternalLink[] = extLinksData
     .map(([url, description, isOfficial]) => {
-      const m = CONST_RECOGNIZED_LINKS.find(({ re }) => {
+      const m = RECOGNIZED_LINKS.find(({ re }) => {
         const m = re.exec(url || '');
         return (m !== null);
       });
@@ -128,7 +128,7 @@ function detectProducerOrSingerInMarkup(wikitext: string): string[] {
   return res;
 }
 
-export function autoloadCategories(input: albumPageFormInterface, tracklistData: string[][]): string[] {
+export function autoloadCategories(input: AlbumPageForm, tracklistData: string[][]): string[] {
   let { description, engines } = input;
   const res: string[] = [];
 

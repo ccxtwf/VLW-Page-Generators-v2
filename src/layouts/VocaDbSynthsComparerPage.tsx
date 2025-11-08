@@ -11,7 +11,7 @@ import {
 } from 'semantic-ui-react';
 import { useState, useEffect } from "react";
 
-const CONST__VDB_QUERY_PAGE_SIZE = 100;
+const VDB_QUERY_PAGE_SIZE = 100;
 interface ComparedSynth {
   vdbId: number
   originalName: string
@@ -34,7 +34,7 @@ async function fetchListOfSynthsFromVocaDb(artistTypes: VocalSynthEngine[], offs
     let res = await fetch(
       `https://vocadb.net/api/artists?artistTypes=${artistTypes.join(",")}` + 
       `&allowBaseVoicebanks=true&childTags=false` + 
-      `&start=${offset * CONST__VDB_QUERY_PAGE_SIZE}&maxResults=${CONST__VDB_QUERY_PAGE_SIZE}&sort=AdditionDate` + 
+      `&start=${offset * VDB_QUERY_PAGE_SIZE}&maxResults=${VDB_QUERY_PAGE_SIZE}&sort=AdditionDate` + 
       `&fields=Names,AdditionalNames,BaseVoicebank&lang=Japanese` +
       `&getTotalCount=false&preferAccurateMatches=false`
     );
@@ -233,7 +233,7 @@ export default function VocaDbSynthsComparerPage() {
               synths.map((synth, idx) => (
                 <TableRow key={synth.vdbId} negative={!synth.isListedOnInternalDb}>
                   <TableCell>
-                    { idx+1 + CONST__VDB_QUERY_PAGE_SIZE*queryOffset }
+                    { idx+1 + VDB_QUERY_PAGE_SIZE*queryOffset }
                   </TableCell>
                   <TableCell>{synth.originalName}</TableCell>
                   <TableCell>{synth.additionalNames}</TableCell>

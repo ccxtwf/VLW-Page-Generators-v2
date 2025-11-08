@@ -1,13 +1,30 @@
-export const CONST_PV_SERVICE_ABBREVIATIONS = {
-  "Niconico":       "NN",
-  "YouTube":        "YT",
-  "bilibili":       "BB",
-  "piapro":         "PP",
-  "SoundCloud":     "SC",
-  "Vimeo":          "VM",
-};
+export const PV_SERVICE_ABBREVIATIONS: Map<string, string> = new Map([
+  ["Niconico",    "NN"],
+  ["YouTube",     "YT"],
+  ["bilibili",    "BB"],
+  ["piapro",      "PP"],
+  ["SoundCloud",  "SC"],
+  ["Vimeo",       "VM"],
+]);
 
-export const CONST_ALBUM_STREAMING_LINKS = [
+interface AlbumStreamingLink {
+  name: string
+  paramKey: string
+  regex: RegExp
+}
+
+interface RecognizedDomain {
+  site: string 
+  re: RegExp
+  isMedia?: boolean
+  mapToAlbumInfoboxReadMoreParam?: string
+}
+
+interface PvService extends RecognizedDomain {
+  site: PV_SERVICE_PROVIDER
+}
+
+export const ALBUM_STREAMING_LINKS: AlbumStreamingLink[] = [
   {
     name: 'Niconico Crossfade',
     paramKey: 'nn-xfade',
@@ -40,71 +57,74 @@ export const CONST_ALBUM_STREAMING_LINKS = [
   }
 ];
 
-interface pvService {
-  site: string
-  re: RegExp
-  sanitize?: RegExp
-  isMedia?: boolean
-  mapToAlbumInfoboxReadMoreParam?: string
+export enum PV_SERVICE_PROVIDER {
+  niconico = "Niconico",
+  youtube = "YouTube",
+  bilibili = "bilibili",
+  piapro = "piapro",
+  soundcloud = "SoundCloud",
+  bandcamp = "Bandcamp",
+  vimeo = "Vimeo",
+  netease = "Netease Music",
+  spotify = "Spotify",
+  fsing = "5Sing",
+  xitter = "X (Twitter)"
 }
 
-export const CONST_PV_SERVICES: pvService[] = [
+export const PV_SERVICES: PvService[] = [
   {
-    site: "Niconico",
+    site: PV_SERVICE_PROVIDER.niconico,
     re: /^https?:\/\/www\.nicovideo\.jp/,
-    sanitize: /^(?<head>https?:\/\/www\.nicovideo\.jp\/watch\/)(?<id>[^\/\?]+)/,
     isMedia: true
   },
   {
-    site: "YouTube",
+    site: PV_SERVICE_PROVIDER.youtube,
     re: /^https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts)|youtu\.be)/,
-    sanitize: /^(?<head>https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/))(?<id>[^\/\?]{11})/,
     isMedia: true
   },
   {
-    site: "bilibili",
+    site: PV_SERVICE_PROVIDER.bilibili,
     re: /^https?:\/\/www\.bilibili\.com/,
-    sanitize: /^(?<head>https?:\/\/www\.bilibili\.com\/video\/)(?<id>[^\/\?]+)/,
     isMedia: true
   },
   {
-    site: "piapro",
+    site: PV_SERVICE_PROVIDER.piapro,
     re: /^https?:\/\/piapro\.jp/,
     isMedia: true
   },
   {
-    site: "SoundCloud",
+    site: PV_SERVICE_PROVIDER.soundcloud,
     re: /^https?:\/\/soundcloud\.com/,
     isMedia: true
   },
   {
-    site: "Bandcamp",
+    site: PV_SERVICE_PROVIDER.bandcamp,
     re: /^https?:\/\/[^\.]*\.?bandcamp\.com/,
     isMedia: true
   },
   {
-    site: "Vimeo",
+    site: PV_SERVICE_PROVIDER.vimeo,
     re: /^https?:\/\/vimeo\.com/,
     isMedia: true
   },
   {
-    site: "Netease Music",
+    site: PV_SERVICE_PROVIDER.netease,
     re: /^https?:\/\/music\.163\.com/,
     isMedia: true
   },
   {
-    site: "Spotify",
+    site: PV_SERVICE_PROVIDER.spotify,
     re: /^https?:\/\/[^\.]+\.spotify\.com/,
     isMedia: true
   },
   {
-    site: "5Sing",
+    site: PV_SERVICE_PROVIDER.fsing,
     re: /^https?:\/\/5sing\.kugou\.com/,
     isMedia: true
   }
 ];
 
-export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
+export const RECOGNIZED_LINKS: RecognizedDomain[] = (PV_SERVICES as RecognizedDomain[]).concat([
   {
     site: "YouTube Channel",
     re: /^https?:\/\/www\.youtube\.com\/user\/.*/,
@@ -122,8 +142,7 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
   },
   {
     site: "VocaDB",
-    re: /^https?:\/\/vocadb\.net\/.*/,
-    sanitize: /(?<head>https?:\/\/vocadb\.net\/(?:S|Ar|Al)\/)(?<id>\d+)/
+    re: /^https?:\/\/vocadb\.net\/.*/
   },
   {
     site: "Discogs",
@@ -230,8 +249,8 @@ export const CONST_RECOGNIZED_LINKS: pvService[] = CONST_PV_SERVICES.concat([
     re: /^https?:\/\/ja\.wikipedia\.org\/.*/
   },
   {
-    site: "X (Twitter)",
-    re: /^https?:\/\/(twitter|x)\.com\/.*/
+    site: PV_SERVICE_PROVIDER.xitter,
+    re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\/.*/
   },
   {
     site: "UtaTen",

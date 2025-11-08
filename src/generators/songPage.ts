@@ -1,9 +1,9 @@
 import { ENUM_AI_WARNING_TYPE, ENUM_CW_STATES } from "../types";
 import { Lyric, PlayLink, ExternalLink } from "./classes";
-import { CONST_PV_SERVICE_ABBREVIATIONS } from '../constants/linkDomains';
-import { CONST_MONTHS } from "../constants/months";
+import { PV_SERVICE_ABBREVIATIONS } from '../constants/linkDomains';
+import { MONTHS } from "../constants/months";
 import { generateLyricsTable, detonePinyin, validateColour } from "../utils";
-import { CONST_LANGUAGES } from "../constants/languages";
+import { LANGUAGES } from "../constants/languages";
 
 interface RawInput {
   data: {
@@ -116,7 +116,7 @@ export function parseInput({
   producers = convertRawTextAreaInput(producers.trim());
   description = convertRawTextAreaInput(description.trim());
   const languages = data.languageIds.map((languageId) => {
-    const { name } = CONST_LANGUAGES[languageId] || {};
+    const { name } = LANGUAGES[languageId] || {};
     if (name === 'Non-lexical lyrics') return 'Nonlexical';
     return name;
   })
@@ -194,9 +194,7 @@ export function autoloadCategories({
     // Infer base producer category
     if (base === '') continue;
     base = base.trim();
-    if (base.match(/^w:c:/i) !== null) {
-      continue;
-    } else if (base.match(/^:Category:(?:.*) songs list/i) !== null) {
+    if (base.match(/^:Category:(?:.*) songs list/i) !== null) {
       prodCategoryTag = base.replace(/^:Category:\s*/i, '');
     } else {
       prodCategoryTag = `${base} songs list`;
@@ -403,7 +401,7 @@ export function validate(input: ProcessedInput): {
   const forgotViewCounts = playLinks.filter(link => (
     link.isOfficiallyAvailable && 
     // @ts-ignore
-    CONST_PV_SERVICE_ABBREVIATIONS[link.site] !== undefined
+    PV_SERVICE_ABBREVIATIONS[link.site] !== undefined
   )).some(link => link.viewCount === '');
   if (forgotViewCounts) res.push([
     false,
@@ -512,7 +510,7 @@ export function generateSongPage(input: ProcessedInput): string {
     dateSegment = `{{Date|${
       uploadDate.getFullYear()
     }|${
-      CONST_MONTHS[uploadDate.getMonth()]
+      MONTHS[uploadDate.getMonth()]
     }|${
       uploadDate.getDate()
     }}}`;
@@ -524,12 +522,12 @@ export function generateSongPage(input: ProcessedInput): string {
     .filter((playLink) => (
       !playLink.isReprint &&
       // @ts-ignore
-      CONST_PV_SERVICE_ABBREVIATIONS[playLink.site] !== undefined
+      PV_SERVICE_ABBREVIATIONS[playLink.site] !== undefined
     ))
     .map((playLink) => ({ 
       vc: playLink.getFormattedViewCount(), 
       // @ts-ignore
-      abbr: CONST_PV_SERVICE_ABBREVIATIONS[playLink.site] 
+      abbr: PV_SERVICE_ABBREVIATIONS[playLink.site] 
     }));
   if (viewCounts.length > 1) {
     viewCountsSegment = viewCounts.map(el => `${el.vc} (${el.abbr})`).join(', ');

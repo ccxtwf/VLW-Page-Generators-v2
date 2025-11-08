@@ -1,11 +1,11 @@
 import { useAppDataSource } from "../components/DatabaseProvider";
 
-interface dbItem {
+interface DbItem {
   id: number
   name: string
 }
 
-export default function useFetchListOfEngines(): dbItem[] {
+export default function useFetchListOfEngines(): DbItem[] {
   try {
     const appSource = useAppDataSource();
     const rawQueryResults = appSource.exec("SELECT * FROM engines;");

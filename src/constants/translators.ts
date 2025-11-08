@@ -1,4 +1,9 @@
-export const CONST_TRANSLATOR_LICENSES = [
+interface TranslatorLicense {
+  id: string[]
+  license: string | null
+}
+
+export const TRANSLATOR_LICENSES: TranslatorLicense[] = [
   {
     id: ["aWhimsicalStar☆"],
     license: "https://awhimsicalstar.dreamwidth.org"

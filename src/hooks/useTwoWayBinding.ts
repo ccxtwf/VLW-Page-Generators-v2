@@ -6,28 +6,28 @@ import {
   CheckboxProps, DropdownProps 
 } from "semantic-ui-react";
 
-interface bindInputInnerInterface {
+interface BindInput {
   // value: any
   // onChange: (_: ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
   onBlur: (e: Event) => void
 }
-interface bindTextAreaInnerInterface {
+interface BindTextArea {
   // value: any
   // onChange: (_: ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
   onBlur: (e: Event) => void
 }
-interface bindCheckboxInnerInterface {
+interface BindCheckbox {
   checked: boolean
   onChange: (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => void
 }
-interface bindDropdownInnerInterface {
+interface BindDropdown {
   value: any
   onChange: (_: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
 }
 
 export default function useTwoWayBinding<T>(state: T, setState: Dispatch<SetStateAction<T>>) {
   
-  const bindInput = (key: string): bindInputInnerInterface => {
+  const bindInput = (key: string): BindInput => {
     return {
       // value: (state as any)[key],
       // onChange: (_: ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => {
@@ -46,7 +46,7 @@ export default function useTwoWayBinding<T>(state: T, setState: Dispatch<SetStat
       }
     }
   }
-  const bindTextArea = (key: string): bindTextAreaInnerInterface => {
+  const bindTextArea = (key: string): BindTextArea => {
     return {
       // value: (state as any)[key],
       // onChange: (_: ChangeEvent<HTMLTextAreaElement>, data: TextAreaProps) => {
@@ -65,7 +65,7 @@ export default function useTwoWayBinding<T>(state: T, setState: Dispatch<SetStat
       }
     }
   }
-  const bindCheckbox = (key: string): bindCheckboxInnerInterface => {
+  const bindCheckbox = (key: string): BindCheckbox => {
     return {
       checked: (state as any)[key],
       onChange: (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => {
@@ -77,7 +77,7 @@ export default function useTwoWayBinding<T>(state: T, setState: Dispatch<SetStat
       }
     }
   }
-  const bindDropdown = (key: string): bindDropdownInnerInterface => {
+  const bindDropdown = (key: string): BindDropdown => {
     return {
       value: (state as any)[key],
       onChange: (_: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => {

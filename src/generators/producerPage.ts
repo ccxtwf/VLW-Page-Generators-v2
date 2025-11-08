@@ -1,10 +1,10 @@
-import { producerPageFormInterface, producerRoles } from "../types";
+import { ProducerPageForm, ProducerRoles } from "../types";
 import { DiscogItem, ExternalLink } from "./classes";
-import { CONST_LANGUAGES } from "../constants/languages";
+import { LANGUAGES } from "../constants/languages";
 
 interface RawInput {
-  formData: producerPageFormInterface
-  producerRoles: producerRoles
+  formData: ProducerPageForm
+  producerRoles: ProducerRoles
   songListData: any[][]
   albumListData: any[][]
   extLinksData: any[][]
@@ -14,7 +14,7 @@ interface ProcessedInput {
     prodCategory: string
     splitAlbum: boolean
     prodAliases: string
-    prodRoles: producerRoles
+    prodRoles: ProducerRoles
     affiliations: string
     label: string
     languageIds: number[]
@@ -229,7 +229,7 @@ export function generateProducerPage(input: ProcessedInput): string {
     }
   }
   for (let id of languageIds) {
-    let lang: string = CONST_LANGUAGES[id]?.name || '';
+    let lang: string = LANGUAGES[id]?.name || '';
     if (lang === 'Mandarin') lang = 'Chinese';
     categories.push(`${lang} original producers`);
   }

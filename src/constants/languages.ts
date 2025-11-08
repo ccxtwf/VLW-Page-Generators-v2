@@ -1,4 +1,11 @@
-export const CONST_LANGUAGES = [
+interface Language {
+  name: string
+  transliteration?: string
+  code: string | null
+  iso?: string
+}
+
+export const LANGUAGES: Language[] = [
   {
     name: "English",
     code: "en",

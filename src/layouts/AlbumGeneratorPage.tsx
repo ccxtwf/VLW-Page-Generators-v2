@@ -21,16 +21,16 @@ import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 import { convertColourStringToHexCode } from '../utils';
 
-import { CONST_TOOLTIPS_ALBUM_PAGES } from '../constants/tooltips';
+import { ALBUM_PAGE_GENERATOR_TOOLTIPS } from '../tooltips/album-page-generator';
 
-import { albumPageFormInterface, displayErrorsInterface } from "../types";
+import { AlbumPageForm, DisplayErrors } from "../types";
 
 import { parseInput, validate, autoloadCategories, generateAlbumPage } from "../generators/albumPage";
 import { fetchDataFromVocaDbForAlbumPage } from "../generators/fetch";
-import { CONST_MONTHS } from '../constants/months';
-import { CONST_ALBUM_STREAMING_LINKS } from '../constants/linkDomains';
+import { MONTHS } from '../constants/months';
+import { ALBUM_STREAMING_LINKS } from '../constants/linkDomains';
 
-const defaultInputData: albumPageFormInterface = {
+const defaultInputData: AlbumPageForm = {
   origTitle: "",
   romTitle: "",
   engTitle: "",
@@ -56,14 +56,14 @@ export default function AlbumGeneratorPage() {
     loading: false
   });
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [formData, setFormData] = useState<albumPageFormInterface>({
+  const [formData, setFormData] = useState<AlbumPageForm>({
     ...defaultInputData,
     engines: [...defaultInputData.engines]
   });
   const [ignoreErrors, setIgnoreErrors] = useState<boolean>(false);
   const [results, setResults] = useState<string>('');
   const [elementsWithErrors, setElementsWithErrors] = useState<string[]>([]);
-  const [notify, setNotify] = useState<displayErrorsInterface>({ 
+  const [notify, setNotify] = useState<DisplayErrors>({ 
     errors: [], 
     warnings: [],
     recommendToAutoloadCategories: false
@@ -74,7 +74,7 @@ export default function AlbumGeneratorPage() {
   const refExtLinks = useRef(null);
   const refOfficialStreaming = useRef(null);
 
-  const { bindInput, bindDropdown, bindCheckbox } = useTwoWayBinding<albumPageFormInterface>(formData, setFormData);
+  const { bindInput, bindDropdown, bindCheckbox } = useTwoWayBinding<AlbumPageForm>(formData, setFormData);
 
   const engines = useFetchListOfEngines();
 
@@ -97,7 +97,7 @@ export default function AlbumGeneratorPage() {
     );
     // @ts-ignore
     refOfficialStreaming.current?.hotInstance?.loadData(
-      CONST_ALBUM_STREAMING_LINKS.map(el => [el.name, ''])
+      ALBUM_STREAMING_LINKS.map(el => [el.name, ''])
     );
   }, []);
 
@@ -221,7 +221,7 @@ export default function AlbumGeneratorPage() {
       );
       // @ts-ignore
       refOfficialStreaming.current?.hotInstance?.loadData(
-        CONST_ALBUM_STREAMING_LINKS.map(el => [el.name, ''])
+        ALBUM_STREAMING_LINKS.map(el => [el.name, ''])
       );
 
       setNotify({
@@ -284,7 +284,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Pre-load from VocaDB:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.vdb}
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Vdb}
             position={tooltipPosition}
           />
         </div>
@@ -321,7 +321,7 @@ export default function AlbumGeneratorPage() {
           <div>Original title:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.origTitle} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.OriginalTitle} 
             position={tooltipPosition}
           />
         </div>
@@ -340,7 +340,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Transliterated title:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.romTitle} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.RomTitle} 
             position={tooltipPosition}
           />
         </div>
@@ -359,7 +359,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>English title:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.engTitle} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.EngTitle} 
             position={tooltipPosition}
           />
         </div>
@@ -383,7 +383,7 @@ export default function AlbumGeneratorPage() {
           <div>Infobox BG/FG colours:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.infobox} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Infobox} 
             position={tooltipPosition}
           />
         </div>
@@ -468,7 +468,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Label:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.label} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Label} 
             position={tooltipPosition}
           />
         </div>
@@ -490,7 +490,7 @@ export default function AlbumGeneratorPage() {
           <div>Description:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.description} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Description} 
             position={tooltipPosition}
           />
         </div>
@@ -518,7 +518,7 @@ export default function AlbumGeneratorPage() {
           <div>Album Publication Date:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.publishedDate} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.DateOfPublication} 
             position={tooltipPosition}
           />
         </div>
@@ -537,7 +537,7 @@ export default function AlbumGeneratorPage() {
           id="album-generator-input-publishedMonth"
           placeholder='month'
           fluid selection clearable
-          options={CONST_MONTHS.map((el, idx) => {
+          options={MONTHS.map((el, idx) => {
             return { key: idx, text: el, value: el }
           })}
           {...bindDropdown('publishedMonth')}
@@ -563,7 +563,7 @@ export default function AlbumGeneratorPage() {
           <div>Singer(s):</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.engines} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Engines} 
             position={tooltipPosition}
           />
         </div>
@@ -588,7 +588,7 @@ export default function AlbumGeneratorPage() {
         <div className='centered-header'>
           <span style={{ paddingRight: '5px' }}>Tracklist</span>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.tracklist} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Tracklist} 
             required wide 
           />
         </div>
@@ -607,7 +607,7 @@ export default function AlbumGeneratorPage() {
           <div>VocaDB Album Page ID:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.vdbAlbumId} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.VdbAlbumId} 
             position={tooltipPosition}
           />
         </div>
@@ -627,7 +627,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>VOCALOID Wiki Page:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.vocaWikiPage} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.VocaWikiPage} 
             position={tooltipPosition}
           />
         </div>
@@ -647,7 +647,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Official Crossfades & Streaming:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.officialStreaming} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.OfficialStreaming} 
             position={tooltipPosition}
           />
         </div>
@@ -665,7 +665,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>External Links:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.extLinks} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.ExternalLinks} 
             position={tooltipPosition}
           />
         </div>
@@ -686,7 +686,7 @@ export default function AlbumGeneratorPage() {
           <div>Categories:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_ALBUM_PAGES.categories} 
+            content={ALBUM_PAGE_GENERATOR_TOOLTIPS.Categories} 
             position={tooltipPosition}
           />
         </div>

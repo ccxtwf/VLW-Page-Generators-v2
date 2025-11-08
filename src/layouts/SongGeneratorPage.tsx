@@ -23,15 +23,15 @@ import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import { convertColourStringToHexCode, parseHeadersFromLanguages } from '../utils';
 
-import { CONST_TOOLTIPS_SONG_PAGES } from '../constants/tooltips';
-import { CONST_LANGUAGES } from '../constants/languages';
+import { SONG_PAGE_TOOLTIPS } from "../tooltips/song-page-generator";
+import { LANGUAGES } from '../constants/languages';
 
-import { ENUM_CW_STATES, ENUM_AI_WARNING_TYPE, songPageFormInterface, displayErrorsInterface } from "../types";
+import { ENUM_CW_STATES, ENUM_AI_WARNING_TYPE, SongPageForm, DisplayErrors } from "../types";
 
 import { parseInput, validate, autoloadCategories, generateSongPage } from "../generators/songPage";
 import { fetchDataFromVocaDbForSongPage } from "../generators/fetch";
 
-const defaultInputData: songPageFormInterface =  {
+const defaultInputData: SongPageForm =  {
   aiCwState: ENUM_AI_WARNING_TYPE.none,
   aiWarningText1: '',
   aiWarningText2: '',
@@ -67,7 +67,7 @@ export default function SongGeneratorPage() {
   });
 
   // Form Data State
-  const [formData, setFormData] = useState<songPageFormInterface>({
+  const [formData, setFormData] = useState<SongPageForm>({
     ...defaultInputData
   });
   const [languageIds, setLanguageIds] = useState<number[]>([]);
@@ -84,7 +84,7 @@ export default function SongGeneratorPage() {
   const [ignoreErrors, setIgnoreErrors] = useState<boolean>(false);
   const [results, setResults] = useState<string>('');
   const [elementsWithErrors, setElementsWithErrors] = useState<string[]>([]);
-  const [notify, setNotify] = useState<displayErrorsInterface>({ 
+  const [notify, setNotify] = useState<DisplayErrors>({ 
     errors: [], 
     warnings: [],
     recommendToAutoloadCategories: false
@@ -95,10 +95,10 @@ export default function SongGeneratorPage() {
   const refPlayLinks = useRef(null);
   const refExtLinks = useRef(null);
 
-  const { bindInput, bindTextArea, bindCheckbox, bindDropdown } = useTwoWayBinding<songPageFormInterface>(formData, setFormData);
+  const { bindInput, bindTextArea, bindCheckbox, bindDropdown } = useTwoWayBinding<SongPageForm>(formData, setFormData);
 
   const languages = useMemo(() => (
-    languageIds.map((el: number) => CONST_LANGUAGES[el])
+    languageIds.map((el: number) => LANGUAGES[el])
   ), [languageIds]);
   const [ needsRomanization, needsEnglishTranslation, headersText, isChinese ] = useMemo(() => (
     parseHeadersFromLanguages(languages)
@@ -168,7 +168,7 @@ export default function SongGeneratorPage() {
           let isoLangCode = '';
           setLanguageIds(() => languageIds);
           if (languageIds.length > 0) {
-            isoLangCode = (CONST_LANGUAGES[languageIds[0]] || {}).iso || '';
+            isoLangCode = (LANGUAGES[languageIds[0]] || {}).iso || '';
           }
           setFormData({
             ...defaultInputData,
@@ -271,7 +271,7 @@ export default function SongGeneratorPage() {
     setLanguageIds(newData);
     if (newData.length === 1) {
       const langId = (data.value as number[])[0];
-      const isoLangCode = (CONST_LANGUAGES[langId] || {}).iso || '';
+      const isoLangCode = (LANGUAGES[langId] || {}).iso || '';
       setFormData({...formData, isoLangCode});
       // @ts-ignore
       document.getElementById("song-generator-input-isoLangCode").value = isoLangCode;
@@ -341,7 +341,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Pre-load from VocaDB:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.vdb} 
+            content={SONG_PAGE_TOOLTIPS.Vdb} 
             position={tooltipPosition} 
           />
         </div>
@@ -380,7 +380,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>GenAI Warning</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.ai} 
+            content={SONG_PAGE_TOOLTIPS.Ai} 
             position={tooltipPosition} 
           />
         </div>
@@ -422,7 +422,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Content Warnings:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.cw} 
+            content={SONG_PAGE_TOOLTIPS.Cw} 
             position={tooltipPosition} 
           />
         </div>
@@ -469,7 +469,7 @@ export default function SongGeneratorPage() {
           <div>Song Language:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.language} 
+            content={SONG_PAGE_TOOLTIPS.Language} 
             position={tooltipPosition} 
           />
         </div>
@@ -478,7 +478,7 @@ export default function SongGeneratorPage() {
         <Dropdown
           placeholder='Song Language'
           fluid multiple selection
-          options={CONST_LANGUAGES.map((el, idx) => {
+          options={LANGUAGES.map((el, idx) => {
             return { key: idx, text: el.name, value: idx }
           })}
           className={bindElementWithErrorNotification('languageIds')}
@@ -493,7 +493,7 @@ export default function SongGeneratorPage() {
           <div>Language ISO Code:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.isoLangCode} 
+            content={SONG_PAGE_TOOLTIPS.IsoLangCode} 
             position={tooltipPosition} 
           />
         </div>
@@ -513,7 +513,7 @@ export default function SongGeneratorPage() {
           <div>Original title:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.origTitle}
+            content={SONG_PAGE_TOOLTIPS.OriginalTitle}
             position={tooltipPosition}  
           />
         </div>
@@ -534,7 +534,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Traditional/Simplified Chinese title:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.altChTitle}
+            content={SONG_PAGE_TOOLTIPS.AltCnTitle}
             position={tooltipPosition} 
           />
         </div>
@@ -565,7 +565,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Transliterated title:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.romTitle} 
+            content={SONG_PAGE_TOOLTIPS.RomTitle} 
             position={tooltipPosition} 
           />
         </div>
@@ -587,7 +587,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Translated title:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.engTitle} 
+            content={SONG_PAGE_TOOLTIPS.EngTitle} 
             position={tooltipPosition} 
           />
         </div>
@@ -620,7 +620,7 @@ export default function SongGeneratorPage() {
           <div>Infobox BG/FG colours:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.infobox} 
+            content={SONG_PAGE_TOOLTIPS.Infobox} 
             position={tooltipPosition} 
           />
         </div>
@@ -690,7 +690,7 @@ export default function SongGeneratorPage() {
           <div>Upload Date:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.dateOfPublication} 
+            content={SONG_PAGE_TOOLTIPS.DateOfPublication} 
             position={tooltipPosition} 
           />
         </div>
@@ -712,7 +712,7 @@ export default function SongGeneratorPage() {
           <div>Singer(s):</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.singers} 
+            content={SONG_PAGE_TOOLTIPS.Singers} 
             position={tooltipPosition} 
           />
         </div>
@@ -733,7 +733,7 @@ export default function SongGeneratorPage() {
           <div>Producer(s):</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.producers}
+            content={SONG_PAGE_TOOLTIPS.Producers}
             position={tooltipPosition}  
           />
         </div>
@@ -753,7 +753,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Description:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.description} 
+            content={SONG_PAGE_TOOLTIPS.Description} 
             position={tooltipPosition} 
           />
         </div>
@@ -776,7 +776,7 @@ export default function SongGeneratorPage() {
           <div>Broadcast Links</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.playLinks} 
+            content={SONG_PAGE_TOOLTIPS.PlayLinks} 
             position={tooltipPosition} 
           />
         </div>
@@ -813,7 +813,7 @@ export default function SongGeneratorPage() {
           <span style={{ paddingRight: '5px' }}>Lyrics</span>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.lyrics} 
+            content={SONG_PAGE_TOOLTIPS.Lyrics} 
           />
         </div>
         {/* <div>
@@ -837,7 +837,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>Translator:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.translator}
+            content={SONG_PAGE_TOOLTIPS.Translator}
             position={tooltipPosition} 
           />
         </div>
@@ -860,7 +860,7 @@ export default function SongGeneratorPage() {
           style={{ marginLeft: '20px' }}
         />
         <Tooltip 
-          content={CONST_TOOLTIPS_SONG_PAGES.officialTranslation} 
+          content={SONG_PAGE_TOOLTIPS.IsOfficialTranslation} 
           position='bottom center' 
         />
       </GridColumn>
@@ -878,7 +878,7 @@ export default function SongGeneratorPage() {
         <div className='label-column'>
           <div>External Links</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_SONG_PAGES.extLinks}
+            content={SONG_PAGE_TOOLTIPS.ExternalLinks}
             position={tooltipPosition} 
           />
         </div>
@@ -897,7 +897,7 @@ export default function SongGeneratorPage() {
           <div>Categories</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_SONG_PAGES.categories}
+            content={SONG_PAGE_TOOLTIPS.Categories}
             position={tooltipPosition}  
           />
         </div>

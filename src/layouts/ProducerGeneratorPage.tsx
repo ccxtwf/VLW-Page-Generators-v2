@@ -19,15 +19,15 @@ import FirstTimeEditorNote from '../components/reusables/FirstTimeEditorNote';
 import useTwoWayBinding from '../hooks/useTwoWayBinding';
 import useFetchListOfEngines from '../hooks/useFetchListOfEngines';
 
-import { CONST_LANGUAGES } from '../constants/languages';
-import { CONST_TOOLTIPS_PRODUCER_PAGES } from '../constants/tooltips';
+import { LANGUAGES } from '../constants/languages';
+import { PRODUCER_PAGE_GENERATOR_TOOLTIPS } from '../tooltips/producer-page-generator';
 
-import { producerPageFormInterface, producerRoles, displayErrorsInterface } from "../types";
+import { ProducerPageForm, ProducerRoles, DisplayErrors } from "../types";
 
 import { parseInput, validate, generateProducerPage } from "../generators/producerPage";
 import { fetchDataFromVocaDbForProducerPage, fetchDiscographyFromVlw } from "../generators/fetch";
 
-const defaultInputData: producerPageFormInterface = {
+const defaultInputData: ProducerPageForm = {
   prodCategory: "",
   splitAlbum: false,
   prodAliases: "",
@@ -58,18 +58,18 @@ export default function AlbumGeneratorPage() {
     loadingDiscog: false
   });
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [formData, setFormData] = useState<producerPageFormInterface>({
+  const [formData, setFormData] = useState<ProducerPageForm>({
     ...defaultInputData,
     languageIds: [...defaultInputData.languageIds],
     engines: [...defaultInputData.engines]
   });
-  const [producerRoles, setProducerRoles] = useState<producerRoles>({
+  const [producerRoles, setProducerRoles] = useState<ProducerRoles>({
     ...defaultProducerRoles
   });
   const [ignoreErrors, setIgnoreErrors] = useState<boolean>(false);
   const [results, setResults] = useState<string>('');
   const [elementsWithErrors, setElementsWithErrors] = useState<string[]>([]);
-  const [notify, setNotify] = useState<displayErrorsInterface>({ 
+  const [notify, setNotify] = useState<DisplayErrors>({ 
     errors: [], 
     warnings: [],
     recommendToAutoloadCategories: false
@@ -80,8 +80,8 @@ export default function AlbumGeneratorPage() {
   const refDiscogAlbums = useRef(null);
   const refExtLinks = useRef(null);
 
-  const { bindInput, bindTextArea, bindDropdown } = useTwoWayBinding<producerPageFormInterface>(formData, setFormData);
-  const { bindCheckbox } = useTwoWayBinding<producerRoles>(producerRoles, setProducerRoles);
+  const { bindInput, bindTextArea, bindDropdown } = useTwoWayBinding<ProducerPageForm>(formData, setFormData);
+  const { bindCheckbox } = useTwoWayBinding<ProducerRoles>(producerRoles, setProducerRoles);
 
   const engines = useFetchListOfEngines();
 
@@ -282,7 +282,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Pre-load from VocaDB:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.vdb} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.Vdb} 
             position={tooltipPosition}
           />
         </div>
@@ -319,7 +319,7 @@ export default function AlbumGeneratorPage() {
           <div>Main producer category:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.prodcat} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.ProducerCategory} 
             position={tooltipPosition}
           />
         </div>
@@ -363,7 +363,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Producer's other aliases:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.prodaliases} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.ProducerAliases} 
             position={tooltipPosition}
           />
         </div>
@@ -386,7 +386,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Affiliations:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.affiliations} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.Affiliations} 
             position={tooltipPosition}
           />
         </div>
@@ -406,7 +406,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>Labels:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.labels} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.Labels} 
             position={tooltipPosition}
           />
         </div>
@@ -427,7 +427,7 @@ export default function AlbumGeneratorPage() {
           <div>Languages:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.languages} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.Languages} 
             position={tooltipPosition}
           />
         </div>
@@ -436,7 +436,7 @@ export default function AlbumGeneratorPage() {
         <Dropdown
           placeholder='Choose a language'
           fluid multiple selection
-          options={CONST_LANGUAGES.map((el, idx) => {
+          options={LANGUAGES.map((el, idx) => {
             return { key: idx, text: el.name, value: idx }
           })}
           {...bindDropdown("languageIds")}
@@ -452,7 +452,7 @@ export default function AlbumGeneratorPage() {
           <div>Uses the synthesizers:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.synthesizers} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.Synthesizers} 
             position={tooltipPosition}
           />
         </div>
@@ -475,7 +475,7 @@ export default function AlbumGeneratorPage() {
           <div>Typical roles:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.prodroles} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.ProducerRoles} 
             position={tooltipPosition}
           />
         </div>
@@ -528,7 +528,7 @@ export default function AlbumGeneratorPage() {
           <div>Description:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.description} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.Description} 
             position={tooltipPosition}
           />
         </div>
@@ -549,7 +549,7 @@ export default function AlbumGeneratorPage() {
         <div className='centered-header'>
           <span style={{ paddingRight: '5px' }}>External Links</span>
           <Tooltip 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.extLinks} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.ExternalLinks} 
             required wide 
           />
         </div>
@@ -569,7 +569,7 @@ export default function AlbumGeneratorPage() {
           <div>List of songs:</div>
           <Tooltip 
             required 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.songList} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.SongsList} 
             position={tooltipPosition}
           />
         </div>
@@ -587,7 +587,7 @@ export default function AlbumGeneratorPage() {
         <div className='label-column'>
           <div>List of albums:</div>
           <Tooltip 
-            content={CONST_TOOLTIPS_PRODUCER_PAGES.albumList} 
+            content={PRODUCER_PAGE_GENERATOR_TOOLTIPS.AlbumsList} 
             position={tooltipPosition}
           />
         </div>

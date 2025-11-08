@@ -14,7 +14,7 @@ export enum ENUM_AI_WARNING_TYPE {
   suspected,
 }
 
-export interface songPageFormInterface {
+export interface SongPageForm {
   aiCwState: ENUM_AI_WARNING_TYPE
   aiWarningText1: string
   aiWarningText2: string
@@ -41,7 +41,7 @@ export interface songPageFormInterface {
   categoriesRaw: string
 }
 
-export interface albumPageFormInterface {
+export interface AlbumPageForm {
   origTitle: string
   romTitle: string
   engTitle: string
@@ -59,7 +59,7 @@ export interface albumPageFormInterface {
   categoriesRaw: string
 }
 
-export interface producerPageFormInterface {
+export interface ProducerPageForm {
   prodCategory: string
   splitAlbum: boolean
   prodAliases: string
@@ -70,7 +70,7 @@ export interface producerPageFormInterface {
   description: string
 }
 
-export interface producerRoles {
+export interface ProducerRoles {
   composer: boolean
   lyricist: boolean
   tuner: boolean
@@ -82,12 +82,12 @@ export interface producerRoles {
   masterer: boolean
 }
 
-export interface lyricsEditorFormInterface {
+export interface LyricsEditorForm {
   translator: string
   isOfficialTranslation: boolean
 }
 
-export interface displayErrorsInterface {
+export interface DisplayErrors {
   errors: string[]
   warnings: string[]
   recommendToAutoloadCategories: boolean
