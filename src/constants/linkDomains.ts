@@ -121,6 +121,10 @@ export const PV_SERVICES: PvService[] = [
     site: PV_SERVICE_PROVIDER.fsing,
     re: /^https?:\/\/5sing\.kugou\.com/,
     isMedia: true
+  },
+  {
+    site: PV_SERVICE_PROVIDER.xitter,
+    re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\/.*/
   }
 ];
 
@@ -247,10 +251,6 @@ export const RECOGNIZED_LINKS: RecognizedDomain[] = (PV_SERVICES as RecognizedDo
   {
     site: "Wikipedia (Japanese)",
     re: /^https?:\/\/ja\.wikipedia\.org\/.*/
-  },
-  {
-    site: PV_SERVICE_PROVIDER.xitter,
-    re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\/.*/
   },
   {
     site: "UtaTen",
