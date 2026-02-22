@@ -242,7 +242,7 @@ export class ExternalLink {
         } else if (matchMirahezeWiki[1] in this.recognizedMirahezeInterwiki) {
           wikitext = `{{${this.recognizedFandomInterwiki[matchMirahezeWiki[1]]}|${matchMirahezeWiki[2]}|${this.description}}}`;
         } else {
-          wikitext = `[[mh:${matchMirahezeWiki[1]}|${matchMirahezeWiki[2]}|${this.description}]]`;
+          wikitext = `[[mh:${matchMirahezeWiki[1]}:${matchMirahezeWiki[2]}|${this.description}]]`;
         }
         break;
       case (matchFandomWiki !== null):
