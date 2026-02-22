@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-let var_ffc16588_90ce_52fd_befe_b72bee8738c1;
+let var_814ecc66_3758_5e28_b3b2_0fa5268ea509;
 let __tla = (async () => {
   var kj = (t, e) => () => (e || t((e = {
     exports: {}
@@ -35168,7 +35168,7 @@ ${x}|}
             e = `{{VDB|${n[1]}}}${this.description === "VocaDB" ? "" : " - " + this.description}`;
             break;
           case r !== null:
-            r[1] === "vocaloidlyrics" ? e = `[[${r[2]}|${this.description}]]` : r[1] in this.recognizedMirahezeInterwiki ? e = `{{${this.recognizedFandomInterwiki[r[1]]}|${r[2]}|${this.description}}}` : e = `[[mh:${r[1]}|${r[2]}|${this.description}]]`;
+            r[1] === "vocaloidlyrics" ? e = `[[${r[2]}|${this.description}]]` : r[1] in this.recognizedMirahezeInterwiki ? e = `{{${this.recognizedFandomInterwiki[r[1]]}|${r[2]}|${this.description}}}` : e = `[[mh:${r[1]}:${r[2]}|${this.description}]]`;
             break;
           case i !== null:
             i[1] in this.recognizedFandomInterwiki ? e = `{{${this.recognizedFandomInterwiki[i[1]]}|${i[2]}|${this.description}}}` : e = `{{FandomWiki|${i[1]}|${i[2]}|${this.description}}}`;
@@ -49090,9 +49090,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       children: v.jsx(_te, {})
     }));
   });
-  var_ffc16588_90ce_52fd_befe_b72bee8738c1 = Ite();
+  var_814ecc66_3758_5e28_b3b2_0fa5268ea509 = Ite();
 })();
 export {
   __tla,
-  var_ffc16588_90ce_52fd_befe_b72bee8738c1 as default
+  var_814ecc66_3758_5e28_b3b2_0fa5268ea509 as default
 };
