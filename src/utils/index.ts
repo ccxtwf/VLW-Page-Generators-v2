@@ -307,3 +307,12 @@ export function convertTwitterLink(url: string) {
   if (m === null) return url;
   return `https://x.com/${m[1]}`;
 }
+
+export function parseDateAsUtc(dateIsoFormat: string) {
+  const d = new Date(dateIsoFormat);
+  return `${d.getUTCFullYear()}-${
+    (d.getUTCMonth() + 1).toString().padStart(2, '0')
+  }-${
+    d.getUTCDate().toString().padStart(2, '0')
+  }`;
+}

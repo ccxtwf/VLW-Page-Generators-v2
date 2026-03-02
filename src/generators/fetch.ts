@@ -18,6 +18,7 @@ import { MONTHS } from "../constants/months";
 import { 
   convertAvidToBvId, 
   convertTwitterLink, 
+  parseDateAsUtc, 
   standardizeYoutubeLink,
   upgradeInsecureHttpLink 
 } from "../utils";
@@ -201,7 +202,7 @@ export async function fetchDataFromVocaDbForSongPage(url: string): Promise<Parse
     const engTitle = (json.names || []).find(el => {
       return el.language === VdbSystemLanguage.eng
     })?.value || '';
-    const uploadDate = (json.publishDate || '').replace(/^(\d{4}-\d{2}-\d{2}).*$/, '$1');
+    const uploadDate = json.publishDate ? parseDateAsUtc(json.publishDate) : '';
 
     const imageProps: {
       src: string

@@ -507,11 +507,11 @@ export function generateSongPage(input: ProcessedInput): string {
 
   if (uploadDate !== null) {
     dateSegment = `{{Date|${
-      uploadDate.getFullYear()
+      uploadDate.getUTCFullYear()
     }|${
-      MONTHS[uploadDate.getMonth()]
+      MONTHS[uploadDate.getUTCMonth()]
     }|${
-      uploadDate.getDate()
+      uploadDate.getUTCDate()
     }}}`;
   }
   
