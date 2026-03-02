@@ -1,12 +1,12 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-let var_814ecc66_3758_5e28_b3b2_0fa5268ea509;
+let var_db63ec7b_8bbd_57ac_aebe_c1e23ce54b6c;
 let __tla = (async () => {
   var kj = (t, e) => () => (e || t((e = {
     exports: {}
   }).exports, e), e.exports);
-  var Ite = kj((Js, co) => {
+  var Ate = kj((Js, co) => {
     (function() {
       const e = document.createElement("link").relList;
       if (e && e.supports && e.supports("modulepreload")) return;
@@ -33911,7 +33911,11 @@ ${x}|}
       const e = /^https?:\/\/(?:www\.|)twitter\.com\/(.*)$/, n = t.match(e);
       return n === null ? t : `https://x.com/${n[1]}`;
     }
-    const nZ = U.forwardRef(function(e, n) {
+    function nZ(t) {
+      const e = new Date(t);
+      return `${e.getUTCFullYear()}-${(e.getUTCMonth() + 1).toString().padStart(2, "0")}-${e.getUTCDate().toString().padStart(2, "0")}`;
+    }
+    const rZ = U.forwardRef(function(e, n) {
       const r = [
         "Site",
         "URL",
@@ -33984,7 +33988,7 @@ ${x}|}
           licenseKey: "non-commercial-and-evaluation"
         })
       });
-    }), XC = /^\s*('{3}|<b>)(?<text>.*)('{3}|<\/b>)\s*$/, QC = /font-weight\s*:\s*bold\b\s*;*/, ZC = new RegExp("^\\s*('{2}|<i>)(?='{3,}|\\s*\\b)(?<text>.*)(?<='{3,}|\\b\\s*)('{2}|<\\/i>)\\s*$"), JC = /font-style\s*:\s*italic\b\s*;*/, rZ = (t, e, n, r, i, o, a) => {
+    }), XC = /^\s*('{3}|<b>)(?<text>.*)('{3}|<\/b>)\s*$/, QC = /font-weight\s*:\s*bold\b\s*;*/, ZC = new RegExp("^\\s*('{2}|<i>)(?='{3,}|\\s*\\b)(?<text>.*)(?<='{3,}|\\b\\s*)('{2}|<\\/i>)\\s*$"), JC = /font-style\s*:\s*italic\b\s*;*/, iZ = (t, e, n, r, i, o, a) => {
       if (e.innerHTML = "", o === null) return e;
       const l = o.matchAll(/([a-zA-Z\-0-9]+)\s*:\s*([^;<>]*)/g), c = [];
       for (const [d, f, m] of l) c.push(`<span style="${f}:${m};">${m}</span>`);
@@ -34013,7 +34017,7 @@ ${x}|}
       ]), d = U.useMemo(() => [
         {
           type: "text",
-          renderer: rZ
+          renderer: iZ
         },
         {
           type: "text",
@@ -35079,7 +35083,7 @@ ${x}|}
         return n;
       }
     }
-    class iZ {
+    class oZ {
       constructor(e, n, r, i, o) {
         __publicField(this, "discNo");
         __publicField(this, "trackNo");
@@ -35106,7 +35110,7 @@ ${x}|}
         return e !== "" && !e.startsWith("|") && (e = `|${e}`), `{{${this.forAlbum ? "awt" : "pwt"} row|${this.page}${e}}}`;
       }
     }
-    class oZ {
+    class sZ {
       constructor(e, n, r, i, o, a) {
         __publicField(this, "site");
         __publicField(this, "url");
@@ -35168,10 +35172,16 @@ ${x}|}
             e = `{{VDB|${n[1]}}}${this.description === "VocaDB" ? "" : " - " + this.description}`;
             break;
           case r !== null:
-            r[1] === "vocaloidlyrics" ? e = `[[${r[2]}|${this.description}]]` : r[1] in this.recognizedMirahezeInterwiki ? e = `{{${this.recognizedFandomInterwiki[r[1]]}|${r[2]}|${this.description}}}` : e = `[[mh:${r[1]}:${r[2]}|${this.description}]]`;
+            {
+              const [l, c, d] = r;
+              c === "vocaloidlyrics" ? e = `[[${d.match(/^[Cc]at(?:egory|)/) !== null ? ":" : ""}${d}|${this.description}]]` : c in this.recognizedMirahezeInterwiki ? e = `{{${this.recognizedFandomInterwiki[c]}|${d}|${this.description}}}` : e = `[[mh:${c}:${d}|${this.description}]]`;
+            }
             break;
           case i !== null:
-            i[1] in this.recognizedFandomInterwiki ? e = `{{${this.recognizedFandomInterwiki[i[1]]}|${i[2]}|${this.description}}}` : e = `{{FandomWiki|${i[1]}|${i[2]}|${this.description}}}`;
+            {
+              const [l, c, d] = i;
+              c in this.recognizedFandomInterwiki ? e = `{{${this.recognizedFandomInterwiki[c]}|${d}|${this.description}}}` : e = `{{FandomWiki|${c}|${d}|${this.description}}}`;
+            }
             break;
           case o !== null:
             e = `{{HMWiki|${o[1]}}}`;
@@ -35199,7 +35209,7 @@ ${x}|}
       "November",
       "December"
     ];
-    function sZ({ data: t, langOptions: e, playLinksData: n, lyricsData: r, extLinksData: i }) {
+    function aZ({ data: t, langOptions: e, playLinksData: n, lyricsData: r, extLinksData: i }) {
       let { aiWarningText1: o, aiWarningText2: a, cwText: l, origTitle: c, altChTitle: d, romTitle: f, engTitle: m, isoLangCode: p, bgColour: w, fgColour: b, uploadDate: C, singers: T, producers: A, description: k, translator: _, categoriesRaw: D } = t;
       o = o.trim(), a = a.trim(), l = l.trim(), p = p.trim(), c = c.trim(), d = d.trim(), f = f.trim(), m = m.trim(), w = w.trim(), b = b.trim(), _ = _.trim(), C = C.trim();
       let O = C === "" ? null : new Date(C);
@@ -35211,7 +35221,7 @@ ${x}|}
       });
       let H = [];
       D = D.trim(), D !== "" && (H = D.split(/[\r\s]*\n+[\r\s]*/));
-      const F = n.map((J) => new oZ(J[0], J[1], J[2], J[3], J[4], J[5])).filter((J) => J.url !== ""), z = i.map((J) => new JR(J[0], J[1], J[2])).filter((J) => J.url !== ""), G = r.map((J) => new nH({
+      const F = n.map((J) => new sZ(J[0], J[1], J[2], J[3], J[4], J[5])).filter((J) => J.url !== ""), z = i.map((J) => new JR(J[0], J[1], J[2])).filter((J) => J.url !== ""), G = r.map((J) => new nH({
         hasAdditionalColumns: false,
         skipColumns: e.skipColumns
       }, ...J));
@@ -35249,7 +35259,7 @@ ${x}|}
         lyrics: G
       };
     }
-    function aZ({ needsEnglishTranslation: t, producers: e, isAlbumOnly: n, lyricsData: r }) {
+    function lZ({ needsEnglishTranslation: t, producers: e, isAlbumOnly: n, lyricsData: r }) {
       const i = [], o = new RegExp("'{2,}\\[\\[(?<base>[^\\|\\n\\]]*)\\|?(?<cap>(?<=\\|)[^\\|\\n\\]]*)?\\]\\]'{2,}").exec(e);
       if (o !== null) {
         let { base: l = "" } = o.groups || {};
@@ -35303,7 +35313,7 @@ ${x}|}
       }
       return n && i.push("Album Only songs"), t && r.every((l) => !l[3] || l[3].trim() === "") && i.push("Pages in need of English translation"), i;
     }
-    function lZ(t) {
+    function uZ(t) {
       let { data: { aiCwState: e, aiWarningText1: n, aiWarningText2: r, cwState: i, cwText: o, origTitle: a, languages: l, bgColour: c, fgColour: d, uploadDate: f, singers: m, producers: p, isAlbumOnly: w, isUnavailable: b, translator: C, isOfficialTranslation: T, categories: A }, langOptions: { skipColumns: k }, playLinks: _, lyrics: D } = t, O = false;
       const x = [];
       i !== Zs.noWarnings && o === "" && x.push([
@@ -35397,7 +35407,7 @@ ${x}|}
         recommendToAutoloadCategories: O
       };
     }
-    function uZ(t) {
+    function cZ(t) {
       let { data: { aiCwState: e, aiWarningText1: n, aiWarningText2: r, cwState: i, cwText: o, hasEpilepsyWarning: a, origTitle: l, altChTitle: c, altChIsTraditional: d, romTitle: f, engTitle: m, titleIsOfficiallyTranslated: p, bgColour: w, fgColour: b, uploadDate: C, singers: T, producers: A, description: k, languages: _, isoLangCode: D, isUnavailable: O, translator: x, isOfficialTranslation: N, categories: H }, langOptions: { headersText: F, skipColumns: z }, playLinks: G, extLinks: J, lyrics: Z } = t, K = "", ge = "", we = "", Ee = "", le = "", R = "", P = "", I = "", V = "", B = _.join(";"), q = "", se = "", de = "";
       const xe = !(z == null ? void 0 : z.includes(2)), Ae = !(z == null ? void 0 : z.includes(3));
       if (xe && f !== "") {
@@ -35405,7 +35415,7 @@ ${x}|}
         let De = UR(f);
         De.replace(/[ -~]/g, "") !== "" && (ge += `|${De}`), ge += "}}";
       }
-      Ee = a ? "{{Epilepsy}}" : "", Ee += i === Zs.questionable ? `{{Questionable${o === "" ? "" : `|${o}`}}}` : i === Zs.explicit ? `{{Explicit${o === "" ? "" : `|${o}`}}}` : "", e !== fs.none && (Ee += `{{AIusage|${n}|${r}${e === fs.suspected ? "|unverified=1" : ""}}}`), O && (we = "{{Unavailable}}"), l.match(/^[a-z]/) !== null && (K = "{{Lowercase}}"), l.match(/[_#]/g) !== null && (K = `{{DISPLAYTITLE:${l}${f === "" ? "" : ` (${f})`}}}`), le = `"'''${l}'''"`, c !== "" && (le += `<br />${d ? "Traditional" : "Simplified"} Chinese: ${c}`), xe && f !== "" && (le += `<br />${F[1]}: ${f}`), Ae && m !== "" && (le += `<br />${p ? "Official " : ""}English: ${m}`), C !== null && (R = `{{Date|${C.getFullYear()}|${ex[C.getMonth()]}|${C.getDate()}}}`), G.length === 0 ? I = "N/A" : I = G.map((De) => De.getWikitext()).join(" ");
+      Ee = a ? "{{Epilepsy}}" : "", Ee += i === Zs.questionable ? `{{Questionable${o === "" ? "" : `|${o}`}}}` : i === Zs.explicit ? `{{Explicit${o === "" ? "" : `|${o}`}}}` : "", e !== fs.none && (Ee += `{{AIusage|${n}|${r}${e === fs.suspected ? "|unverified=1" : ""}}}`), O && (we = "{{Unavailable}}"), l.match(/^[a-z]/) !== null && (K = "{{Lowercase}}"), l.match(/[_#]/g) !== null && (K = `{{DISPLAYTITLE:${l}${f === "" ? "" : ` (${f})`}}}`), le = `"'''${l}'''"`, c !== "" && (le += `<br />${d ? "Traditional" : "Simplified"} Chinese: ${c}`), xe && f !== "" && (le += `<br />${F[1]}: ${f}`), Ae && m !== "" && (le += `<br />${p ? "Official " : ""}English: ${m}`), C !== null && (R = `{{Date|${C.getUTCFullYear()}|${ex[C.getUTCMonth()]}|${C.getUTCDate()}}}`), G.length === 0 ? I = "N/A" : I = G.map((De) => De.getWikitext()).join(" ");
       const Me = G.filter((De) => !De.isReprint && wS.has(De.site)).map((De) => ({
         vc: De.getFormattedViewCount(),
         abbr: wS.get(De.site)
@@ -35455,7 +35465,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         return e;
       }, dg.apply(this, arguments);
     };
-    function cZ() {
+    function dZ() {
       var t = U.useRef(false), e = U.useCallback(function() {
         return t.current;
       }, []);
@@ -35465,11 +35475,11 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         };
       }, []), e;
     }
-    function dZ(t, e, n) {
+    function hZ(t, e, n) {
       e === void 0 && (e = []), n === void 0 && (n = {
         loading: false
       });
-      var r = U.useRef(0), i = cZ(), o = U.useState(n), a = o[0], l = o[1], c = U.useCallback(function() {
+      var r = U.useRef(0), i = dZ(), o = U.useState(n), a = o[0], l = o[1], c = U.useCallback(function() {
         for (var d = [], f = 0; f < arguments.length; f++) d[f] = arguments[f];
         var m = ++r.current;
         return a.loading || l(function(p) {
@@ -35493,9 +35503,9 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         c
       ];
     }
-    function hZ(t, e) {
+    function fZ(t, e) {
       e === void 0 && (e = []);
-      var n = dZ(t, e, {
+      var n = hZ(t, e, {
         loading: true
       }), r = n[0], i = n[1];
       return U.useEffect(function() {
@@ -35507,14 +35517,14 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
     var e0 = {
       exports: {}
     };
-    const fZ = {}, mZ = Object.freeze(Object.defineProperty({
+    const mZ = {}, pZ = Object.freeze(Object.defineProperty({
       __proto__: null,
-      default: fZ
+      default: mZ
     }, Symbol.toStringTag, {
       value: "Module"
-    })), lA = Pj(mZ);
+    })), lA = Pj(pZ);
     var uA;
-    function pZ() {
+    function gZ() {
       return uA || (uA = 1, (function(t, e) {
         var n = void 0, r = function(i) {
           return n || (n = new Promise(function(o, a) {
@@ -37564,17 +37574,17 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         t.exports = r, t.exports.default = r;
       })(e0)), e0.exports;
     }
-    var gZ = pZ();
-    const vZ = da(gZ), wZ = "/VLW-Page-Generators-v2/assets/sql-wasm-C1U8OeUW.wasm", yZ = "/VLW-Page-Generators-v2/assets/synths-BQytWTGR.db", rH = U.createContext({
+    var vZ = gZ();
+    const wZ = da(vZ), yZ = "/VLW-Page-Generators-v2/assets/sql-wasm-C1U8OeUW.wasm", bZ = "/VLW-Page-Generators-v2/assets/synths-BQytWTGR.db", rH = U.createContext({
       AppDataSource: {}
     });
     let hg;
-    const bZ = ({ children: t }) => {
-      const { value: e, loading: n } = hZ(async () => {
+    const CZ = ({ children: t }) => {
+      const { value: e, loading: n } = fZ(async () => {
         try {
-          const r = await vZ({
-            locateFile: () => wZ
-          }), i = await fetch(yZ).then((a) => a.arrayBuffer());
+          const r = await wZ({
+            locateFile: () => yZ
+          }), i = await fetch(bZ).then((a) => a.arrayBuffer());
           return new r.Database(new Uint8Array(i));
         } catch (r) {
           console.error(r);
@@ -37591,7 +37601,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         },
         children: !n && t
       }));
-    }, CZ = () => {
+    }, SZ = () => {
       const { AppDataSource: t } = U.useContext(rH);
       return t;
     };
@@ -37635,12 +37645,12 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
       const e = kf.find(({ re: n }) => t.match(n) !== null);
       return e && (e.site === uo.xitter && (t = qR(t)), e.site === uo.youtube && (t = YR(t)), e.site === uo.bilibili && (t = JL(t)), Object.values(uo).includes(e.site || "") && (t = GR(t))), t;
     }
-    async function SZ(t) {
+    async function EZ(t) {
       var _a, _b2, _c2;
       try {
         const e = nx(t, "S");
         if (e === null) throw new Error("VocaDB page ID is empty or invalid!");
-        const r = await (await fetch(`https://vocadb.net/api/songs/${e}?fields=Artists,Names,PVs,WebLinks,CultureCodes&lang=English&origin=${tx}`)).json(), i = (r.cultureCodes || []).map((x) => nl.findIndex((N) => N.code === x)).filter((x) => x > -1), o = r.defaultName || "", a = ((_a = (r.names || []).find((x) => x.language === bS.rom)) == null ? void 0 : _a.value) || "", l = ((_b2 = (r.names || []).find((x) => x.language === bS.eng)) == null ? void 0 : _b2.value) || "", c = (r.publishDate || "").replace(/^(\d{4}-\d{2}-\d{2}).*$/, "$1"), d = [], f = [], m = [], p = /* @__PURE__ */ new Set(), w = [], b = [], C = [], T = [
+        const r = await (await fetch(`https://vocadb.net/api/songs/${e}?fields=Artists,Names,PVs,WebLinks,CultureCodes&lang=English&origin=${tx}`)).json(), i = (r.cultureCodes || []).map((x) => nl.findIndex((N) => N.code === x)).filter((x) => x > -1), o = r.defaultName || "", a = ((_a = (r.names || []).find((x) => x.language === bS.rom)) == null ? void 0 : _a.value) || "", l = ((_b2 = (r.names || []).find((x) => x.language === bS.eng)) == null ? void 0 : _b2.value) || "", c = r.publishDate ? nZ(r.publishDate) : "", d = [], f = [], m = [], p = /* @__PURE__ */ new Set(), w = [], b = [], C = [], T = [
           [
             `https://vocadb.net/S/${e}`,
             "VocaDB",
@@ -37795,7 +37805,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         throw e;
       }
     }
-    async function EZ(t) {
+    async function RZ(t) {
       var _a, _b2, _c2, _d, _e2, _f2;
       try {
         const e = nx(t, "Al");
@@ -37917,7 +37927,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         throw e;
       }
     }
-    async function RZ(t) {
+    async function xZ(t) {
       var _a;
       try {
         const e = nx(t, "Ar");
@@ -37963,7 +37973,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         throw e;
       }
     }
-    async function xZ(t) {
+    async function TZ(t) {
       try {
         if (t.trim() === "") throw new Error("Producer category cannot be empty");
         let e = /* @__PURE__ */ new Set(), n = /* @__PURE__ */ new Map(), r = [], i = "";
@@ -38084,7 +38094,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
       isOfficialTranslation: false,
       categoriesRaw: ""
     };
-    function TZ() {
+    function MZ() {
       const [t, e] = U.useState({
         url: "",
         loading: false
@@ -38173,7 +38183,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         window.confirm("Are you sure you want to continue? This will reset all data in the page.") && (P(true), e({
           ...t,
           loading: true
-        }), SZ(t.url).then((B) => {
+        }), EZ(t.url).then((B) => {
           var _a, _b2, _c2, _d, _e2, _f2;
           const { formData: { languageIds: q, origTitle: se, romTitle: de, engTitle: xe, uploadDate: Ae, singers: Me, producers: De, imageProps: Ct }, playLinksData: at, extLinksData: xt } = B;
           let ke = "";
@@ -38203,7 +38213,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
       }
       function R() {
         var _a, _b2;
-        const B = aZ({
+        const B = lZ({
           needsEnglishTranslation: F,
           producers: n.producers,
           isAlbumOnly: n.isAlbumOnly,
@@ -38293,7 +38303,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
       }
       function V() {
         var _a, _b2, _c2, _d, _e2, _f2, _g2, _h2, _i2, _j;
-        const B = sZ({
+        const B = aZ({
           data: {
             ...n,
             languageIds: i
@@ -38307,7 +38317,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
           playLinksData: ((_f2 = (_e2 = A.current) == null ? void 0 : _e2.hotInstance) == null ? void 0 : _f2.getData()) || [],
           lyricsData: ((_h2 = (_g2 = T.current) == null ? void 0 : _g2.hotInstance) == null ? void 0 : _h2.getData()) || [],
           extLinksData: ((_j = (_i2 = k.current) == null ? void 0 : _i2.hotInstance) == null ? void 0 : _j.getData()) || []
-        }), { errors: q, recommendToAutoloadCategories: se } = lZ(B);
+        }), { errors: q, recommendToAutoloadCategories: se } = uZ(B);
         let de = false;
         const xe = [], Ae = [];
         let Me = /* @__PURE__ */ new Set();
@@ -38322,7 +38332,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
           warnings: Ae,
           recommendToAutoloadCategories: se
         }), !de || c) {
-          const De = uZ(B);
+          const De = cZ(B);
           m(De);
         }
       }
@@ -38938,7 +38948,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
                   v.jsxs(_e, {
                     width: 13,
                     children: [
-                      v.jsx(nZ, {
+                      v.jsx(rZ, {
                         ref: A
                       }),
                       v.jsxs("div", {
@@ -39215,7 +39225,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         })
       });
     }
-    const MZ = U.forwardRef(function(e, n) {
+    const OZ = U.forwardRef(function(e, n) {
       const r = U.useMemo(() => (f, m, p, w, b, C, T) => {
         if (!C || C === "") return m.innerText = "", m;
         const A = (C == null ? void 0 : C.match(/^(?:\[\[(?!fandom:|wikia:|mh:|m:|meta:|metawiki:|commons:|w:))(?:([^\|]*)(?:|\|.*))\]\]$/i)) || null;
@@ -39415,7 +39425,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
           licenseKey: "non-commercial-and-evaluation"
         })
       });
-    }), OZ = U.forwardRef(function(e, n) {
+    }), _Z = U.forwardRef(function(e, n) {
       const r = U.useMemo(() => [
         "Type",
         "URL"
@@ -39548,7 +39558,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
     function uH() {
       var _a;
       try {
-        return (_a = CZ().exec("SELECT * FROM engines;")[0].values) == null ? void 0 : _a.map(([r, i]) => ({
+        return (_a = SZ().exec("SELECT * FROM engines;")[0].values) == null ? void 0 : _a.map(([r, i]) => ({
           id: r,
           name: i
         }));
@@ -39664,13 +39674,13 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         ]
       })
     };
-    function _Z({ formData: t, tracklistData: e, officialStreamingData: n, extLinksData: r }) {
+    function IZ({ formData: t, tracklistData: e, officialStreamingData: n, extLinksData: r }) {
       var _a;
       let { origTitle: i, romTitle: o, engTitle: a, bgColour: l, fgColour: c, label: d, description: f, publishedYear: m, publishedMonth: p, publishedDay: w, vdbAlbumId: b, vocaWikiPage: C, categoriesRaw: T } = t;
       i = i.trim(), o = o.trim(), a = a.trim(), l = l.trim(), c = c.trim(), d = d.trim(), f = f.trim(), m = m.trim(), p = p.trim(), w = w.trim(), b = b.trim().replace(/^(\d+)\D*$/, "$1"), C = C.trim();
       let A = [];
       T = T.trim(), T !== "" && (A = T.split(/[\r\s]*\n+[\r\s]*/));
-      const k = e.map((O) => new iZ(O[0], O[1], O[2], O[3], O[4])).filter((O) => O.pageTitle !== ""), _ = [];
+      const k = e.map((O) => new oZ(O[0], O[1], O[2], O[3], O[4])).filter((O) => O.pageTitle !== ""), _ = [];
       for (let [O, x] of n) {
         if (O = (O || "").trim(), x = (x || "").trim(), O === "" || x === "") continue;
         const N = af.find((G) => G.name === O);
@@ -39716,7 +39726,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
       }
       return e;
     }
-    function IZ(t, e) {
+    function AZ(t, e) {
       var _a, _b2;
       let { description: n, engines: r } = t;
       const i = [], o = [], a = [];
@@ -39729,7 +39739,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
       for (let f of l) c.has(f) && c.delete(f);
       return o.push(...l), o.push(...c), a.push(...d), i.push(...r.map((f) => `Albums featuring ${f}`)), i.push(...a.map((f) => `Albums featuring ${f}`)), i.push(...o.map((f) => `${f} songs list/Albums`)), i;
     }
-    function AZ(t) {
+    function kZ(t) {
       let { formData: { origTitle: e, bgColour: n, fgColour: r, description: i, publishedYear: o, publishedMonth: a, publishedDay: l, engines: c, vdbAlbumId: d, categories: f }, tracklist: m, officialStreamingLinks: p } = t, w = false;
       const b = [];
       if (e === "" && b.push([
@@ -39836,7 +39846,7 @@ ${de}${H.map((De) => `[[Category:${De}]]`).join(`
         recommendToAutoloadCategories: w
       };
     }
-    function kZ(t) {
+    function PZ(t) {
       let { formData: { origTitle: e, romTitle: n, engTitle: r, bgColour: i, fgColour: o, label: a, description: l, isCompilationAlbum: c, publishedYear: d, publishedMonth: f, publishedDay: m, vdbAlbumId: p, vocaWikiPage: w, categories: b }, tracklist: C, officialStreamingLinks: T, extLinks: A } = t, k = "", _ = "", D = "", O = "", x = "", N = "", H = "", F = "", z = "";
       e.match(/^[a-z]/) !== null && (k = "{{Lowercase}}"), e.match(/_/g) !== null && (k = `{{DISPLAYTITLE:${e}}}`), (d !== "" || f !== "" || m !== "") && (_ = `{{DateAlbum|${d}|${f}|${m}}}`), O = C.map((K) => `|${K.discNo == "1" ? "" : K.discNo}tr${K.trackNo} = ${K.pageTitle}
 |${K.discNo == "1" ? "" : K.discNo}tr${K.trackNo}s = ${K.credits}`).join(`
@@ -39898,7 +39908,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
       vocaWikiPage: "",
       categoriesRaw: ""
     };
-    function PZ() {
+    function DZ() {
       const [t, e] = U.useState({
         url: "",
         loading: false
@@ -39943,7 +39953,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
         window.confirm("Are you sure you want to continue? This will reset all data in the page.") && (J(true), r(null), e({
           ...t,
           loading: true
-        }), EZ(t.url).then((K) => {
+        }), RZ(t.url).then((K) => {
           var _a, _b2, _c2, _d, _e2, _f2;
           const { formData: { origTitle: ge, romTitle: we, engTitle: Ee, label: le, description: R, isCompilationAlbum: P, publishedYear: I, publishedMonth: V, publishedDay: B, engines: q, vdbAlbumId: se, vocaWikiPage: de, imageSrc: xe }, tracklistData: Ae, extLinksData: Me, officialStreamingData: De } = K;
           o(() => ({
@@ -39972,7 +39982,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
       }
       function G() {
         var _a, _b2;
-        const K = IZ(i, (_b2 = (_a = b.current) == null ? void 0 : _a.hotInstance) == null ? void 0 : _b2.getData());
+        const K = AZ(i, (_b2 = (_a = b.current) == null ? void 0 : _a.hotInstance) == null ? void 0 : _b2.getData());
         o({
           ...i,
           categoriesRaw: K.join(`
@@ -40010,12 +40020,12 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
       }
       function Z() {
         var _a, _b2, _c2, _d, _e2, _f2;
-        const K = _Z({
+        const K = IZ({
           formData: i,
           tracklistData: ((_b2 = (_a = b.current) == null ? void 0 : _a.hotInstance) == null ? void 0 : _b2.getData()) || [],
           officialStreamingData: ((_d = (_c2 = T.current) == null ? void 0 : _c2.hotInstance) == null ? void 0 : _d.getData()) || [],
           extLinksData: ((_f2 = (_e2 = C.current) == null ? void 0 : _e2.hotInstance) == null ? void 0 : _f2.getData()) || []
-        }), { errors: ge, recommendToAutoloadCategories: we } = AZ(K);
+        }), { errors: ge, recommendToAutoloadCategories: we } = kZ(K);
         let Ee = false;
         const le = [], R = [];
         let P = /* @__PURE__ */ new Set();
@@ -40030,7 +40040,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
           warnings: R,
           recommendToAutoloadCategories: we
         }), !Ee || a) {
-          const I = kZ(K);
+          const I = PZ(K);
           d(I);
         }
       }
@@ -40468,7 +40478,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
                         })
                       ]
                     }),
-                    v.jsx(MZ, {
+                    v.jsx(OZ, {
                       ref: b
                     })
                   ]
@@ -40553,7 +40563,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
                   }),
                   v.jsx(_e, {
                     width: 13,
-                    children: v.jsx(OZ, {
+                    children: v.jsx(_Z, {
                       ref: T
                     })
                   })
@@ -40958,7 +40968,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
         ]
       })
     };
-    function DZ({ formData: t, producerRoles: e, songListData: n, albumListData: r, extLinksData: i }) {
+    function NZ({ formData: t, producerRoles: e, songListData: n, albumListData: r, extLinksData: i }) {
       let { prodCategory: o, prodAliases: a, affiliations: l, label: c, description: d } = t;
       o = o.trim(), a = a.trim(), l = l.trim(), l = l === "" ? "" : l.split(/\s*\n\s*/g).map((w) => `* ${w}`).join(`
 `), c = c.trim(), c = c === "" ? "" : c.split(/\s*\n\s*/g).map((w) => `* ${w}`).join(`
@@ -40979,7 +40989,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
         extLinks: p
       };
     }
-    function NZ(t) {
+    function LZ(t) {
       let { formData: { prodCategory: e, prodRoles: n, languageIds: r, engines: i, description: o }, songList: a, extLinks: l } = t;
       const c = [];
       return e === "" && c.push([
@@ -41019,7 +41029,7 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
         recommendToAutoloadCategories: false
       };
     }
-    function LZ(t) {
+    function HZ(t) {
       const e = {
         MIKUWIKI: /^https?:\/\/(?:w|www5)\.atwiki\.jp\/hmiku\/pages\/(\d*)\.html/,
         UTAUDB: /^https?:\/\/w\.atwiki\.jp\/utauuuta\/pages\/(\d*)\.html/,
@@ -41052,14 +41062,14 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
 }}`.trim()}
 ${r}`;
     }
-    function HZ(t) {
+    function jZ(t) {
       var _a;
       const { formData: { prodCategory: e, splitAlbum: n, prodAliases: r, prodRoles: i, affiliations: o, label: a, languageIds: l, engines: c, description: d }, songList: f, albumList: m, extLinks: p } = t;
       let w = "", b = [
         "Producers"
       ], C = p.filter((_) => _.isOfficial && !_.isMedia).map((_) => `* ${_.description}: [${_.url} ]
 `).join(""), T = p.filter((_) => _.isOfficial && _.isMedia).map((_) => `* ${_.getWikitext()}
-`).join(""), A = LZ(p.filter((_) => !_.isOfficial));
+`).join(""), A = HZ(p.filter((_) => !_.isOfficial));
       w += `==External links==
 `, w += C === "" ? "" : C + `
 `, w += T === "" ? "" : `===Media===
@@ -41136,7 +41146,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       languageIds: [],
       engines: [],
       description: ""
-    }, jZ = {
+    }, FZ = {
       composer: false,
       lyricist: false,
       tuner: false,
@@ -41147,7 +41157,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       mixer: false,
       masterer: false
     };
-    function FZ() {
+    function $Z() {
       const [t, e] = U.useState({
         url: "",
         loading: false,
@@ -41161,7 +41171,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           ...Wl.engines
         ]
       }), [a, l] = U.useState({
-        ...jZ
+        ...FZ
       }), [c, d] = U.useState(false), [f, m] = U.useState(""), [p, w] = U.useState([]), [b, C] = U.useState({
         errors: [],
         warnings: [],
@@ -41197,7 +41207,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         window.confirm("Are you sure you want to continue? This will reset all data in the page.") && (ge(true), r(null), e({
           ...t,
           loading: true
-        }), RZ(t.url).then((Ee) => {
+        }), xZ(t.url).then((Ee) => {
           var _a, _b2, _c2, _d, _e2, _f2;
           const { formData: { prodCategory: le, affiliations: R, label: P, description: I, imageSrc: V }, extLinksData: B } = Ee;
           o(() => ({
@@ -41226,7 +41236,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         e({
           ...t,
           loadingDiscog: true
-        }), xZ(i.prodCategory).then((Ee) => {
+        }), TZ(i.prodCategory).then((Ee) => {
           var _a, _b2, _c2, _d;
           const { songs: le, albums: R, recommendToSplitAlbum: P } = Ee;
           o({
@@ -41276,13 +41286,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       function we() {
         var _a, _b2, _c2, _d, _e2, _f2;
-        const Ee = DZ({
+        const Ee = NZ({
           formData: i,
           producerRoles: a,
           songListData: ((_b2 = (_a = T.current) == null ? void 0 : _a.hotInstance) == null ? void 0 : _b2.getData()) || [],
           albumListData: ((_d = (_c2 = A.current) == null ? void 0 : _c2.hotInstance) == null ? void 0 : _d.getData()) || [],
           extLinksData: ((_f2 = (_e2 = k.current) == null ? void 0 : _e2.hotInstance) == null ? void 0 : _f2.getData()) || []
-        }), { errors: le, recommendToAutoloadCategories: R } = NZ(Ee);
+        }), { errors: le, recommendToAutoloadCategories: R } = LZ(Ee);
         let P = false;
         const I = [], V = [];
         let B = /* @__PURE__ */ new Set();
@@ -41297,7 +41307,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           warnings: V,
           recommendToAutoloadCategories: R
         }), !P || c) {
-          const q = HZ(Ee);
+          const q = jZ(Ee);
           m(q);
         }
       }
@@ -41902,7 +41912,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         })
       });
     }
-    const $Z = {
+    const WZ = {
       SourceInput: v.jsxs(v.Fragment, {
         children: [
           "Use this tool to edit the lyrics table on a wikipage. It is primarily aimed for Japanese/Chinese/Korean song pages.",
@@ -41938,7 +41948,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         ]
       })
     };
-    function WZ(t) {
+    function VZ(t) {
       const e = /(\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]toggle[^\}]+\}\}(?:.*?)|)(\{\|\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]table[ _]class\}\}\s*\n\|-\s*class\s*=\s*["'][^\n]*\blyrics-table-header\b[^\n]*["']\s*\n!\s*\{\{(?:[Tt]emplate:|)[Ll]yrics[ _]header\}\})\s*\n(.*?\|\})\s*(\{\{(?:[Tt]emplate:|)[Tt]ranslator[^\}]*\}\}|)/gs;
       return Array.from(t.matchAll(e));
     }
@@ -41974,7 +41984,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         miscParams: r
       };
     }
-    function VZ(t) {
+    function BZ(t) {
       const e = [];
       let n = 0;
       const [r, i, o, a] = t, { toggleElement: l, headers: c, isoLangCode: d } = cH(i), f = Array.from(a.matchAll(/\|-(.*?)\n([^]*?)\n(?=\|-|\|\})/g)).map(function(m) {
@@ -42028,7 +42038,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         numColumns: n
       };
     }
-    function BZ(t) {
+    function zZ(t) {
       const e = /^\s*<[Ss][Pp][Aa][Nn]\s+style\s*=\s*["']\s*color\s*:\s*([a-zA-Z0-9#]+);?["']\s*>(.*)<\/\s*[Ss][Pp][Aa][Nn]\s*>\s*$/, n = /<span(?:\s+[^>]+|)\s*>/i;
       return t.map((r) => {
         let i = [];
@@ -42046,13 +42056,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return r;
       });
     }
-    function zZ(t) {
+    function UZ(t) {
       return t.map((e) => (e[2] = (e[2] || "").trim().replace(/^(?:["'`]*)\w/, (n) => n.toLowerCase()), e[2] = e[2].replace(/([\.\?!])\s*(["'`]*\s*)(\w)/g, (n, r, i, o) => `${r} ${i}${o.toLowerCase()}`), e));
     }
-    function UZ(t) {
+    function YZ(t) {
       return t.map((e) => (e[2] = UR((e[2] || "").trim(), true), e));
     }
-    function YZ(t) {
+    function GZ(t) {
       return t.map((e) => (e[2] = (e[2] || "").trim().replace(new RegExp("(?=\\b)(wo|he)(?<=\\b)", "gi"), (n) => {
         switch (n) {
           case "wo":
@@ -42064,7 +42074,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }
       }), e[2] = (e[2] || "").trim().replace(/dzu/gi, "zu"), e));
     }
-    function GZ() {
+    function qZ() {
       const t = U.useRef(null);
       U.useEffect(() => {
         var _a, _b2;
@@ -42092,7 +42102,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       const _ = U.useMemo(() => () => {
         var _a, _b2;
         if (d === -1 || e.length === 0) return;
-        const O = e[d], { lyrics: x, toggleElement: N, headers: H, isoLangCode: F, numColumns: z } = VZ(O);
+        const O = e[d], { lyrics: x, toggleElement: N, headers: H, isoLangCode: F, numColumns: z } = BZ(O);
         if (c(F || ""), document.getElementById("lyrics-toggle").value = N, i(H), z >= "5") a([]);
         else {
           const Z = [];
@@ -42138,7 +42148,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           children: [
             v.jsx("h3", {
               children: v.jsx(bo, {
-                content: $Z.SourceInput,
+                content: WZ.SourceInput,
                 mouseLeaveDelay: 1500,
                 on: "hover",
                 inverted: true,
@@ -42206,7 +42216,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
             v.jsx(Wr, {
               rows: 20,
               onInput: (O, x) => {
-                const N = WZ(`${(x == null ? void 0 : x.value) || ""}`);
+                const N = VZ(`${(x == null ? void 0 : x.value) || ""}`);
                 n(N), f(N.length === 0 ? -1 : 0);
               }
             }),
@@ -42311,7 +42321,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
                     var _a;
                     const O = (_a = t.current) == null ? void 0 : _a.hotInstance;
                     let x = O.getData();
-                    x = zZ(x), O == null ? void 0 : O.loadData(x);
+                    x = UZ(x), O == null ? void 0 : O.loadData(x);
                   },
                   children: "Decapitalize romanized lyrics"
                 }),
@@ -42321,7 +42331,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
                     var _a;
                     const O = (_a = t.current) == null ? void 0 : _a.hotInstance;
                     let x = O.getData();
-                    x = BZ(x), O == null ? void 0 : O.loadData(x);
+                    x = zZ(x), O == null ? void 0 : O.loadData(x);
                   },
                   children: "Consolidate per-cell span colour formatting to per-row"
                 }),
@@ -42331,7 +42341,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
                     var _a;
                     const O = (_a = t.current) == null ? void 0 : _a.hotInstance;
                     let x = O.getData();
-                    x = YZ(x), O == null ? void 0 : O.loadData(x);
+                    x = GZ(x), O == null ? void 0 : O.loadData(x);
                   },
                   children: "Romaji: Change 'wo'\u2192'o', 'he'\u2192'e', 'dzu'\u2192'zu'"
                 }),
@@ -42341,7 +42351,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
                     var _a;
                     const O = (_a = t.current) == null ? void 0 : _a.hotInstance;
                     let x = O.getData();
-                    x = UZ(x), O == null ? void 0 : O.loadData(x);
+                    x = YZ(x), O == null ? void 0 : O.loadData(x);
                   },
                   children: "Pinyin: Remove tones"
                 })
@@ -42380,7 +42390,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       });
     }
     const CS = 100;
-    async function qZ(t, e = 0) {
+    async function KZ(t, e = 0) {
       try {
         const r = await (await fetch(`https://vocadb.net/api/artists?artistTypes=${t.join(",")}&allowBaseVoicebanks=true&childTags=false&start=${e * CS}&maxResults=${CS}&sort=AdditionDate&fields=Names,AdditionalNames,BaseVoicebank&lang=Japanese&getTotalCount=false&preferAccurateMatches=false`)).json(), i = [], o = /* @__PURE__ */ new Map();
         for (let l = 0; l < r.items.length; l++) {
@@ -42430,7 +42440,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         throw n;
       }
     }
-    function KZ() {
+    function XZ() {
       const [t, e] = U.useState([
         Ka.vocaloid,
         Ka.synthv,
@@ -42444,7 +42454,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }, d = () => {
         isNaN(+n) ? r(1) : r(n + 1);
       }, f = () => {
-        l(true), o([]), qZ(t, n).then((m) => {
+        l(true), o([]), KZ(t, n).then((m) => {
           o(m);
         }).catch(console.error).finally(() => l(false));
       };
@@ -42680,7 +42690,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         ]
       });
     }
-    const XZ = z$([
+    const QZ = z$([
       {
         path: "/",
         element: v.jsx(h6, {}),
@@ -42694,23 +42704,23 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           },
           {
             path: "/song-pages",
-            element: v.jsx(TZ, {})
+            element: v.jsx(MZ, {})
           },
           {
             path: "/album-pages",
-            element: v.jsx(PZ, {})
+            element: v.jsx(DZ, {})
           },
           {
             path: "/producer-pages",
-            element: v.jsx(FZ, {})
+            element: v.jsx($Z, {})
           },
           {
             path: "/lyrics-editor",
-            element: v.jsx(GZ, {})
+            element: v.jsx(qZ, {})
           },
           {
             path: "/vdb-synths",
-            element: v.jsx(KZ, {})
+            element: v.jsx(XZ, {})
           },
           {
             path: "*",
@@ -42720,10 +42730,10 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           }
         ]
       }
-    ]), dA = "handsontableEditor", QZ = "handsontable";
+    ]), dA = "handsontableEditor", ZZ = "handsontable";
     class rx extends fv {
       static get EDITOR_TYPE() {
-        return QZ;
+        return ZZ;
       }
       open() {
         super.open(), this.htEditor && this.htEditor.destroy(), this.htContainer.style.display === "none" && (this.htContainer.style.display = ""), this.htEditor = new this.hot.constructor(this.htContainer, this.htOptions), this.htEditor.init(), this.htEditor.rootElement.style.display = "", this.cellProperties.strict ? this.htEditor.selectCell(0, 0) : this.htEditor.deselectCell(), Zg(this.TEXTAREA, 0, this.TEXTAREA.value.length), this.refreshDimensions();
@@ -42828,19 +42838,19 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         super.unregisterShortcuts(), this.hot.getShortcutManager().getContext("editor").removeShortcutsByGroup(dA);
       }
     }
-    function ZZ(t, e, n) {
-      return e = JZ(e), e in t ? Object.defineProperty(t, e, {
+    function JZ(t, e, n) {
+      return e = eJ(e), e in t ? Object.defineProperty(t, e, {
         value: n,
         enumerable: true,
         configurable: true,
         writable: true
       }) : t[e] = n, t;
     }
-    function JZ(t) {
-      var e = eJ(t, "string");
+    function eJ(t) {
+      var e = tJ(t, "string");
       return typeof e == "symbol" ? e : String(e);
     }
-    function eJ(t, e) {
+    function tJ(t, e) {
       if (typeof t != "object" || t === null) return t;
       var n = t[Symbol.toPrimitive];
       if (n !== void 0) {
@@ -42850,13 +42860,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       return (e === "string" ? String : Number)(t);
     }
-    const r0 = /* @__PURE__ */ new WeakMap(), tJ = "autocomplete";
+    const r0 = /* @__PURE__ */ new WeakMap(), nJ = "autocomplete";
     class ix extends rx {
       static get EDITOR_TYPE() {
-        return tJ;
+        return nJ;
       }
       constructor(e) {
-        super(e), ZZ(this, "sortByRelevance", function(n, r, i) {
+        super(e), JZ(this, "sortByRelevance", function(n, r, i) {
           const o = [], a = [], l = n.length;
           let c = r.length, d, f, m, p;
           if (l === 0) {
@@ -43018,7 +43028,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }
       }
     }
-    const nJ = "html";
+    const rJ = "html";
     function dH(t, e, n, r, i, o, a) {
       mv.apply(this, [
         t,
@@ -43030,8 +43040,8 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         a
       ]), HE(e, o ?? "", false);
     }
-    dH.RENDERER_TYPE = nJ;
-    const rJ = "autocomplete";
+    dH.RENDERER_TYPE = rJ;
+    const iJ = "autocomplete";
     function Pf(t, e, n, r, i, o, a) {
       const { rootDocument: l } = t, c = a.allowHtml ? dH : gd, d = l.createElement("DIV");
       if (d.className = "htAutocompleteArrow", d.appendChild(l.createTextNode("\u25BC")), c.apply(this, [
@@ -43051,8 +43061,8 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         });
       }
     }
-    Pf.RENDERER_TYPE = rJ;
-    const iJ = "autocomplete";
+    Pf.RENDERER_TYPE = iJ;
+    const oJ = "autocomplete";
     function Tv(t, e) {
       let n = t;
       if (n == null && (n = ""), this.allowEmpty && n === "") {
@@ -43061,7 +43071,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       this.strict && this.source ? typeof this.source == "function" ? this.source(n, hA(n, e)) : hA(n, e)(this.source) : e(true);
     }
-    Tv.VALIDATOR_TYPE = iJ;
+    Tv.VALIDATOR_TYPE = oJ;
     function hA(t, e) {
       const n = t;
       return function(r) {
@@ -43073,15 +43083,15 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         e(i);
       };
     }
-    const oJ = "autocomplete", sJ = {
-      CELL_TYPE: oJ,
+    const sJ = "autocomplete", aJ = {
+      CELL_TYPE: sJ,
       editor: ix,
       renderer: Pf,
       validator: Tv
-    }, aJ = "checkbox";
+    }, lJ = "checkbox";
     class hH extends hv {
       static get EDITOR_TYPE() {
-        return aJ;
+        return lJ;
       }
       beginEditing(e, n) {
         if (n && n.type === "mouseup") {
@@ -43104,7 +43114,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       focus() {
       }
     }
-    const fA = /* @__PURE__ */ new WeakMap(), mA = /* @__PURE__ */ new WeakMap(), lJ = "htBadValue", td = "data-row", nd = "data-col", uJ = "checkboxRenderer", fH = "checkbox";
+    const fA = /* @__PURE__ */ new WeakMap(), mA = /* @__PURE__ */ new WeakMap(), uJ = "htBadValue", td = "data-row", nd = "data-col", cJ = "checkboxRenderer", fH = "checkbox";
     Kt.getSingleton().add("modifyAutoColumnSizeSeed", function(t, e, n) {
       const { label: r, type: i, row: o, column: a, prop: l } = e;
       if (i === fH) {
@@ -43131,24 +43141,24 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         i,
         o,
         a
-      ]), cJ(t);
-      let c = dJ(l);
+      ]), dJ(t);
+      let c = hJ(l);
       const d = a.label;
       let f = false;
-      if (typeof a.checkedTemplate > "u" && (a.checkedTemplate = true), typeof a.uncheckedTemplate > "u" && (a.uncheckedTemplate = false), ml(e), o === a.checkedTemplate || hs(o).toLocaleLowerCase(a.locale) === hs(a.checkedTemplate).toLocaleLowerCase(a.locale) ? c.checked = true : o === a.uncheckedTemplate || hs(o).toLocaleLowerCase(a.locale) === hs(a.uncheckedTemplate).toLocaleLowerCase(a.locale) ? c.checked = false : fl(o) ? ct(c, "noValue") : (c.style.display = "none", ct(c, lJ), f = true), c.setAttribute(td, n), c.setAttribute(nd, r), !f && d) {
+      if (typeof a.checkedTemplate > "u" && (a.checkedTemplate = true), typeof a.uncheckedTemplate > "u" && (a.uncheckedTemplate = false), ml(e), o === a.checkedTemplate || hs(o).toLocaleLowerCase(a.locale) === hs(a.checkedTemplate).toLocaleLowerCase(a.locale) ? c.checked = true : o === a.uncheckedTemplate || hs(o).toLocaleLowerCase(a.locale) === hs(a.uncheckedTemplate).toLocaleLowerCase(a.locale) ? c.checked = false : fl(o) ? ct(c, "noValue") : (c.style.display = "none", ct(c, uJ), f = true), c.setAttribute(td, n), c.setAttribute(nd, r), !f && d) {
         let b = "";
         if (d.value) b = typeof d.value == "function" ? d.value.call(this, n, r, i, o) : d.value;
         else if (d.property) {
           const T = t.getDataAtRowProp(n, d.property);
           b = T !== null ? T : "";
         }
-        const C = hJ(l, b, d.separated !== true);
+        const C = fJ(l, b, d.separated !== true);
         d.position === "before" ? d.separated ? (e.appendChild(C), e.appendChild(c)) : (C.appendChild(c), c = C) : (!d.position || d.position === "after") && (d.separated ? (e.appendChild(c), e.appendChild(C)) : (C.insertBefore(c, C.firstChild), c = C));
       }
       (!d || d && !d.separated) && e.appendChild(c), f && e.appendChild(l.createTextNode("#bad-value#")), fA.has(t) || (fA.set(t, true), m());
       function m() {
         const C = t.getShortcutManager().getContext("grid"), T = {
-          group: uJ
+          group: cJ
         };
         C.addShortcuts([
           {
@@ -43237,33 +43247,33 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
     }
     ox.RENDERER_TYPE = fH;
-    function cJ(t) {
+    function dJ(t) {
       let e = mA.get(t);
       if (!e) {
         const { rootElement: n } = t;
-        e = new ri(t), e.addEventListener(n, "click", (r) => mJ(r, t)), e.addEventListener(n, "mouseup", (r) => fJ(r, t)), e.addEventListener(n, "change", (r) => pJ(r, t)), mA.set(t, e);
+        e = new ri(t), e.addEventListener(n, "click", (r) => pJ(r, t)), e.addEventListener(n, "mouseup", (r) => mJ(r, t)), e.addEventListener(n, "change", (r) => gJ(r, t)), mA.set(t, e);
       }
       return e;
     }
-    function dJ(t) {
+    function hJ(t) {
       const e = t.createElement("input");
       return e.className = "htCheckboxRendererInput", e.type = "checkbox", e.setAttribute("autocomplete", "off"), e.setAttribute("tabindex", "-1"), e.cloneNode(false);
     }
-    function hJ(t, e, n) {
+    function fJ(t, e, n) {
       const r = t.createElement("label");
       return r.className = `htCheckboxRendererLabel ${n ? "fullWidth" : ""}`, r.appendChild(t.createTextNode(e)), r.cloneNode(true);
     }
-    function fJ(t, e) {
+    function mJ(t, e) {
       const { target: n } = t;
       sx(n) && (!n.hasAttribute(td) || !n.hasAttribute(nd) || setTimeout(e.listen, 10));
     }
-    function mJ(t, e) {
+    function pJ(t, e) {
       const { target: n } = t;
       if (!sx(n) || !n.hasAttribute(td) || !n.hasAttribute(nd)) return;
       const r = parseInt(n.getAttribute(td), 10), i = parseInt(n.getAttribute(nd), 10);
       e.getCellMeta(r, i).readOnly && t.preventDefault();
     }
-    function pJ(t, e) {
+    function gJ(t, e) {
       const { target: n } = t;
       if (!sx(n) || !n.hasAttribute(td) || !n.hasAttribute(nd)) return;
       const r = parseInt(n.getAttribute(td), 10), i = parseInt(n.getAttribute(nd), 10), o = e.getCellMeta(r, i);
@@ -43275,14 +43285,14 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     function sx(t) {
       return t.tagName === "INPUT" && t.getAttribute("type") === "checkbox";
     }
-    const gJ = "checkbox", vJ = {
-      CELL_TYPE: gJ,
+    const vJ = "checkbox", wJ = {
+      CELL_TYPE: vJ,
       editor: hH,
       renderer: ox
-    }, wJ = "dropdown";
+    }, yJ = "dropdown";
     class ax extends ix {
       static get EDITOR_TYPE() {
-        return wJ;
+        return yJ;
       }
       prepare(e, n, r, i, o, a) {
         super.prepare(e, n, r, i, o, a), this.cellProperties.filter = false, this.cellProperties.strict = true;
@@ -43292,19 +43302,19 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       const r = this.getCellMeta(e, this.propToCol(n));
       r.editor === ax && r.strict === void 0 && (r.filter = false, r.strict = true);
     });
-    const yJ = "dropdown", bJ = {
-      CELL_TYPE: yJ,
+    const bJ = "dropdown", CJ = {
+      CELL_TYPE: bJ,
       editor: ax,
       renderer: Pf,
       validator: Tv
-    }, CJ = "handsontable", SJ = {
-      CELL_TYPE: CJ,
+    }, SJ = "handsontable", EJ = {
+      CELL_TYPE: SJ,
       editor: rx,
       renderer: Pf
-    }, EJ = "numeric";
+    }, RJ = "numeric";
     class mH extends fv {
       static get EDITOR_TYPE() {
-        return EJ;
+        return RJ;
       }
     }
     function op(t) {
@@ -43313,7 +43323,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     var i0 = {
       exports: {}
     }, pA;
-    function RJ() {
+    function xJ() {
       return pA || (pA = 1, (function(t, e) {
         (function(n) {
           t.exports = n();
@@ -44927,8 +44937,8 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         });
       })(i0)), i0.exports;
     }
-    var xJ = RJ();
-    const Vl = da(xJ), TJ = "numeric";
+    var TJ = xJ();
+    const Vl = da(TJ), MJ = "numeric";
     function lx(t, e, n, r, i, o, a) {
       let l = o;
       if (as(l)) {
@@ -44941,27 +44951,27 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       gd(t, e, n, r, i, l, a);
     }
-    lx.RENDERER_TYPE = TJ;
-    const MJ = "numeric";
+    lx.RENDERER_TYPE = MJ;
+    const OJ = "numeric";
     function ux(t, e) {
       let n = t;
       n == null && (n = ""), this.allowEmpty && n === "" ? e(true) : e(n === "" ? false : as(t));
     }
-    ux.VALIDATOR_TYPE = MJ;
-    const OJ = "numeric", _J = {
-      CELL_TYPE: OJ,
+    ux.VALIDATOR_TYPE = OJ;
+    const _J = "numeric", IJ = {
+      CELL_TYPE: _J,
       editor: mH,
       renderer: lx,
       validator: ux,
       dataType: "number"
     };
-    function IJ(t, e) {
-      AJ(t, e), e.add(t);
-    }
     function AJ(t, e) {
+      kJ(t, e), e.add(t);
+    }
+    function kJ(t, e) {
       if (e.has(t)) throw new TypeError("Cannot initialize the same private elements twice on an object");
     }
-    function kJ(t, e, n) {
+    function PJ(t, e, n) {
       if (!e.has(t)) throw new TypeError("attempted to get private field on non-instance");
       return n;
     }
@@ -44986,12 +44996,12 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         "validator",
         fN
       ]
-    ]), PJ = "base", Bl = /* @__PURE__ */ new WeakMap(), o0 = [];
+    ]), DJ = "base", Bl = /* @__PURE__ */ new WeakMap(), o0 = [];
     let rs = null;
     var vA = /* @__PURE__ */ new WeakSet();
     class qi {
       static get PLUGIN_KEY() {
-        return PJ;
+        return DJ;
       }
       static get SETTING_KEYS() {
         return [
@@ -44999,7 +45009,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         ];
       }
       constructor(e) {
-        IJ(this, vA), Ca(this, "hot", e, {
+        AJ(this, vA), Ca(this, "hot", e, {
           writable: false
         }), Bl.set(this, {
           hooks: {}
@@ -45068,7 +45078,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         Ke(this.pluginsInitializedCallbacks, (e) => e()), this.pluginsInitializedCallbacks.length = 0, this.isPluginsReady = true;
       }
       onUpdateSettings(e) {
-        const n = kJ(this, vA, DJ).call(this, e);
+        const n = PJ(this, vA, NJ).call(this, e);
         this.isEnabled && (this.enabled && !this.isEnabled() && this.disablePlugin(), !this.enabled && this.isEnabled() && this.enablePlugin(), this.enabled && this.isEnabled() && n && this.updatePlugin(e));
       }
       updatePlugin() {
@@ -45079,7 +45089,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }), delete this.t, delete this.hot;
       }
     }
-    function DJ(t) {
+    function NJ(t) {
       if (!t) return false;
       const e = this.constructor.SETTING_KEYS;
       if (typeof e == "boolean") return e;
@@ -45285,13 +45295,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
     }
     Kt.getSingleton().register("modifyAutoColumnSizeSeed");
-    const dh = "autoColumnSize", NJ = 10, s0 = /* @__PURE__ */ new WeakMap(), LJ = "autoColumnSize";
+    const dh = "autoColumnSize", LJ = 10, s0 = /* @__PURE__ */ new WeakMap(), HJ = "autoColumnSize";
     class Ih extends qi {
       static get PLUGIN_KEY() {
         return dh;
       }
       static get PLUGIN_PRIORITY() {
-        return NJ;
+        return LJ;
       }
       static get SETTING_KEYS() {
         return true;
@@ -45314,7 +45324,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
             value: o,
             bundleSeed: a
           };
-        }), this.firstCalculation = true, this.inProgress = false, this.measuredColumns = 0, this.columnWidthsMap = new Cu(), this.hot.columnIndexMapper.registerMap(LJ, this.columnWidthsMap), this.addHook("beforeColumnResize", (n, r, i) => this.onBeforeColumnResize(n, r, i));
+        }), this.firstCalculation = true, this.inProgress = false, this.measuredColumns = 0, this.columnWidthsMap = new Cu(), this.hot.columnIndexMapper.registerMap(HJ, this.columnWidthsMap), this.addHook("beforeColumnResize", (n, r, i) => this.onBeforeColumnResize(n, r, i));
       }
       isEnabled() {
         return this.hot.getSettings()[dh] !== false && !this.hot.getSettings().colWidths;
@@ -45492,7 +45502,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       horizontal: "horizontal",
       vertical: "vertical"
     };
-    function HJ(t, e, n) {
+    function jJ(t, e, n) {
       let r, i, o;
       return e[0] === t[0] && e[1] < t[1] ? (o = "left", r = n(e[0], e[1]), i = n(e[2], t[1] - 1)) : e[2] === t[2] && e[0] === t[0] && e[3] > t[3] ? (o = "right", r = n(e[0], t[3] + 1), i = n(e[2], e[3])) : e[0] < t[0] && e[1] === t[1] ? (o = "up", r = n(e[0], e[1]), i = n(t[0] - 1, e[3])) : e[2] > t[2] && e[1] === t[1] && (o = "down", r = n(t[2] + 1, e[1]), i = n(e[2], e[3])), r && r.normalize(), i && i.normalize(), {
         directionOfDrag: o,
@@ -45500,7 +45510,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         endOfDragCoords: i
       };
     }
-    function jJ(t) {
+    function FJ(t) {
       const e = {};
       return t === true ? (e.directions = Object.keys(Xl), e.autoInsertRow = true) : Pr(t) ? (Gt(t.autoInsertRow) ? t.direction === Xl.horizontal ? e.autoInsertRow = false : e.autoInsertRow = t.autoInsertRow : e.autoInsertRow = false, Gt(t.direction) ? e.directions = [
         t.direction
@@ -45511,20 +45521,20 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     Kt.getSingleton().register("modifyAutofillRange");
     Kt.getSingleton().register("beforeAutofill");
     Kt.getSingleton().register("afterAutofill");
-    const wA = "autofill", FJ = 20, $J = [
+    const wA = "autofill", $J = 20, WJ = [
       "fillHandle"
-    ], WJ = "insert_row_below", VJ = 200;
-    class BJ extends qi {
+    ], VJ = "insert_row_below", BJ = 200;
+    class zJ extends qi {
       static get PLUGIN_KEY() {
         return wA;
       }
       static get PLUGIN_PRIORITY() {
-        return FJ;
+        return $J;
       }
       static get SETTING_KEYS() {
         return [
           wA,
-          ...$J
+          ...WJ
         ];
       }
       constructor(e) {
@@ -45575,7 +45585,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           Math.min(a.col, n),
           Math.max(l.row, r),
           Math.max(l.col, i)
-        ], c), { directionOfDrag: f, startOfDragCoords: m, endOfDragCoords: p } = HJ(c, d, (w, b) => this.hot._createCellCoords(w, b));
+        ], c), { directionOfDrag: f, startOfDragCoords: m, endOfDragCoords: p } = jJ(c, d, (w, b) => this.hot._createCellCoords(w, b));
         if (m && m.row > -1 && m.col > -1) {
           const w = this.getSelectionData(), b = o.clone(), C = this.hot._createCellRange(m, m, p), T = this.hot.runHooks("beforeAutofill", w, b, C, f);
           if (T === false) return this.hot.selection.highlight.getFill().clear(), this.hot.render(), false;
@@ -45618,8 +45628,8 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       addRow() {
         this.hot._registerTimeout(() => {
-          this.hot.alter(WJ, void 0, 1, `${this.pluginName}.fill`), this.addingStarted = false;
-        }, VJ);
+          this.hot.alter(VJ, void 0, 1, `${this.pluginName}.fill`), this.addingStarted = false;
+        }, BJ);
       }
       addNewRowIfNeeded() {
         if (!this.hot.selection.highlight.getFill().isEmpty() && this.addingStarted === false && this.autoInsertRow) {
@@ -45681,20 +45691,20 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.directions.length = 0, this.autoInsertRow = false;
       }
       mapSettings() {
-        const e = jJ(this.hot.getSettings().fillHandle);
+        const e = FJ(this.hot.getSettings().fillHandle);
         this.directions = e.directions, this.autoInsertRow = e.autoInsertRow;
       }
       destroy() {
         super.destroy();
       }
     }
-    const sp = "autoRowSize", zJ = 40, UJ = "autoRowSize";
+    const sp = "autoRowSize", UJ = 40, YJ = "autoRowSize";
     class Ah extends qi {
       static get PLUGIN_KEY() {
         return sp;
       }
       static get PLUGIN_PRIORITY() {
-        return zJ;
+        return UJ;
       }
       static get SETTING_KEYS() {
         return true;
@@ -45711,7 +45721,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           return n >= 0 ? i = this.hot.getDataAtCell(n, r) : n === -1 && (i = this.hot.getColHeader(r)), {
             value: i
           };
-        }), this.firstCalculation = true, this.inProgress = false, this.measuredRows = 0, this.rowHeightsMap = new Cu(), this.hot.rowIndexMapper.registerMap(UJ, this.rowHeightsMap), this.addHook("beforeRowResize", (n, r, i) => this.onBeforeRowResize(n, r, i));
+        }), this.firstCalculation = true, this.inProgress = false, this.measuredRows = 0, this.rowHeightsMap = new Cu(), this.hot.rowIndexMapper.registerMap(YJ, this.rowHeightsMap), this.addHook("beforeRowResize", (n, r, i) => this.onBeforeRowResize(n, r, i));
       }
       isEnabled() {
         const e = this.hot.getSettings()[sp];
@@ -45872,12 +45882,12 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
     }
     const wr = "---------";
-    function YJ() {
+    function GJ() {
       return {
         name: wr
       };
     }
-    function GJ(t) {
+    function qJ(t) {
       return Br(t, (e) => ({
         start: e.getTopStartCorner(),
         end: e.getBottomEndCorner()
@@ -45886,7 +45896,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     function ap(t) {
       return cn(t, "htSeparator");
     }
-    function qJ(t) {
+    function KJ(t) {
       return cn(t, "htSubmenu");
     }
     function lp(t) {
@@ -45899,10 +45909,10 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       const e = t.getSelected();
       return !e || e[0] < 0 ? null : e;
     }
-    function KJ(t, e) {
+    function XJ(t, e) {
       return t.indexOf(e) !== -1 ? t : `${t.replace("htTop", "").replace("htMiddle", "").replace("htBottom", "").replace("  ", "")} ${e}`;
     }
-    function XJ(t, e) {
+    function QJ(t, e) {
       return t.indexOf(e) !== -1 ? t : `${t.replace("htLeft", "").replace("htCenter", "").replace("htRight", "").replace("htJustify", "").replace("  ", "")} ${e}`;
     }
     function zl(t, e) {
@@ -45916,14 +45926,14 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     function Ya(t, e, n, r, i) {
       Ke(t, (o) => {
         o.forAll((a, l) => {
-          a >= 0 && l >= 0 && QJ(a, l, e, n, r, i);
+          a >= 0 && l >= 0 && ZJ(a, l, e, n, r, i);
         });
       });
     }
-    function QJ(t, e, n, r, i, o) {
+    function ZJ(t, e, n, r, i, o) {
       const a = i(t, e);
       let l = r;
-      a.className && (n === "vertical" ? l = KJ(a.className, r) : l = XJ(a.className, r)), o(t, e, "className", l);
+      a.className && (n === "vertical" ? l = XJ(a.className, r) : l = QJ(a.className, r)), o(t, e, "className", l);
     }
     function Us(t, e) {
       let n = false;
@@ -45934,7 +45944,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     function Ga(t) {
       return `<span class="selected">\u2713</span>${t}`;
     }
-    function ZJ(t, e) {
+    function JJ(t, e) {
       return !t.hidden || !(typeof t.hidden == "function" && t.hidden.call(e));
     }
     function gH(t, e) {
@@ -45942,22 +45952,22 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       for (let r = 0; r < n.length && n[r].name === e; ) n.shift();
       return n;
     }
-    function JJ(t, e) {
+    function eee(t, e) {
       let n = t.slice(0);
       return n.reverse(), n = gH(n, e), n.reverse(), n;
     }
-    function eee(t) {
+    function tee(t) {
       const e = [];
       return Ke(t, (n, r) => {
         r > 0 ? e[e.length - 1].name !== n.name && e.push(n) : e.push(n);
       }), e;
     }
-    function tee(t) {
+    function nee(t) {
       let e = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : wr, n = t.slice(0);
-      return n = gH(n, e), n = JJ(n, e), n = eee(n), n;
+      return n = gH(n, e), n = eee(n, e), n = tee(n), n;
     }
     var yA = {}, a0, bA;
-    function nee() {
+    function ree() {
       if (bA) return a0;
       bA = 1;
       var t = NP(), e = TypeError;
@@ -45966,10 +45976,10 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }, a0;
     }
     var CA;
-    function ree() {
+    function iee() {
       if (CA) return yA;
       CA = 1;
-      var t = vu(), e = Dg(), n = Hg(), r = GP(), i = nee(), o = qP(), a = [].unshift(0) !== 1, l = function() {
+      var t = vu(), e = Dg(), n = Hg(), r = GP(), i = ree(), o = qP(), a = [].unshift(0) !== 1, l = function() {
         try {
           Object.defineProperty([], "length", {
             writable: false
@@ -45998,8 +46008,8 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }
       }), yA;
     }
-    ree();
-    class iee {
+    iee();
+    class oee {
       constructor(e) {
         this.hot = e, this.commands = {}, this.commonCallback = null;
       }
@@ -46014,12 +46024,12 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         const o = e.split(":"), a = o[0], l = o.length === 2 ? o[1] : null;
         let c = this.commands[a];
         if (!c) throw new Error(`Menu command '${a}' not exists.`);
-        if (l && c.submenu && (c = oee(l, c.submenu.items)), c.disabled === true || typeof c.disabled == "function" && c.disabled.call(this.hot) === true || Eo(c, "submenu")) return;
+        if (l && c.submenu && (c = see(l, c.submenu.items)), c.disabled === true || typeof c.disabled == "function" && c.disabled.call(this.hot) === true || Eo(c, "submenu")) return;
         const d = [];
         typeof c.callback == "function" && d.push(c.callback), typeof this.commonCallback == "function" && d.push(this.commonCallback), r.unshift(o.join(":")), Ke(d, (f) => f.apply(this.hot, r));
       }
     }
-    function oee(t, e) {
+    function see(t, e) {
       let n;
       return Ke(e, (r) => {
         const i = r.key ? r.key.split(":") : null;
@@ -46027,7 +46037,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }), n;
     }
     const jo = "alignment";
-    function see() {
+    function aee() {
       return {
         key: jo,
         name() {
@@ -46151,7 +46161,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const cx = "clear_column";
-    function aee() {
+    function lee() {
       return {
         key: cx,
         name() {
@@ -46171,7 +46181,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Ov = "col_left";
-    function lee() {
+    function uee() {
       return {
         key: Ov,
         name() {
@@ -46190,7 +46200,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const _v = "col_right";
-    function uee() {
+    function cee() {
       return {
         key: _v,
         name() {
@@ -46209,7 +46219,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Iv = "make_read_only";
-    function cee() {
+    function dee() {
       return {
         key: Iv,
         name() {
@@ -46230,7 +46240,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Av = "redo";
-    function dee() {
+    function hee() {
       return {
         key: Av,
         name() {
@@ -46249,7 +46259,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const kv = "remove_col";
-    function hee() {
+    function fee() {
       return {
         key: kv,
         name() {
@@ -46276,7 +46286,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Pv = "remove_row";
-    function fee() {
+    function mee() {
       return {
         key: Pv,
         name() {
@@ -46303,7 +46313,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Dv = "row_above";
-    function mee() {
+    function pee() {
       return {
         key: Dv,
         name() {
@@ -46322,7 +46332,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Nv = "row_below";
-    function pee() {
+    function gee() {
       return {
         key: Nv,
         name() {
@@ -46341,7 +46351,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const cf = "no_items";
-    function gee() {
+    function vee() {
       return {
         key: cf,
         name() {
@@ -46352,7 +46362,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     const Lv = "undo";
-    function vee() {
+    function wee() {
       return {
         key: Lv,
         name() {
@@ -46370,7 +46380,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }
       };
     }
-    const wee = [
+    const yee = [
       Dv,
       Nv,
       Ov,
@@ -46384,28 +46394,28 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       jo,
       wr,
       cf
-    ], yee = {
-      [wr]: YJ,
-      [cf]: gee,
-      [Dv]: mee,
-      [Nv]: pee,
-      [Ov]: lee,
-      [_v]: uee,
-      [cx]: aee,
-      [Pv]: fee,
-      [kv]: hee,
-      [Lv]: vee,
-      [Av]: dee,
-      [Iv]: cee,
-      [jo]: see
+    ], bee = {
+      [wr]: GJ,
+      [cf]: vee,
+      [Dv]: pee,
+      [Nv]: gee,
+      [Ov]: uee,
+      [_v]: cee,
+      [cx]: lee,
+      [Pv]: mee,
+      [kv]: fee,
+      [Lv]: wee,
+      [Av]: hee,
+      [Iv]: dee,
+      [jo]: aee
     };
     function vH() {
       const t = {};
-      return xn(yee, (e, n) => {
+      return xn(bee, (e, n) => {
         t[n] = e();
       }), t;
     }
-    class bee {
+    class Cee {
       constructor(e) {
         let n = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
         this.hot = e, this.predefinedItems = vH(), this.defaultOrderPattern = n;
@@ -46419,10 +46429,10 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       getItems() {
         let e = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : null;
-        return Cee(e, this.defaultOrderPattern, this.predefinedItems);
+        return See(e, this.defaultOrderPattern, this.predefinedItems);
       }
     }
-    function Cee() {
+    function See() {
       let t = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : null, e = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : [], n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
       const r = [];
       let i = t;
@@ -46433,13 +46443,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }), l.key === void 0 && (l.key = a), r.push(l);
       }) : Ke(i, (o, a) => {
         let l = n[o];
-        !l && wee.indexOf(o) >= 0 || (l || (l = {
+        !l && yee.indexOf(o) >= 0 || (l || (l = {
           name: o,
           key: `${a}`
         }), Pr(o) && ca(l, o), l.key === void 0 && (l.key = a), r.push(l));
       }), r;
     }
-    class See {
+    class Eee {
       constructor(e, n) {
         const r = Jh(n), i = Kc(n);
         let o, a, l, c, d, f;
@@ -46464,7 +46474,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return this.leftRelative >= e.offsetWidth;
       }
     }
-    const SA = 215, wH = "menu", Eee = wH;
+    const SA = 215, wH = "menu", Ree = wH;
     class Hv {
       constructor(e, n) {
         this.hot = e, this.options = n || {
@@ -46506,10 +46516,10 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         var e = this;
         this.runLocalHooks("beforeOpen"), this.container.removeAttribute("style"), this.container.style.display = "block";
         const n = Kq((p) => this.openSubMenu(p), 300), r = this.options.minWidth || SA;
-        let i = false, o = su(this.menuItems, (p) => (p.key === cf && (i = true), ZJ(p, this.hot)));
+        let i = false, o = su(this.menuItems, (p) => (p.key === cf && (i = true), JJ(p, this.hot)));
         if (o.length < 1 && !i) o.push(vH()[cf]);
         else if (o.length === 0) return;
-        o = tee(o, wr);
+        o = nee(o, wr);
         let a = false;
         const l = {
           data: o,
@@ -46555,7 +46565,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.origOutsideClickDeselects = this.hot.getSettings().outsideClickDeselects, this.hot.getSettings().outsideClickDeselects = false, this.hotMenu = new HR(this.container, l), this.hotMenu.addHook("afterInit", () => this.onAfterInit()), this.hotMenu.addHook("afterSelection", function() {
           return e.onAfterSelection(...arguments);
         }), this.hotMenu.init(), this.hotMenu.listen();
-        const c = this.hotMenu.getShortcutManager(), d = c.addContext(Eee), m = {
+        const c = this.hotMenu.getShortcutManager(), d = c.addContext(Ree), m = {
           ...{
             group: wH
           },
@@ -46662,7 +46672,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       openSubMenu(e) {
         if (!this.hotMenu) return false;
         const n = this.hotMenu.getCell(e, 0);
-        if (this.closeAllSubMenus(), !n || !qJ(n)) return false;
+        if (this.closeAllSubMenus(), !n || !KJ(n)) return false;
         const r = this.hotMenu.getSourceDataAtRow(e), i = new Hv(this.hot, {
           parent: this,
           name: r.name,
@@ -46693,7 +46703,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         if (!this.isOpened() || !this.hasSelectedItem()) return;
         const n = this.getSelectedItem();
         if (this.runLocalHooks("select", n, e), this.isCommandPassive(n)) return;
-        const r = this.hot.getSelectedRange(), i = r ? GJ(r) : [];
+        const r = this.hot.getSelectedRange(), i = r ? qJ(r) : [];
         this.runLocalHooks("executeCommand", n.key, i, e), this.isSubMenu() && this.parentMenu.runLocalHooks("executeCommand", n.key, i, e);
       }
       isCommandPassive(e) {
@@ -46701,7 +46711,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return n === false || r === wr || a === true || o;
       }
       setPosition(e) {
-        const n = new See(e, this.container.ownerDocument.defaultView);
+        const n = new Eee(e, this.container.ownerDocument.defaultView);
         this.options.keepInViewport ? (n.fitsBelow(this.container) ? this.setPositionBelowCursor(n) : n.fitsAbove(this.container) ? this.setPositionAboveCursor(n) : this.setPositionBelowCursor(n), this.hot.isLtr() ? this.setHorizontalPositionForLtr(n) : this.setHorizontalPositionForRtl(n)) : (this.setPositionBelowCursor(n), this.setPositionOnRightOfCursor(n));
       }
       setHorizontalPositionForRtl(e) {
@@ -46786,7 +46796,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
     }
     lr(Hv, Ms);
-    const cp = "contextMenu", Ree = 70;
+    const cp = "contextMenu", xee = 70;
     Kt.getSingleton().register("afterContextMenuDefaultOptions");
     Kt.getSingleton().register("beforeContextMenuShow");
     Kt.getSingleton().register("afterContextMenuShow");
@@ -46797,7 +46807,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return cp;
       }
       static get PLUGIN_PRIORITY() {
-        return Ree;
+        return xee;
       }
       static get PLUGIN_DEPS() {
         return [
@@ -46824,7 +46834,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         ];
       }
       constructor(e) {
-        super(e), this.eventManager = new ri(this), this.commandExecutor = new iee(this.hot), this.itemsFactory = null, this.menu = null;
+        super(e), this.eventManager = new ri(this), this.commandExecutor = new oee(this.hot), this.itemsFactory = null, this.menu = null;
       }
       isEnabled() {
         return !!this.hot.getSettings()[cp];
@@ -46869,7 +46879,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.commandExecutor.execute(e, ...r);
       }
       prepareMenuItems() {
-        this.itemsFactory = new bee(this.hot, jv.DEFAULT_ITEMS);
+        this.itemsFactory = new Cee(this.hot, jv.DEFAULT_ITEMS);
         const e = this.hot.getSettings()[cp], n = {
           items: this.itemsFactory.getItems(e)
         };
@@ -46901,7 +46911,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     jv.SEPARATOR = {
       name: wr
     };
-    function xee(t) {
+    function Tee(t) {
       return {
         key: "copy",
         name() {
@@ -46918,7 +46928,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         hidden: false
       };
     }
-    function Tee(t) {
+    function Mee(t) {
       return {
         key: "copy_column_headers_only",
         name() {
@@ -46936,7 +46946,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         hidden: false
       };
     }
-    function Mee(t) {
+    function Oee(t) {
       return {
         key: "copy_with_column_group_headers",
         name() {
@@ -46954,7 +46964,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         hidden: false
       };
     }
-    function Oee(t) {
+    function _ee(t) {
       return {
         key: "copy_with_column_headers",
         name() {
@@ -46972,7 +46982,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         hidden: false
       };
     }
-    function _ee(t) {
+    function Iee(t) {
       return {
         key: "cut",
         name() {
@@ -46989,7 +46999,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         hidden: false
       };
     }
-    class Iee {
+    class Aee {
       constructor() {
         this.data = {};
       }
@@ -47000,9 +47010,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return this.data[e] || void 0;
       }
     }
-    class Aee {
+    class kee {
       constructor() {
-        this.clipboardData = new Iee();
+        this.clipboardData = new Aee();
       }
     }
     class dx {
@@ -47010,7 +47020,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.rootDocument = e.defaultView ? e : e.ownerDocument, this.mainElement = null, this.eventManager = new ri(this), this.listenersCount = /* @__PURE__ */ new WeakSet(), this.container = e;
       }
       useSecondaryElement() {
-        const e = Dee(this.container);
+        const e = Nee(this.container);
         this.listenersCount.has(e) || (this.listenersCount.add(e), EA(this.eventManager, e, this)), this.mainElement = e;
       }
       setFocusableElement(e) {
@@ -47025,12 +47035,12 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     }
     lr(dx, Ms);
     const fg = /* @__PURE__ */ new WeakMap();
-    function kee(t) {
+    function Pee(t) {
       const e = new dx(t);
       let n = fg.get(t);
       return n = isNaN(n) ? 0 : n, fg.set(t, n + 1), e;
     }
-    function Pee(t) {
+    function Dee(t) {
       t.eventManager.clear();
     }
     const l0 = (t, e) => (n) => e.runLocalHooks(t, n);
@@ -47038,7 +47048,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       t.addEventListener(e, "copy", l0("copy", n)), t.addEventListener(e, "cut", l0("cut", n)), t.addEventListener(e, "paste", l0("paste", n));
     }
     const mg = /* @__PURE__ */ new WeakMap();
-    function Dee(t) {
+    function Nee(t) {
       const e = mg.get(t);
       if (e) return e.parentElement || t.appendChild(e), e;
       const r = (t.defaultView ? t : t.ownerDocument).createElement("textarea");
@@ -47047,7 +47057,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     function RA(t) {
       if (!(t instanceof dx)) return;
       let e = fg.get(t.container);
-      if (e = isNaN(e) ? 0 : e, e > 0 && (e -= 1), Pee(t), e <= 0) {
+      if (e = isNaN(e) ? 0 : e, e > 0 && (e -= 1), Dee(t), e <= 0) {
         e = 0;
         const n = mg.get(t.container);
         n && n.parentNode && (n.parentNode.removeChild(n), mg.delete(t.container)), t.mainElement = null;
@@ -47069,20 +47079,20 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     }
     function li(t, e) {
       var n = bH(t, e, "get");
-      return Nee(t, n);
+      return Lee(t, n);
     }
-    function Nee(t, e) {
+    function Lee(t, e) {
       return e.get ? e.get.call(t) : e.value;
     }
     function uc(t, e, n) {
       var r = bH(t, e, "set");
-      return Lee(t, r, n), n;
+      return Hee(t, r, n), n;
     }
     function bH(t, e, n) {
       if (!e.has(t)) throw new TypeError("attempted to " + n + " private field on non-instance");
       return e.get(t);
     }
-    function Lee(t, e, n) {
+    function Hee(t, e, n) {
       if (e.set) e.set.call(t, n);
       else {
         if (!e.writable) throw new TypeError("attempted to set read only private field");
@@ -47090,7 +47100,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
     }
     var Ba = /* @__PURE__ */ new WeakMap(), u0 = /* @__PURE__ */ new WeakMap(), hh = /* @__PURE__ */ new WeakMap(), SS = /* @__PURE__ */ new WeakMap(), ES = /* @__PURE__ */ new WeakMap(), fh = /* @__PURE__ */ new WeakMap(), hp = /* @__PURE__ */ new WeakSet(), TA = /* @__PURE__ */ new WeakSet();
-    class Hee {
+    class jee {
       constructor(e) {
         let { countRows: n, countColumns: r, rowsLimit: i, columnsLimit: o, countColumnHeaders: a } = e;
         xA(this, TA), xA(this, hp), lc(this, Ba, {
@@ -47118,7 +47128,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       getCellsRange() {
         if (li(this, u0).call(this) === 0 || li(this, hh).call(this) === 0) return null;
-        const { row: e, col: n } = li(this, Ba).getTopStartCorner(), { row: r, col: i } = li(this, Ba).getBottomEndCorner(), o = dp(this, TA, jee).call(this, e, r), a = dp(this, hp, c0).call(this, n, i);
+        const { row: e, col: n } = li(this, Ba).getTopStartCorner(), { row: r, col: i } = li(this, Ba).getBottomEndCorner(), o = dp(this, TA, Fee).call(this, e, r), a = dp(this, hp, c0).call(this, n, i);
         return {
           isRangeTrimmed: r !== o || i !== a,
           startRow: e,
@@ -47153,7 +47163,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     function c0(t, e) {
       return Math.min(e, Math.max(t + li(this, ES).call(this) - 1, t));
     }
-    function jee(t, e) {
+    function Fee(t, e) {
       return Math.min(e, Math.max(t + li(this, SS).call(this) - 1, t));
     }
     function CH(t) {
@@ -47172,7 +47182,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         columns: n
       };
     }
-    function Fee(t, e) {
+    function $ee(t, e) {
       SH(t, e), e.add(t);
     }
     function Ul(t, e, n) {
@@ -47182,18 +47192,18 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       if (e.has(t)) throw new TypeError("Cannot initialize the same private elements twice on an object");
     }
     function cc(t, e, n) {
-      return e = $ee(e), e in t ? Object.defineProperty(t, e, {
+      return e = Wee(e), e in t ? Object.defineProperty(t, e, {
         value: n,
         enumerable: true,
         configurable: true,
         writable: true
       }) : t[e] = n, t;
     }
-    function $ee(t) {
-      var e = Wee(t, "string");
+    function Wee(t) {
+      var e = Vee(t, "string");
       return typeof e == "symbol" ? e : String(e);
     }
-    function Wee(t, e) {
+    function Vee(t, e) {
       if (typeof t != "object" || t === null) return t;
       var n = t[Symbol.toPrimitive];
       if (n !== void 0) {
@@ -47203,26 +47213,26 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       }
       return (e === "string" ? String : Number)(t);
     }
-    function Vee(t, e, n) {
+    function Bee(t, e, n) {
       if (!e.has(t)) throw new TypeError("attempted to get private field on non-instance");
       return n;
     }
     function ji(t, e) {
       var n = EH(t, e, "get");
-      return Bee(t, n);
+      return zee(t, n);
     }
-    function Bee(t, e) {
+    function zee(t, e) {
       return e.get ? e.get.call(t) : e.value;
     }
     function Ws(t, e, n) {
       var r = EH(t, e, "set");
-      return zee(t, r, n), n;
+      return Uee(t, r, n), n;
     }
     function EH(t, e, n) {
       if (!e.has(t)) throw new TypeError("attempted to " + n + " private field on non-instance");
       return e.get(t);
     }
-    function zee(t, e, n) {
+    function Uee(t, e, n) {
       if (e.set) e.set.call(t, n);
       else {
         if (!e.writable) throw new TypeError("attempted to set read only private field");
@@ -47237,16 +47247,16 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     Kt.getSingleton().register("afterPaste");
     Kt.getSingleton().register("beforeCopy");
     Kt.getSingleton().register("afterCopy");
-    const fp = "copyPaste", Uee = 80, Yee = [
+    const fp = "copyPaste", Yee = 80, Gee = [
       "fragmentSelection"
     ], MA = [
       '<meta name="generator" content="Handsontable"/>',
       '<style type="text/css">td{white-space:normal}br{mso-data-placement:same-cell}</style>'
     ].join("");
     var d0 = /* @__PURE__ */ new WeakMap(), h0 = /* @__PURE__ */ new WeakMap(), f0 = /* @__PURE__ */ new WeakMap(), dc = /* @__PURE__ */ new WeakMap(), mp = /* @__PURE__ */ new WeakMap(), pp = /* @__PURE__ */ new WeakMap(), hc = /* @__PURE__ */ new WeakMap(), OA = /* @__PURE__ */ new WeakSet();
-    class Gee extends qi {
+    class qee extends qi {
       constructor() {
-        super(...arguments), Fee(this, OA), cc(this, "columnsLimit", 1 / 0), cc(this, "rowsLimit", 1 / 0), cc(this, "pasteMode", "overwrite"), cc(this, "uiContainer", this.hot.rootDocument.body), Ul(this, d0, {
+        super(...arguments), $ee(this, OA), cc(this, "columnsLimit", 1 / 0), cc(this, "rowsLimit", 1 / 0), cc(this, "pasteMode", "overwrite"), cc(this, "uiContainer", this.hot.rootDocument.body), Ul(this, d0, {
           writable: true,
           value: false
         }), Ul(this, h0, {
@@ -47266,7 +47276,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           value: false
         }), Ul(this, hc, {
           writable: true,
-          value: new Hee({
+          value: new jee({
             countRows: () => this.hot.countRows(),
             countColumns: () => this.hot.countCols(),
             rowsLimit: () => this.rowsLimit,
@@ -47281,11 +47291,11 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       static get SETTING_KEYS() {
         return [
           fp,
-          ...Yee
+          ...Gee
         ];
       }
       static get PLUGIN_PRIORITY() {
-        return Uee;
+        return Yee;
       }
       isEnabled() {
         return !!this.hot.getSettings()[fp];
@@ -47297,7 +47307,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
           var n, r;
           this.pasteMode = (n = e.pasteMode) !== null && n !== void 0 ? n : this.pasteMode, this.rowsLimit = isNaN(e.rowsLimit) ? this.rowsLimit : e.rowsLimit, this.columnsLimit = isNaN(e.columnsLimit) ? this.columnsLimit : e.columnsLimit, Ws(this, d0, !!e.copyColumnHeaders), Ws(this, h0, !!e.copyColumnGroupHeaders), Ws(this, f0, !!e.copyColumnHeadersOnly), this.uiContainer = (r = e.uiContainer) !== null && r !== void 0 ? r : this.uiContainer;
         }
-        this.addHook("afterContextMenuDefaultOptions", (i) => this.onAfterContextMenuDefaultOptions(i)), this.addHook("afterOnCellMouseUp", () => this.onAfterOnCellMouseUp()), this.addHook("afterSelectionEnd", () => this.onAfterSelectionEnd()), this.addHook("beforeKeyDown", () => this.onBeforeKeyDown()), this.focusableElement = kee(this.uiContainer), this.focusableElement.addLocalHook("copy", (i) => this.onCopy(i)).addLocalHook("cut", (i) => this.onCut(i)).addLocalHook("paste", (i) => this.onPaste(i)), super.enablePlugin();
+        this.addHook("afterContextMenuDefaultOptions", (i) => this.onAfterContextMenuDefaultOptions(i)), this.addHook("afterOnCellMouseUp", () => this.onAfterOnCellMouseUp()), this.addHook("afterSelectionEnd", () => this.onAfterSelectionEnd()), this.addHook("beforeKeyDown", () => this.onBeforeKeyDown()), this.focusableElement = Pee(this.uiContainer), this.focusableElement.addLocalHook("copy", (i) => this.onCopy(i)).addLocalHook("cut", (i) => this.onCut(i)).addLocalHook("paste", (i) => this.onPaste(i)), super.enablePlugin();
       }
       updatePlugin() {
         this.disablePlugin(), this.enablePlugin(), this.getOrCreateFocusableElement(), super.updatePlugin();
@@ -47339,7 +47349,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       paste() {
         let e = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : "", n = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : e;
         if (!e && !n) return;
-        const r = new Aee();
+        const r = new kee();
         e && r.clipboardData.setData("text/plain", e), n && r.clipboardData.setData("text/html", n), this.getOrCreateFocusableElement(), this.onPaste(r);
       }
       setCopyableText() {
@@ -47409,7 +47419,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       onCopy(e) {
         if (!this.hot.isListening() && !ji(this, mp) || this.isEditorOpened()) return;
         this.setCopyableText(), Ws(this, mp, false);
-        const n = this.getRangedData(this.copyableRanges), r = Vee(this, OA, qee).call(this, this.copyableRanges);
+        const n = this.getRangedData(this.copyableRanges), r = Bee(this, OA, Kee).call(this, this.copyableRanges);
         if (!!this.hot.runHooks("beforeCopy", n, this.copyableRanges, r)) {
           const o = _h(n);
           if (e && e.clipboardData) {
@@ -47463,7 +47473,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       onAfterContextMenuDefaultOptions(e) {
         e.items.push({
           name: "---------"
-        }, xee(this)), ji(this, d0) && e.items.push(Oee(this)), ji(this, h0) && e.items.push(Mee(this)), ji(this, f0) && e.items.push(Tee(this)), e.items.push(_ee(this));
+        }, Tee(this)), ji(this, d0) && e.items.push(_ee(this)), ji(this, h0) && e.items.push(Oee(this)), ji(this, f0) && e.items.push(Mee(this)), e.items.push(Iee(this));
       }
       onAfterOnCellMouseUp() {
         !this.hot.isListening() || this.isEditorOpened() || this.hot.getSettings().fragmentSelection || (this.getOrCreateFocusableElement(), this.focusableElement.focus());
@@ -47480,7 +47490,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.focusableElement && (RA(this.focusableElement), this.focusableElement = null), super.destroy();
       }
     }
-    function qee(t) {
+    function Kee(t) {
       const { rows: e } = CH(t);
       let n = 0;
       for (let r = 0; r < e.length && !(e[r] >= 0); r++) n += 1;
@@ -47488,13 +47498,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         columnHeadersCount: n
       };
     }
-    const _A = "dragToScroll", Kee = 100;
-    class Xee extends qi {
+    const _A = "dragToScroll", Xee = 100;
+    class Qee extends qi {
       static get PLUGIN_KEY() {
         return _A;
       }
       static get PLUGIN_PRIORITY() {
-        return Kee;
+        return Xee;
       }
       constructor(e) {
         super(e), this.eventManager = new ri(this), this.boundaries = null, this.callback = null, this.listening = false;
@@ -47552,7 +47562,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         super.destroy();
       }
     }
-    function Qee(t) {
+    function Zee(t) {
       return {
         key: "hidden_columns_hide",
         name() {
@@ -47577,7 +47587,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         }
       };
     }
-    function Zee(t) {
+    function Jee(t) {
       const e = [];
       return {
         key: "hidden_columns_show",
@@ -47616,27 +47626,27 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       };
     }
     function IA(t, e, n) {
-      Jee(t, e), e.set(t, n);
+      ete(t, e), e.set(t, n);
     }
-    function Jee(t, e) {
+    function ete(t, e) {
       if (e.has(t)) throw new TypeError("Cannot initialize the same private elements twice on an object");
     }
     function Fi(t, e) {
       var n = RH(t, e, "get");
-      return ete(t, n);
+      return tte(t, n);
     }
-    function ete(t, e) {
+    function tte(t, e) {
       return e.get ? e.get.call(t) : e.value;
     }
     function mh(t, e, n) {
       var r = RH(t, e, "set");
-      return tte(t, r, n), n;
+      return nte(t, r, n), n;
     }
     function RH(t, e, n) {
       if (!e.has(t)) throw new TypeError("attempted to " + n + " private field on non-instance");
       return e.get(t);
     }
-    function tte(t, e, n) {
+    function nte(t, e, n) {
       if (e.set) e.set.call(t, n);
       else {
         if (!e.writable) throw new TypeError("attempted to set read only private field");
@@ -47647,9 +47657,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     Kt.getSingleton().register("afterHideColumns");
     Kt.getSingleton().register("beforeUnhideColumns");
     Kt.getSingleton().register("afterUnhideColumns");
-    const m0 = "hiddenColumns", nte = 310;
+    const m0 = "hiddenColumns", rte = 310;
     var is = /* @__PURE__ */ new WeakMap(), os = /* @__PURE__ */ new WeakMap();
-    class rte extends qi {
+    class ite extends qi {
       constructor() {
         super(...arguments), IA(this, is, {
           writable: true,
@@ -47663,7 +47673,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return m0;
       }
       static get PLUGIN_PRIORITY() {
-        return nte;
+        return rte;
       }
       isEnabled() {
         return !!this.hot.getSettings()[m0];
@@ -47767,7 +47777,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       onAfterContextMenuDefaultOptions(e) {
         e.items.push({
           name: wr
-        }, Qee(this), Zee(this));
+        }, Zee(this), Jee(this));
       }
       onMapInit() {
         Array.isArray(Fi(this, is).columns) && this.hideColumns(Fi(this, is).columns);
@@ -47826,27 +47836,27 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         };
       }
     };
-    const ite = "ht__manualColumnMove--backlight";
-    let ote = class extends xH {
+    const ote = "ht__manualColumnMove--backlight";
+    let ste = class extends xH {
       build() {
-        super.build(), ct(this._element, ite);
+        super.build(), ct(this._element, ote);
       }
     };
-    const ste = "ht__manualColumnMove--guideline";
-    let ate = class extends xH {
+    const ate = "ht__manualColumnMove--guideline";
+    let lte = class extends xH {
       build() {
-        super.build(), ct(this._element, ste);
+        super.build(), ct(this._element, ate);
       }
     };
     Kt.getSingleton().register("beforeColumnMove");
     Kt.getSingleton().register("afterColumnMove");
-    const g0 = "manualColumnMove", lte = 120, za = /* @__PURE__ */ new WeakMap(), PA = "ht__manualColumnMove", gp = "show-ui", v0 = "on-moving--columns", w0 = "after-selection--columns";
-    class ute extends qi {
+    const g0 = "manualColumnMove", ute = 120, za = /* @__PURE__ */ new WeakMap(), PA = "ht__manualColumnMove", gp = "show-ui", v0 = "on-moving--columns", w0 = "after-selection--columns";
+    class cte extends qi {
       static get PLUGIN_KEY() {
         return g0;
       }
       static get PLUGIN_PRIORITY() {
-        return lte;
+        return ute;
       }
       constructor(e) {
         super(e), za.set(this, {
@@ -47861,7 +47871,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
             col: void 0
           },
           cachedDropIndex: void 0
-        }), this.eventManager = new ri(this), this.backlight = new ote(e), this.guideline = new ate(e);
+        }), this.eventManager = new ri(this), this.backlight = new ste(e), this.guideline = new lte(e);
       }
       isEnabled() {
         return !!this.hot.getSettings()[g0];
@@ -48035,13 +48045,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.backlight.destroy(), this.guideline.destroy(), super.destroy();
       }
     }
-    const vp = "manualColumnResize", cte = 130, DA = "manualColumnWidths", y0 = /* @__PURE__ */ new WeakMap();
-    class dte extends qi {
+    const vp = "manualColumnResize", dte = 130, DA = "manualColumnWidths", y0 = /* @__PURE__ */ new WeakMap();
+    class hte extends qi {
       static get PLUGIN_KEY() {
         return vp;
       }
       static get PLUGIN_PRIORITY() {
-        return cte;
+        return dte;
       }
       constructor(e) {
         super(e);
@@ -48260,27 +48270,27 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         };
       }
     }
-    const hte = "ht__manualRowMove--backlight";
-    class fte extends TH {
+    const fte = "ht__manualRowMove--backlight";
+    class mte extends TH {
       build() {
-        super.build(), ct(this._element, hte);
+        super.build(), ct(this._element, fte);
       }
     }
-    const mte = "ht__manualRowMove--guideline";
-    class pte extends TH {
+    const pte = "ht__manualRowMove--guideline";
+    class gte extends TH {
       build() {
-        super.build(), ct(this._element, mte);
+        super.build(), ct(this._element, pte);
       }
     }
     Kt.getSingleton().register("beforeRowMove");
     Kt.getSingleton().register("afterRowMove");
-    const C0 = "manualRowMove", gte = 140, Ua = /* @__PURE__ */ new WeakMap(), HA = "ht__manualRowMove", wp = "show-ui", S0 = "on-moving--rows", E0 = "after-selection--rows";
-    class vte extends qi {
+    const C0 = "manualRowMove", vte = 140, Ua = /* @__PURE__ */ new WeakMap(), HA = "ht__manualRowMove", wp = "show-ui", S0 = "on-moving--rows", E0 = "after-selection--rows";
+    class wte extends qi {
       static get PLUGIN_KEY() {
         return C0;
       }
       static get PLUGIN_PRIORITY() {
-        return gte;
+        return vte;
       }
       constructor(e) {
         super(e), Ua.set(this, {
@@ -48293,7 +48303,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
             row: void 0
           },
           cachedDropIndex: void 0
-        }), this.eventManager = new ri(this), this.backlight = new fte(e), this.guideline = new pte(e);
+        }), this.eventManager = new ri(this), this.backlight = new mte(e), this.guideline = new gte(e);
       }
       isEnabled() {
         return !!this.hot.getSettings()[C0];
@@ -48466,13 +48476,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         this.backlight.destroy(), this.guideline.destroy(), super.destroy();
       }
     }
-    const yp = "manualRowResize", wte = 30, jA = "manualRowHeights", R0 = /* @__PURE__ */ new WeakMap();
-    class yte extends qi {
+    const yp = "manualRowResize", yte = 30, jA = "manualRowHeights", R0 = /* @__PURE__ */ new WeakMap();
+    class bte extends qi {
       static get PLUGIN_KEY() {
         return yp;
       }
       static get PLUGIN_PRIORITY() {
-        return wte;
+        return yte;
       }
       constructor(e) {
         super(e);
@@ -48627,13 +48637,13 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         super.destroy();
       }
     }
-    const bp = "trimRows", bte = 330;
-    class Cte extends qi {
+    const bp = "trimRows", Cte = 330;
+    class Ste extends qi {
       static get PLUGIN_KEY() {
         return bp;
       }
       static get PLUGIN_PRIORITY() {
-        return bte;
+        return Cte;
       }
       constructor(e) {
         super(e), this.trimmedRowsMap = null;
@@ -48705,7 +48715,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         super.destroy();
       }
     }
-    const MH = "undoRedo", Ste = "undoRedo";
+    const MH = "undoRedo", Ete = "undoRedo";
     function rt(t) {
       const e = this;
       this.instance = t, this.doneActions = [], this.undoneActions = [], this.ignoreNewActions = false, this.enabled = false, t.addHook("afterChange", function(n, r) {
@@ -48823,12 +48833,12 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     rt.prototype.enable = function() {
       if (this.isEnabled()) return;
       const t = this.instance;
-      this.enabled = true, xte(t), this.registerShortcuts(), t.addHook("afterChange", OH);
+      this.enabled = true, Tte(t), this.registerShortcuts(), t.addHook("afterChange", OH);
     };
     rt.prototype.disable = function() {
       if (!this.isEnabled()) return;
       const t = this.instance;
-      this.enabled = false, Tte(t), this.unregisterShortcuts(), t.removeHook("afterChange", OH);
+      this.enabled = false, Mte(t), this.unregisterShortcuts(), t.removeHook("afterChange", OH);
     };
     rt.prototype.destroy = function() {
       this.clear(), this.instance = null, this.doneActions = null, this.undoneActions = null;
@@ -48951,7 +48961,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       const n = t.getPlugin("filters");
       t.addHookOnce("afterViewRender", e), n.conditionCollection.importAllConditions(this.conditionsStack), n.filter();
     };
-    class Ete extends rt.Action {
+    class Rte extends rt.Action {
       constructor(e, n) {
         super(), this.cellRange = n;
         const r = this.cellRange.getTopStartCorner(), i = this.cellRange.getBottomEndCorner();
@@ -48968,8 +48978,8 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         e.addHookOnce("afterViewRender", n), r.mergeRange(this.cellRange);
       }
     }
-    rt.MergeCellsAction = Ete;
-    class Rte extends rt.Action {
+    rt.MergeCellsAction = Rte;
+    class xte extends rt.Action {
       constructor(e, n) {
         super(), this.cellRange = n;
       }
@@ -48982,7 +48992,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         e.addHookOnce("afterViewRender", n), r.unmergeRange(this.cellRange, true), e.render();
       }
     }
-    rt.UnmergeCellsAction = Rte;
+    rt.UnmergeCellsAction = xte;
     rt.RowMoveAction = function(t, e) {
       this.rows = t.slice(), this.finalIndex = e, this.actionType = "row_move";
     };
@@ -49046,7 +49056,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       const n = this;
       if (e === "loadData") return n.undoRedo.clear();
     }
-    function xte(t) {
+    function Tte(t) {
       t.undo = function() {
         return t.undoRedo.undo();
       }, t.redo = function() {
@@ -49059,7 +49069,7 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
         return t.undoRedo.clear();
       };
     }
-    function Tte(t) {
+    function Mte(t) {
       delete t.undo, delete t.redo, delete t.isUndoAvailable, delete t.isRedoAvailable, delete t.clearUndo;
     }
     const Df = Kt.getSingleton();
@@ -49071,28 +49081,28 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
     Df.register("afterUndo");
     Df.register("beforeRedo");
     Df.register("afterRedo");
-    rt.PLUGIN_KEY = Ste;
+    rt.PLUGIN_KEY = Ete;
     rt.SETTING_KEYS = true;
-    function Mte() {
-      Yl(sJ), Yl(vJ), Yl(bJ), Yl(SJ), Yl(_J), Yl(WL), vh(lx), vh(Pf), vh(gd), vh(ox), qa(ix), qa(hH), qa(ax), qa(rx), qa(mH), qa(fv), uS(Tv), uS(ux);
-    }
     function Ote() {
-      Ci(Ih), Ci(Ah), Ci(BJ), Ci(qi), Ci(jv), Ci(Gee), Ci(Xee), Ci(rte), Ci(ute), Ci(dte), Ci(vte), Ci(yte), Ci(Cte), Ci(rt);
+      Yl(aJ), Yl(wJ), Yl(CJ), Yl(EJ), Yl(IJ), Yl(WL), vh(lx), vh(Pf), vh(gd), vh(ox), qa(ix), qa(hH), qa(ax), qa(rx), qa(mH), qa(fv), uS(Tv), uS(ux);
     }
-    Mte();
-    Ote();
     function _te() {
+      Ci(Ih), Ci(Ah), Ci(zJ), Ci(qi), Ci(jv), Ci(qee), Ci(Qee), Ci(ite), Ci(cte), Ci(hte), Ci(wte), Ci(bte), Ci(Ste), Ci(rt);
+    }
+    Ote();
+    _te();
+    function Ite() {
       return v.jsx(tW, {
-        router: XZ
+        router: QZ
       });
     }
-    Vj.createRoot(document.getElementById("root")).render(v.jsx(bZ, {
-      children: v.jsx(_te, {})
+    Vj.createRoot(document.getElementById("root")).render(v.jsx(CZ, {
+      children: v.jsx(Ite, {})
     }));
   });
-  var_814ecc66_3758_5e28_b3b2_0fa5268ea509 = Ite();
+  var_db63ec7b_8bbd_57ac_aebe_c1e23ce54b6c = Ate();
 })();
 export {
   __tla,
-  var_814ecc66_3758_5e28_b3b2_0fa5268ea509 as default
+  var_db63ec7b_8bbd_57ac_aebe_c1e23ce54b6c as default
 };
