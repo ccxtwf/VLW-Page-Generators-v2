@@ -237,19 +237,26 @@ export class ExternalLink {
         wikitext = `{{VDB|${matchVdb[1]}}}${this.description === 'VocaDB' ? '' : ' - ' + this.description}`;
         break;
       case (matchMirahezeWiki !== null):
-        if (matchMirahezeWiki[1] === import.meta.env.VITE_VLW_WIKI_NAME) {
-          wikitext = `[[${matchMirahezeWiki[2]}|${this.description}]]`;
-        } else if (matchMirahezeWiki[1] in this.recognizedMirahezeInterwiki) {
-          wikitext = `{{${this.recognizedFandomInterwiki[matchMirahezeWiki[1]]}|${matchMirahezeWiki[2]}|${this.description}}}`;
-        } else {
-          wikitext = `[[mh:${matchMirahezeWiki[1]}:${matchMirahezeWiki[2]}|${this.description}]]`;
+        {
+          const [_, p1, p2] = matchMirahezeWiki;
+          if (p1 === import.meta.env.VITE_VLW_WIKI_NAME) {
+            const isCategory = p2.match(/^[Cc]at(?:egory|)/) !== null;
+            wikitext = `[[${isCategory ? ':' : ''}${p2}|${this.description}]]`;
+          } else if (p1 in this.recognizedMirahezeInterwiki) {
+            wikitext = `{{${this.recognizedFandomInterwiki[p1]}|${p2}|${this.description}}}`;
+          } else {
+            wikitext = `[[mh:${p1}:${p2}|${this.description}]]`;
+          }
         }
         break;
       case (matchFandomWiki !== null):
-        if (matchFandomWiki[1] in this.recognizedFandomInterwiki) {
-          wikitext = `{{${this.recognizedFandomInterwiki[matchFandomWiki[1]]}|${matchFandomWiki[2]}|${this.description}}}`;
-        } else {
-          wikitext = `{{FandomWiki|${matchFandomWiki[1]}|${matchFandomWiki[2]}|${this.description}}}`;
+        {
+          const [_, p1, p2] = matchFandomWiki;
+          if (p1 in this.recognizedFandomInterwiki) {
+            wikitext = `{{${this.recognizedFandomInterwiki[p1]}|${p2}|${this.description}}}`;
+          } else {
+            wikitext = `{{FandomWiki|${p1}|${p2}|${this.description}}}`;
+          }
         }
         break;
       case (matchHMWiki !== null):
