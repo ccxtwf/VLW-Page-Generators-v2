@@ -73,7 +73,7 @@ export function validate(input: ProcessedInput): {
   let {
     formData: {
       prodCategory, prodRoles,
-      languageIds, engines,
+      languageIds,
       description
     },
     songList, extLinks
@@ -94,14 +94,6 @@ export function validate(input: ProcessedInput): {
       true,
       'You haven\'t chosen a language.',
       'languageIds'
-    ]);
-  }
-
-  if (engines.length === 0) {
-    res.push([
-      true,
-      'Please list at least one vocal synth engine, e.g. VOCALOID. Choose \"Other/Unlisted\" if not on the list.',
-      'engines'
     ]);
   }
   
