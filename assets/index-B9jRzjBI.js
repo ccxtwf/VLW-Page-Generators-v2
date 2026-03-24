@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-let var_db63ec7b_8bbd_57ac_aebe_c1e23ce54b6c;
+let var_7d55d6cb_9ce3_550d_bbbb_0b957f7b95e4;
 let __tla = (async () => {
   var kj = (t, e) => () => (e || t((e = {
     exports: {}
@@ -40990,42 +40990,38 @@ ${F}${z}${b.map((K) => `[[Category:${K}]]`).join(`
       };
     }
     function LZ(t) {
-      let { formData: { prodCategory: e, prodRoles: n, languageIds: r, engines: i, description: o }, songList: a, extLinks: l } = t;
-      const c = [];
-      return e === "" && c.push([
+      let { formData: { prodCategory: e, prodRoles: n, languageIds: r, description: i }, songList: o, extLinks: a } = t;
+      const l = [];
+      return e === "" && l.push([
         true,
         "You must add the producer category page name for the producer. (This will be used as the parameter of {{ProdLinks}})",
         "prodCategory"
-      ]), r.length === 0 && c.push([
+      ]), r.length === 0 && l.push([
         true,
         "You haven't chosen a language.",
         "languageIds"
-      ]), i.length === 0 && c.push([
-        true,
-        'Please list at least one vocal synth engine, e.g. VOCALOID. Choose "Other/Unlisted" if not on the list.',
-        "engines"
-      ]), Object.values(n).every((d) => !d) && c.push([
+      ]), Object.values(n).every((c) => !c) && l.push([
         true,
         "You must specify at least one role for the producer, e.g. Do they compose their own songs? Are they an illustrator/PV maker for other producers?",
         "producerRoles"
-      ]), o === "" && c.push([
+      ]), i === "" && l.push([
         true,
         'You must add a description for the producer. Even a short description, e.g. "[PRODUCER] is a VOCALOID producer.", will do.',
         "description"
-      ]), l.length === 0 ? c.push([
+      ]), a.length === 0 ? l.push([
         true,
         "You must add at least one external link.",
         "extLinks"
-      ]) : l.every((d) => !d.isOfficial) && c.push([
+      ]) : a.every((c) => !c.isOfficial) && l.push([
         true,
         "You must add at least one official external link, e.g. the producer's social media.",
         "extLinks"
-      ]), a.length === 0 && c.push([
+      ]), o.length === 0 && l.push([
         true,
         "No song page has been added.",
         "pwtDiscog"
       ]), {
-        errors: c,
+        errors: l,
         recommendToAutoloadCategories: false
       };
     }
@@ -49100,9 +49096,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       children: v.jsx(Ite, {})
     }));
   });
-  var_db63ec7b_8bbd_57ac_aebe_c1e23ce54b6c = Ate();
+  var_7d55d6cb_9ce3_550d_bbbb_0b957f7b95e4 = Ate();
 })();
 export {
   __tla,
-  var_db63ec7b_8bbd_57ac_aebe_c1e23ce54b6c as default
+  var_7d55d6cb_9ce3_550d_bbbb_0b957f7b95e4 as default
 };
