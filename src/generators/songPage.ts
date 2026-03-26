@@ -163,7 +163,6 @@ export function parseInput({
 export function autoloadCategories({
   needsEnglishTranslation, 
   producers, 
-  isAlbumOnly, 
   lyricsData
 }: AutoloadCategoriesInput): string[] {
   const res = [];
@@ -248,8 +247,6 @@ export function autoloadCategories({
       res.push(`${prodCategoryTag}${subtag}`);
     }
   }
-
-  if (isAlbumOnly) res.push('Album Only songs');
 
   if (needsEnglishTranslation && lyricsData.every(el => !el[3] || el[3].trim() === '')) {
     res.push('Pages in need of English translation');
@@ -382,7 +379,7 @@ export function validate(input: ProcessedInput): {
   }
   if (categories.length === 0) {
     res.push([
-      true, 
+      false, 
       'Did you forget to add categories?', 
       'categoriesRaw'
     ]);
@@ -448,7 +445,7 @@ export function generateSongPage(input: ProcessedInput): string {
       aiCwState, aiWarningText1, aiWarningText2, cwState, cwText, hasEpilepsyWarning, 
       origTitle, altChTitle, altChIsTraditional, romTitle, engTitle, titleIsOfficiallyTranslated,
       bgColour, fgColour, uploadDate,
-      singers, producers, description, languages, isoLangCode, isUnavailable,
+      singers, producers, description, languages, isoLangCode, isUnavailable, isAlbumOnly,
       translator, isOfficialTranslation, 
       categories
     }, 
@@ -564,7 +561,7 @@ export function generateSongPage(input: ProcessedInput): string {
 |singer = ${singers}
 |producer = ${producers}
 |#views = ${viewCountsSegment}
-|link = ${songLinksSegment}${description ? `\n|description = ${description}` : ''}
+|link = ${songLinksSegment}${isAlbumOnly ? '\n|album-only = 1' : ''}${description ? `\n|description = ${description}` : ''}
 |language = ${languageSegment}
 }}
 
