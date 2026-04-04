@@ -222,7 +222,6 @@ export function generateProducerPage(input: ProcessedInput): string {
   }
   for (let id of languageIds) {
     let lang: string = LANGUAGES[id]?.name || '';
-    if (lang === 'Mandarin') lang = 'Chinese';
     categories.push(`${lang} original producers`);
   }
   for (let engine of engines) {

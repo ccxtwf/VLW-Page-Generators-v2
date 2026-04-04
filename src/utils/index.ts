@@ -32,16 +32,13 @@ export const parseHeadersFromLanguages = (
     const headerRomanizedLanguages: string[] = [];
 
     languages.forEach(lang => {
-      if (lang.name !== 'English') needsEnglishTranslation = true;
-      if (lang.name === 'Mandarin') {
-        isChinese = true;
-        headerOriginalLanguages.push('Chinese');
-      } else if (lang.name === 'Cantonese') {
-        isChinese = true;
-        headerOriginalLanguages.push(lang.name);
-      } else {
-        headerOriginalLanguages.push(lang.name);
+      if (lang.name !== 'English') {
+        needsEnglishTranslation = true;
       }
+      if (lang.name === 'Mandarin' || lang.name === 'Cantonese') {
+        isChinese = true;
+      }
+      headerOriginalLanguages.push(lang.name);
       if (lang.transliteration) {
         needsRomanization = true;
         headerRomanizedLanguages.push(lang.transliteration);
@@ -96,7 +93,7 @@ interface LyricsGeneratorParams {
 function generateLyricsToggle(headersText: string[], needsRomanization: boolean, showEnglishColumn: boolean, isoLangCode: string) {
   const lookupOriginalColumnSemanticId: IDictionary<string> = {
     'Japanese': 'jp',
-    'Chinese': 'cn',
+    'Mandarin': 'cn',
     'Korean': 'kr',
     'Cantonese': 'yue',
     'Spanish': 'sp',
@@ -114,7 +111,7 @@ function generateLyricsToggle(headersText: string[], needsRomanization: boolean,
   };
   const skipCustomLangIsoCode: IDictionary<string> = {
     'Japanese': 'ja',
-    'Chinese': 'zh-Hans',
+    'Mandarin': 'zh-Hans',
     'Korean': 'ko',
     'Cantonese': 'zh-Hant',
     'Spanish': 'es',
