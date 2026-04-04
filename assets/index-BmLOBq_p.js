@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-let var_c6b3ef17_dab1_50f3_9128_31203ab66779;
+let var_c6aca613_b460_59ea_9728_3e93c4356291;
 let __tla = (async () => {
   var kj = (t, e) => () => (e || t((e = {
     exports: {}
@@ -33758,7 +33758,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       else {
         const o = [], a = [];
         t.forEach((l) => {
-          l.name !== "English" && (n = true), l.name === "Mandarin" ? (i = true, o.push("Chinese")) : (l.name === "Cantonese" && (i = true), o.push(l.name)), l.transliteration && (e = true, a.push(l.transliteration));
+          l.name !== "English" && (n = true), (l.name === "Mandarin" || l.name === "Cantonese") && (i = true), o.push(l.name), l.transliteration && (e = true, a.push(l.transliteration));
         }), r = [
           "Row Styling",
           o.join("/"),
@@ -33779,7 +33779,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     function tZ(t, e, n, r) {
       const i = {
         Japanese: "jp",
-        Chinese: "cn",
+        Mandarin: "cn",
         Korean: "kr",
         Cantonese: "yue",
         Spanish: "sp",
@@ -33795,7 +33795,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         Pinyin: "py"
       }, a = {
         Japanese: "ja",
-        Chinese: "zh-Hans",
+        Mandarin: "zh-Hans",
         Korean: "ko",
         Cantonese: "zh-Hant",
         Spanish: "es",
@@ -41076,7 +41076,7 @@ ${A}`;
       for (const [_, D] of Object.entries(i)) D && b.push(`${_.replace(/^\w/, (O) => O.toUpperCase())}s`);
       for (let _ of l) {
         let D = ((_a = nl[_]) == null ? void 0 : _a.name) || "";
-        D === "Mandarin" && (D = "Chinese"), b.push(`${D} original producers`);
+        b.push(`${D} original producers`);
       }
       for (let _ of c) b.push(`Producers using ${_}`);
       let k = "";
@@ -49097,9 +49097,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       children: v.jsx(Ite, {})
     }));
   });
-  var_c6b3ef17_dab1_50f3_9128_31203ab66779 = Ate();
+  var_c6aca613_b460_59ea_9728_3e93c4356291 = Ate();
 })();
 export {
   __tla,
-  var_c6b3ef17_dab1_50f3_9128_31203ab66779 as default
+  var_c6aca613_b460_59ea_9728_3e93c4356291 as default
 };
