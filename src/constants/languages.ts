@@ -40,15 +40,64 @@ export const LANGUAGES: Language[] = [
     iso: "id",
   },
   {
-    name: "Catalan",
+    name: "Ainu",
     code: null,
-    iso: "ca",
+    iso: "ain",
+  },
+  {
+    name: "Arabic",
+    transliteration: "Romanization",
+    code: null,
+    iso: "ara",
+  },
+  {
+    name: "Basque",
+    code: null,
+    iso: "eus",
+  },
+  {
+    name: "Belarusian",
+    transliteration: "Romanization",
+    code: null,
+    iso: "bel",
+  },
+  {
+    name: "Bulgarian",
+    transliteration: "Romanization",
+    code: null,
+    iso: "bul",
   },
   {
     name: "Cantonese",
     transliteration: "Jyutping",
     code: "yue",
     iso: "zh-Hant",
+  },
+  {
+    name: "Catalan",
+    code: null,
+    iso: "ca",
+  },
+  {
+    name: "Cherokee",
+    transliteration: "Romanization",
+    code: null,
+    iso: "chr",
+  },
+  {
+    name: "Croatian",
+    code: null,
+    iso: "hrv",
+  },
+  {
+    name: "Czech",
+    code: null,
+    iso: "ces",
+  },
+  {
+    name: "Danish",
+    code: null,
+    iso: "dan",
   },
   {
     name: "Dutch",
@@ -59,6 +108,17 @@ export const LANGUAGES: Language[] = [
     name: "Esperanto",
     code: null,
     iso: "eo",
+  },
+  {
+    name: "Estonian",
+    code: null,
+    iso: "est",
+  },
+  {
+    name: "Evenki",
+    transliteration: "Romanization",
+    code: null,
+    iso: "evn",
   },
   {
     name: "Filipino",
@@ -76,6 +136,11 @@ export const LANGUAGES: Language[] = [
     iso: "fr",
   },
   {
+    name: "Gaelic",
+    code: null,
+    iso: "gle",
+  },
+  {
     name: "German",
     code: "de",
     iso: "de",
@@ -85,6 +150,17 @@ export const LANGUAGES: Language[] = [
     transliteration: "Romanization",
     code: null,
     iso: "el",
+  },
+  {
+    name: "Hindi",
+    transliteration: "Romanization",
+    code: null,
+    iso: "hin",
+  },
+  {
+    name: "Hungarian",
+    code: null,
+    iso: "hun",
   },
   {
     name: "Indonesian",
@@ -112,6 +188,23 @@ export const LANGUAGES: Language[] = [
     iso: "ms",
   },
   {
+    name: "Mongolian",
+    transliteration: "Romanization",
+    code: null,
+    iso: "mon",
+  },
+  {
+    name: "Northern Wu",
+    transliteration: "Romanization",
+    code: null,
+    iso: "taiu",
+  },
+  {
+    name: "Norwegian",
+    code: null,
+    iso: "nor",
+  },
+  {
     name: "Polish",
     code: null,
     iso: "pl",
@@ -133,6 +226,26 @@ export const LANGUAGES: Language[] = [
     iso: "ru",
   },
   {
+    name: "Serbian",
+    code: null,
+    iso: "srp",
+  },
+  {
+    name: "Slovak",
+    code: null,
+    iso: "slk",
+  },
+  {
+    name: "Somali",
+    code: null,
+    iso: "som",
+  },
+  {
+    name: "Southern Quechua",
+    code: null,
+    iso: "qwc",
+  },
+  {
     name: "Sundanese",
     code: null,
     iso: "su",
@@ -143,14 +256,49 @@ export const LANGUAGES: Language[] = [
     iso: "sv",
   },
   {
+    name: "Taiwanese",
+    transliteration: "Tâi-lô",
+    code: null,
+    iso: "zh-Hant",
+  },
+  {
+    name: "Tajik",
+    transliteration: "Romanization",
+    code: null,
+    iso: "tgk",
+  },
+  {
+    name: "Teochew Min",
+    transliteration: "Romanization",
+    code: null,
+    iso: "zh-Hant",
+  },
+  {
     name: "Thai",
     transliteration: "Romanization",
     code: "th"
   },
   {
+    name: "Toki Pona",
+    code: null,
+    iso: "tok",
+  },
+  {
     name: "Turkish",
     code: null,
     iso: "tr",
+  },
+  {
+    name: "Ukrainian",
+    transliteration: "Romanization",
+    code: null,
+    iso: "uk",
+  },
+  {
+    name: "Urdu",
+    transliteration: "Romanization",
+    code: null,
+    iso: "ur",
   },
   {
     name: "Vietnamese",
@@ -161,6 +309,18 @@ export const LANGUAGES: Language[] = [
     name: "Welsh",
     code: null,
     iso: "cy",
+  },
+  {
+    name: "Yakut",
+    transliteration: "Romanization",
+    code: null,
+    iso: "sah",
+  },
+  {
+    name: "Yiddish",
+    transliteration: "Romanization",
+    code: null,
+    iso: "yid",
   },
   {
     name: "Conlang",
