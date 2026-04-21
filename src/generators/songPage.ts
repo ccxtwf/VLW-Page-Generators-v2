@@ -161,9 +161,7 @@ export function parseInput({
 }
 
 export function autoloadCategories({
-  needsEnglishTranslation, 
   producers, 
-  lyricsData
 }: AutoloadCategoriesInput): string[] {
   const res = [];
   
@@ -248,9 +246,10 @@ export function autoloadCategories({
     }
   }
 
-  if (needsEnglishTranslation && lyricsData.every(el => !el[3] || el[3].trim() === '')) {
-    res.push('Pages in need of English translation');
-  }
+  // No longer push this tag
+  // if (needsEnglishTranslation && lyricsData.every(el => !el[3] || el[3].trim() === '')) {
+  //   res.push('Pages in need of English translation');
+  // }
 
   return res;
 }
@@ -267,7 +266,6 @@ export function validate(input: ProcessedInput): {
       bgColour, fgColour, uploadDate,
       singers, producers, isAlbumOnly, isUnavailable,
       translator, isOfficialTranslation,
-      categories
     }, 
     langOptions: { skipColumns }, 
     playLinks, lyrics 
@@ -377,14 +375,14 @@ export function validate(input: ProcessedInput): {
       recommendToAutoloadCategories = true;
     }
   }
-  if (categories.length === 0) {
-    res.push([
-      false, 
-      'Did you forget to add categories?', 
-      'categoriesRaw'
-    ]);
-    recommendToAutoloadCategories = true;
-  }
+  // if (categories.length === 0) {
+  //   res.push([
+  //     false, 
+  //     'Did you forget to add categories?', 
+  //     'categoriesRaw'
+  //   ]);
+  //   recommendToAutoloadCategories = true;
+  // }
 
   if (!isUnavailable && !isAlbumOnly && playLinks.length === 0) {
     res.push([
