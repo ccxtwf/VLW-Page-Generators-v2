@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-let var_978ea0c1_e1f6_591d_9314_7ad61dd89ae6;
+let var_e56f8eae_0796_59e4_833a_49a496b5e7b2;
 let __tla = (async () => {
   var kj = (t, e) => () => (e || t((e = {
     exports: {}
@@ -33766,7 +33766,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `), m && p && o && (_ += `{{OfficialEnglishNotify}}
 `);
       const D = ZQ.find((T) => T.id[0] === i);
-      if (D && (_ += `{{TranslatorLicense2|${D.id[0]}}}
+      if (D && (_ += `{{TranslatorLicense|${D.id[0]}}}
 `), k.size > 1) {
         let T = k.has("");
         T && k.delete("");
@@ -49192,9 +49192,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       children: v.jsx(_te, {})
     }));
   });
-  var_978ea0c1_e1f6_591d_9314_7ad61dd89ae6 = Ite();
+  var_e56f8eae_0796_59e4_833a_49a496b5e7b2 = Ite();
 })();
 export {
   __tla,
-  var_978ea0c1_e1f6_591d_9314_7ad61dd89ae6 as default
+  var_e56f8eae_0796_59e4_833a_49a496b5e7b2 as default
 };
