@@ -196,7 +196,7 @@ export function generateLyricsTable(
     el.id[0] === translator
   ));
   if (referLicense) {
-    res += `{{TranslatorLicense2|${referLicense.id[0]}}}\n`;
+    res += `{{TranslatorLicense|${referLicense.id[0]}}}\n`;
   }
 
   // Singer coloured lines
