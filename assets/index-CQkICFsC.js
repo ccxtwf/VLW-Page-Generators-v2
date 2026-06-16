@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-let var_e56f8eae_0796_59e4_833a_49a496b5e7b2;
+let var_14fde69c_84b4_502e_8cac_6185d5806b6f;
 let __tla = (async () => {
   var kj = (t, e) => () => (e || t((e = {
     exports: {}
@@ -33301,61 +33301,75 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         regex: /^(?<embedid>https?:\/\/soundcloud\.com\/.*)$/
       }
     ];
-    var uo = ((t) => (t.niconico = "Niconico", t.youtube = "YouTube", t.bilibili = "bilibili", t.piapro = "piapro", t.soundcloud = "SoundCloud", t.bandcamp = "Bandcamp", t.vimeo = "Vimeo", t.netease = "Netease Music", t.spotify = "Spotify", t.fsing = "5Sing", t.xitter = "X (Twitter)", t))(uo || {});
+    var uo = ((t) => (t.niconico = "Niconico", t.youtube = "YouTube", t.bilibili = "bilibili", t.piapro = "piapro", t.soundcloud = "SoundCloud", t.bandcamp = "Bandcamp", t.vimeo = "Vimeo", t.netease = "Netease Music", t.spotify = "Spotify", t.applemusic = "Apple Music", t.bandlab = "BandLab", t.fsing = "5Sing", t.tumblr = "Tumblr", t.xitter = "X (Twitter)", t))(uo || {});
     const yS = [
       {
         site: "Niconico",
-        re: /^https?:\/\/www\.nicovideo\.jp/,
+        re: /^https?:\/\/www\.nicovideo\.jp\//,
         isMedia: true
       },
       {
         site: "YouTube",
-        re: /^https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts)|youtu\.be)/,
+        re: /^https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts)|youtu\.be)\//,
         isMedia: true
       },
       {
         site: "bilibili",
-        re: /^https?:\/\/www\.bilibili\.com/,
+        re: /^https?:\/\/www\.bilibili\.com\//,
         isMedia: true
       },
       {
         site: "piapro",
-        re: /^https?:\/\/piapro\.jp/,
+        re: /^https?:\/\/piapro\.jp\//,
         isMedia: true
       },
       {
         site: "SoundCloud",
-        re: /^https?:\/\/soundcloud\.com/,
+        re: /^https?:\/\/soundcloud\.com\//,
         isMedia: true
       },
       {
         site: "Bandcamp",
-        re: /^https?:\/\/[^\.]*\.?bandcamp\.com/,
+        re: /^https?:\/\/[^\.]*\.?bandcamp\.com\//,
         isMedia: true
       },
       {
         site: "Vimeo",
-        re: /^https?:\/\/vimeo\.com/,
+        re: /^https?:\/\/vimeo\.com\//,
         isMedia: true
       },
       {
         site: "Netease Music",
-        re: /^https?:\/\/music\.163\.com/,
+        re: /^https?:\/\/music\.163\.com\//,
         isMedia: true
       },
       {
         site: "Spotify",
-        re: /^https?:\/\/[^\.]+\.spotify\.com/,
+        re: /^https?:\/\/[^\.]+\.spotify\.com\//,
+        isMedia: true
+      },
+      {
+        site: "Apple Music",
+        re: /^https?:\/\/music\.apple\.com\/[a-z]+\//,
         isMedia: true
       },
       {
         site: "5Sing",
-        re: /^https?:\/\/5sing\.kugou\.com/,
+        re: /^https?:\/\/5sing\.kugou\.com\//,
         isMedia: true
       },
       {
+        site: "BandLab",
+        re: /^https?:\/\/www\.bandlab\.com\//,
+        isMedia: true
+      },
+      {
+        site: "Tumblr",
+        re: /^https?:\/\/[^\.]+\.tumblr\.com\//
+      },
+      {
         site: "X (Twitter)",
-        re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\/.*/
+        re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\//
       }
     ], kf = yS.concat([
       {
@@ -37672,7 +37686,7 @@ ${Re}${F.map((Xe) => `[[Category:${Xe}]]`).join(`
       })(e0)), e0.exports;
     }
     var gZ = pZ();
-    const vZ = da(gZ), wZ = "/VLW-Page-Generators-v2/assets/sql-wasm-C1U8OeUW.wasm", yZ = "/VLW-Page-Generators-v2/assets/synths-BQytWTGR.db", rH = U.createContext({
+    const vZ = da(gZ), wZ = "/VLW-Page-Generators-v2/assets/sql-wasm-C1U8OeUW.wasm", yZ = "/VLW-Page-Generators-v2/assets/synths-D43JkqNA.db", rH = U.createContext({
       AppDataSource: {}
     });
     let hg;
@@ -49192,9 +49206,9 @@ ${b.map((_) => `[[Category:${_}]]`).join(`
       children: v.jsx(_te, {})
     }));
   });
-  var_e56f8eae_0796_59e4_833a_49a496b5e7b2 = Ite();
+  var_14fde69c_84b4_502e_8cac_6185d5806b6f = Ite();
 })();
 export {
   __tla,
-  var_e56f8eae_0796_59e4_833a_49a496b5e7b2 as default
+  var_14fde69c_84b4_502e_8cac_6185d5806b6f as default
 };
