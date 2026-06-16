@@ -67,65 +67,82 @@ export enum PV_SERVICE_PROVIDER {
   vimeo = "Vimeo",
   netease = "Netease Music",
   spotify = "Spotify",
+  applemusic = "Apple Music",
+  bandlab = "BandLab",
   fsing = "5Sing",
+  tumblr = "Tumblr",
   xitter = "X (Twitter)"
 }
 
 export const PV_SERVICES: PvService[] = [
   {
     site: PV_SERVICE_PROVIDER.niconico,
-    re: /^https?:\/\/www\.nicovideo\.jp/,
+    re: /^https?:\/\/www\.nicovideo\.jp\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.youtube,
-    re: /^https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts)|youtu\.be)/,
+    re: /^https?:\/\/(?:(?:|www\.)youtube\.com\/(?:watch\?v=|shorts)|youtu\.be)\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.bilibili,
-    re: /^https?:\/\/www\.bilibili\.com/,
+    re: /^https?:\/\/www\.bilibili\.com\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.piapro,
-    re: /^https?:\/\/piapro\.jp/,
+    re: /^https?:\/\/piapro\.jp\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.soundcloud,
-    re: /^https?:\/\/soundcloud\.com/,
+    re: /^https?:\/\/soundcloud\.com\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.bandcamp,
-    re: /^https?:\/\/[^\.]*\.?bandcamp\.com/,
+    re: /^https?:\/\/[^\.]*\.?bandcamp\.com\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.vimeo,
-    re: /^https?:\/\/vimeo\.com/,
+    re: /^https?:\/\/vimeo\.com\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.netease,
-    re: /^https?:\/\/music\.163\.com/,
+    re: /^https?:\/\/music\.163\.com\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.spotify,
-    re: /^https?:\/\/[^\.]+\.spotify\.com/,
+    re: /^https?:\/\/[^\.]+\.spotify\.com\//,
+    isMedia: true
+  },
+  {
+    site: PV_SERVICE_PROVIDER.applemusic,
+    re: /^https?:\/\/music\.apple\.com\/[a-z]+\//,
     isMedia: true
   },
   {
     site: PV_SERVICE_PROVIDER.fsing,
-    re: /^https?:\/\/5sing\.kugou\.com/,
+    re: /^https?:\/\/5sing\.kugou\.com\//,
     isMedia: true
   },
   {
+    site: PV_SERVICE_PROVIDER.bandlab,
+    re: /^https?:\/\/www\.bandlab\.com\//,
+    isMedia: true
+  },
+  {
+    site: PV_SERVICE_PROVIDER.tumblr,
+    re: /^https?:\/\/[^\.]+\.tumblr\.com\//,
+  },
+  {
     site: PV_SERVICE_PROVIDER.xitter,
-    re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\/.*/
-  }
+    re: /^https?:\/\/(?:www\.|)(twitter|x)\.com\//
+  },
 ];
 
 export const RECOGNIZED_LINKS: RecognizedDomain[] = (PV_SERVICES as RecognizedDomain[]).concat([
